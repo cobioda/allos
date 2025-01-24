@@ -1,0 +1,2 @@
+[nbdev]
+allos = allos._modidx:d

@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "allos"
+  site-url: "https://cobioda.github.io/allos"
+  description: "Storage and visualization of long read based single cell datasets"
+  repo-branch: main
+  repo-url: "https://github.com/cobioda/allos"

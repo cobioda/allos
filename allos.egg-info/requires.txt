@@ -1,0 +1,13 @@
+scanpy
+scipy
+muon
+anndata
+matplotlib
+seaborn
+requests
+patchworklib
+numpy
+pandas
+fastcore
+
+[dev]
