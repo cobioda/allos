@@ -1,4 +1,4 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.1
 Name: allos
 Version: 0.0.2
 Summary: Storage and visualization of long read based single cell datasets
@@ -29,19 +29,9 @@ Requires-Dist: patchworklib
 Requires-Dist: numpy
 Requires-Dist: pandas
 Requires-Dist: fastcore
+Requires-Dist: pyranges
+Requires-Dist: pyfaidx
 Provides-Extra: dev
-Dynamic: author
-Dynamic: author-email
-Dynamic: classifier
-Dynamic: description
-Dynamic: description-content-type
-Dynamic: home-page
-Dynamic: keywords
-Dynamic: license
-Dynamic: provides-extra
-Dynamic: requires-dist
-Dynamic: requires-python
-Dynamic: summary
 
 # allos
 
@@ -62,38 +52,11 @@ Plot transcript module can be used on its own to explore the structure
 on known and especialy new transcripts. The long read sequencing methods
 are great to discovar new isoforms and it is often important to compare
 their structure with known isoforms. Transcript’s structure can be
-visualized with draw_transcript function from your own list of exons or
-directly by indicating a valid Ensemble id. get_coord_from_tscrpt_id
-function takes a transcript’s Ensemble id as an input and returns
-coordinates of exons and strand.
+visualized with **draw_transcript** function from custom coordiantes or
+directly by indicating a valid Ensemble id.
 
 ``` python
-import allos.plot_transcripts as ptr
-```
-
-![](index_files/figure-commonmark/cell-2-output-1.png)
-
-To draw custom transcript provide the exons coordinate as in the example
-below:
-
-``` python
-new_isoform = [[134195740, 134195631],
-  [134197486, 134197414],
-  [134198150, 134197978],
-  [134200306, 134200115],
-  [134201154, 134200643]]
-# ptr.draw_transcript takes as arguments a list of exons coordinates, strand (1 or -1) and color
-ptr.draw_transcript(new_isoform, -1, color="lightblue")
-```
-
-![](index_files/figure-commonmark/cell-3-output-1.png)
-
-The exons coordinates for know isoforms can be retrieved with
-get_coord_from_tscrpt_id(transcipt_id) function. In this case to
-visualize known transcript use:
-
-``` python
-draw_transcript(get_coord_from_tscrpt_id("ENSMUST00000030636"), 1, color="lightblue")
+import allos.transcript_plots as ptr
 ```
 
 Multiple transcripts can be vizualized on one panel with the function
@@ -101,33 +64,204 @@ draw_transcripts_list where the transcripts’ ids are provided as a list.
 The list can be a mix of known and novev, custom defined transcripts:
 
 ``` python
-ptr.draw_transcripts_list(["ENSMUST00000030636", "ENSMUST00000105867", "ENSMUST00000105868", "ENSMUST00000130253", "ENSMUST00000127279"])
+ptr.TranscriptPlots.draw_transcripts_list(["ENSMUST00000030636", "ENSMUST00000105867", "ENSMUST00000105868", "ENSMUST00000130253", "ENSMUST00000127279"])
 ```
 
-![](index_files/figure-commonmark/cell-4-output-1.png)
+![](index_files/figure-commonmark/cell-3-output-1.png)
 
 ### Gene report module
+
+Offers a complete pipeline to discover and visualize differentially
+expressed and switching isoforms among different cell types and
+conditions in long reads based single RNA-seq data. Allos supports
+several technologies and tools producing long reads based scRNA seq
+datasets: Oxford Nanopore, PacBio, Smartseq2 and such tools as Sicelore,
+Isocsceles, Kallisto etc. The output from other tools can be adapted to
+a universal reader.
 
 ``` python
 import allos.gene_report as gr
 ```
 
-    /home/diamant/.conda/envs/iso_swt/lib/python3.9/site-packages/umap/distances.py:1063: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
-      @numba.jit()
-    /home/diamant/.conda/envs/iso_swt/lib/python3.9/site-packages/umap/distances.py:1071: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
-      @numba.jit()
-    /home/diamant/.conda/envs/iso_swt/lib/python3.9/site-packages/umap/distances.py:1086: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
-      @numba.jit()
-    /home/diamant/.conda/envs/iso_swt/lib/python3.9/site-packages/umap/umap_.py:660: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
-      @numba.jit()
-    2024-08-27 11:29:16.065303: I tensorflow/core/util/port.cc:110] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
-    2024-08-27 11:29:16.375468: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
-    To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
-    2024-08-27 11:29:17.611483: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+## 1. Initialization
+
+The AnnDataIso object initializes with:
+
+Input: AnnData object and an optional cell types DataFrame. \### Setup:
+Filters genes with multiple isoforms. Calculates isoform percentages per
+gene for each cell type. Prepares the data for downstream analyses. \###
+Usage:
+
+``` python
+path = al.readers_tests.download_test_data()
+```
+
+    File downloaded successfully
+    File extracted successfully
+
+``` python
+adata_iso = al.switch_search.create_iso_adata(path)
+```
+
+``` python
+adata_iso = al.anndata_iso.AnnDataIso(adata_iso)
+```
 
     <Figure size 100x100 with 0 Axes>
 
-plot_isoforms_summary is a nice way to build a basic summary of your
-data. It summs up information on how many genes are expressed per cell
-type, how many transcripts contains your dataset in general and reports
-on how many genes are expressed by multiple isoforms.
+4.  Data Visualization
+
+<!-- -->
+
+1.  Isoform Summary Method: plot_isoforms_summary() Purpose: Summarizes
+    isoform switching and frequencies across genes. Subplots: Bar plot:
+    Percentage of genes with multiple isoforms. Bar plot: Frequency of
+    isoforms per gene. Boxplot: Number of genes expressed per cell type.
+    Usage:
+
+### Gene-Specific Transcripts
+
+Method: plot_transcripts_per_cell_type() Visualizes isoform expression
+across cell types for a specific gene. Parameters: gene_name: The gene
+to visualize. trs_to_show: List of transcript IDs to include (optional).
+Usage:
+
+``` python
+adata_iso.plot_transcripts_per_cell_type("GeneName")
+```
+
+### Gene Summary
+
+Method: draw_gene_summary() Purpose: Generates a comprehensive
+visualization of transcript counts, per-cell-type breakdown, and
+transcripts structures for a specific gene. Parameters: gene_name:
+Target gene for visualization. trs_to_show: List of transcripts to
+highlight. Usage:
+
+``` python
+adata_iso.draw_gene_summary("GeneName")
+```
+
+## Statistical Analysis
+
+1.  Find Switching Isoforms Method: find_switching_isoforms() Purpose:
+    Identifies genes with significant isoform switching between cell
+    types using statistical tests. Parameters: cell_group_column: Column
+    specifying cell group labels. min_count: Minimum expression count
+    threshold. min_diff: Minimum expression difference for isoform
+    detection. Usage:
+
+``` python
+switching_genes = adata_iso.find_switching_isoforms(cell_group_column="cell_type")
+```
+
+## Likelihood Ratio Test
+
+Method: \_\_compare_groups() Purpose: Tests for significant isoform
+usage differences between two groups. Parameters: group_1_label and
+group_2_label: Names of the groups to compare. cell_group_column: Column
+specifying cell group labels. gene_id: Gene ID to test.
+
+``` python
+adata_iso.plot_isoforms_summary()
+```
+
+### Gene-Specific Transcripts
+
+Method: plot_transcripts_per_cell_type() Visualizes isoform expression
+across cell types for a specific gene. Parameters: gene_name: The gene
+to visualize. trs_to_show: List of transcript IDs to include (optional).
+Usage:
+
+``` python
+adata_iso.plot_transcripts_per_cell_type("GeneName")
+```
+
+### Gene Summary
+
+Method: draw_gene_summary() Purpose: Generates a comprehensive
+visualization of transcript counts, per-cell-type breakdown, and
+transcripts structures for a specific gene. Parameters: gene_name:
+Target gene for visualization. trs_to_show: List of transcripts to
+highlight. Usage:
+
+``` python
+adata_iso.draw_gene_summary("GeneName")
+```
+
+## Statistical Analysis
+
+1.  Find Switching Isoforms Method: find_switching_isoforms() Purpose:
+    Identifies genes with significant isoform switching between cell
+    types using statistical tests. Parameters: cell_group_column: Column
+    specifying cell group labels. min_count: Minimum expression count
+    threshold. min_diff: Minimum expression difference for isoform
+    detection. Usage:
+
+``` python
+switching_genes = adata_iso.find_switching_isoforms(cell_group_column="cell_type")
+```
+
+## Likelihood Ratio Test
+
+Method: \_\_compare_groups() Purpose: Tests for significant isoform
+usage differences between two groups. Parameters: group_1_label and
+group_2_label: Names of the groups to compare. cell_group_column: Column
+specifying cell group labels. gene_id: Gene ID to test.
+
+``` python
+adata_iso.plot_isoforms_summary()
+```
+
+### Gene-Specific Transcripts
+
+Method: plot_transcripts_per_cell_type() Visualizes isoform expression
+across cell types for a specific gene. Parameters: gene_name: The gene
+to visualize. trs_to_show: List of transcript IDs to include (optional).
+Usage:
+
+``` python
+adata_iso.plot_transcripts_per_cell_type("GeneName")
+```
+
+### Gene Summary
+
+Method: draw_gene_summary() Purpose: Generates a comprehensive
+visualization of transcript counts, per-cell-type breakdown, and
+transcripts structures for a specific gene. Parameters: gene_name:
+Target gene for visualization. trs_to_show: List of transcripts to
+highlight. Usage:
+
+``` python
+adata_iso.draw_gene_summary("GeneName")
+```
+
+## Statistical Analysis
+
+1.  Find Switching Isoforms Method: find_switching_isoforms() Purpose:
+    Identifies genes with significant isoform switching between cell
+    types using statistical tests. Parameters: cell_group_column: Column
+    specifying cell group labels. min_count: Minimum expression count
+    threshold. min_diff: Minimum expression difference for isoform
+    detection. Usage:
+
+``` python
+switching_genes = adata_iso.find_switching_isoforms(cell_group_column="cell_type")
+```
+
+## Likelihood Ratio Test
+
+Method: \_\_compare_groups() Purpose: Tests for significant isoform
+usage differences between two groups. Parameters: group_1_label and
+group_2_label: Names of the groups to compare. cell_group_column: Column
+specifying cell group labels. gene_id: Gene ID to test.
+
+## Isoform Rating
+
+Major vs. Minor Isoforms Method: find_major_minor_isoforms() Purpose:
+Identifies major and minor isoforms for each gene across cell types.
+Usage:
+
+``` python
+major_isoforms = adata_iso.find_major_minor_isoforms()
+```

@@ -8,7 +8,6 @@ allos/_modidx.py
 allos/anndata_iso.py
 allos/color_palette.py
 allos/gene_report.py
-allos/plot_transcripts.py
 allos/readers_tests.py
 allos/switch_search.py
 allos/transcript_plots.py

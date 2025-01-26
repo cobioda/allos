@@ -17,7 +17,6 @@ import urllib
 import os
 import gzip
 import shutil
-import torch
 import matplotlib.pyplot as plt
 from scipy.special import gammaln
 from scipy.optimize import minimize

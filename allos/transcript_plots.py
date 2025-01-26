@@ -17,7 +17,6 @@ import urllib
 import os
 import gzip
 import shutil
-import torch
 import matplotlib.pyplot as plt
 from scipy.special import gammaln
 from scipy.optimize import minimize
@@ -564,7 +563,7 @@ class TranscriptData:
         df.reset_index(drop=True, inplace=True)
         return df
 
-# %% ../nbs/001_transcript_plots.ipynb 4
+# %% ../nbs/001_transcript_plots.ipynb 5
 class TranscriptPlots:
     def __init__(self, gtf_file=None, reference_fasta=None):
         self.transcript_data = None

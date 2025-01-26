@@ -9,5 +9,7 @@ patchworklib
 numpy
 pandas
 fastcore
+pyranges
+pyfaidx
 
 [dev]
