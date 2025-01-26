@@ -4,7 +4,7 @@ website:
       - index.html
       - 000_palettes.ipynb
       - 001_transcript_plots.ipynb
-      - 002_readers_tests.ipynb
-      - 003_anndata_iso.ipynb
-      - 004_switch_search.ipynb
-      - 005_gene_report.ipynb
+      - 003_readers_tests.ipynb
+      - 004_anndata_iso.ipynb
+      - 005_switch_search.ipynb
+      - 006_gene_report.ipynb
