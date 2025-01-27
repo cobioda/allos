@@ -114,40 +114,32 @@ def scattermap(color_data, marker_size=None, square=True, cmap="Reds",
 ###############################################################################
 # The SwitchSearch class
 ###############################################################################
+import anndata as ad
+import scanpy as sc
+
 class SwitchSearch(sc.AnnData):
     """
     An AnnData subclass with specialized Dirichlet-based and Wilcoxon-based
     isoform 'switch' detection methods, plus helper plots and caches.
     """
 
-    def __init__(self, anndata: ad.AnnData, cell_types: pd.DataFrame = None):
-        self.colors = ["#BF045B", "#038C33", "#73BF86", "#D9B29C", "#A65F46", 
-                       "#D9C252", "#F2BF91", "#A69C94", "#D9763D", "#8C2F1B"]
+    def __init__(self, anndata: ad.AnnData):
+        self.colors = ["#BF045B", "#038C33", "#73BF86", "#D9B29C", 
+                       "#A65F46", "#D9C252", "#F2BF91", "#A69C94", 
+                       "#D9763D", "#8C2F1B"]
         self.relevant_genes = None
+
         # Caches for single-group and combined fits:
         self._single_fit_cache = {}    # (group_label, gene_id) -> (nll, alpha) or None
         self._combined_fit_cache = {}  # (group1_label, group2_label, gene_id) -> (nll, alpha) or None
 
+        # Initialize as an actual AnnData object
         self._init_as_actual(anndata.copy())
-        if 'batch' in self.obs_keys():
-            del self.obs['batch']
-        self.obs['barcodes'] = self.obs['cell_type'].index
+
+        # Optional: if you rely on a 'transcriptId' column later, ensure it exists
         if 'transcriptId' not in self.var_keys():
             self.gene_counts = self.var.reset_index().groupby(by='geneId').count()
             self.var['transcriptId'] = self.var.index
-
-        self.__filtered_anndata = self.__filter_isodata()
-        if 'barcodes' not in self.__filtered_anndata.obs_keys():
-            self.__filtered_anndata.obs['barcodes'] = self.__filtered_anndata.obs.index
-
-        if cell_types is not None:
-            self.obs['cell_type'] = cell_types
-        df = self.__filtered_anndata.to_df().set_index(self.__filtered_anndata.obs['barcodes'])
-        df = df.transpose()
-        df[['transcriptId', 'geneId']] = self.__filtered_anndata.var[['transcriptId', 'geneId']]
-        df_m_iso = self.iso_percent(df)
-        df_m_iso = df_m_iso.iloc[0:,:-2].transpose()
-        self.__filtered_anndata.obsm['Iso_prct'] = df_m_iso
 
 
     ###########################################################################
