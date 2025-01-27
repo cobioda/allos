@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import anndata as ad
 
-# %% ../nbs/004_anndata_iso.ipynb 3
+# %% ../nbs/004_anndata_iso.ipynb 6
 class AnnDataIso(ad.AnnData):
     # Private method to filter dataset for genes with multiple isoforms.
     def _filter_isodata(self):
@@ -55,7 +55,7 @@ class AnnDataIso(ad.AnnData):
         return iso_perc_df
 
     # Class initializer to process the AnnData object and compute relevant annotations.
-    def __init__(self, anndata: ad.AnnData, cell_types: pd.DataFrame, palette='ghibli'):
+    def __init__(self, anndata: ad.AnnData, palette='ghibli'):
         """
         Initializes the AnnDataIso object with isoform and gene-level annotations.
 
@@ -69,7 +69,6 @@ class AnnDataIso(ad.AnnData):
         # Filter dataset for genes with multiple isoforms.
         self._filtered_anndata = self._filter_isodata()
         # Annotate cell types in the observation data.
-        self.obs['cell_type'] = cell_types
         # Compute isoform percentages.
         df = self._filtered_anndata.to_df().set_index(self._filtered_anndata.obs['barcodes'])
         df = df.transpose()
