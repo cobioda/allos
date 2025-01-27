@@ -10,6 +10,7 @@ allos/color_palette.py
 allos/gene_report.py
 allos/readers_tests.py
 allos/switch_search.py
+allos/transcript_data.py
 allos/transcript_plots.py
 allos.egg-info/PKG-INFO
 allos.egg-info/SOURCES.txt

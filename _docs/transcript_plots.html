@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Storage and visualization of long read based single cell datasets">
+<meta name="description" content="The TranscriptPlots class is defined to facilitate the visualization of transcript structures.">
 
-<title>allos</title>
+<title>Transcript plots – allos</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -104,16 +104,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="allos">
-<meta property="og:description" content="Storage and visualization of long read based single cell datasets">
-<meta property="og:image" content="https://cobioda.github.io/allos/index_files/figure-html/cell-3-output-1.png">
+<meta property="og:title" content="Transcript plots – allos">
+<meta property="og:description" content="The TranscriptPlots class is defined to facilitate the visualization of transcript structures.">
+<meta property="og:image" content="https://cobioda.github.io/allos/001_transcript_plots_files/figure-html/cell-7-output-1.png">
 <meta property="og:site_name" content="allos">
-<meta property="og:image:height" content="790">
+<meta property="og:image:height" content="482">
 <meta property="og:image:width" content="1570">
-<meta name="twitter:title" content="allos">
-<meta name="twitter:description" content="Storage and visualization of long read based single cell datasets">
-<meta name="twitter:image" content="https://cobioda.github.io/allos/index_files/figure-html/cell-3-output-1.png">
-<meta name="twitter:image-height" content="790">
+<meta name="twitter:title" content="Transcript plots – allos">
+<meta name="twitter:description" content="The TranscriptPlots class is defined to facilitate the visualization of transcript structures.">
+<meta name="twitter:image" content="https://cobioda.github.io/allos/001_transcript_plots_files/figure-html/cell-7-output-1.png">
+<meta name="twitter:image-height" content="482">
 <meta name="twitter:image-width" content="1570">
 <meta name="twitter:card" content="summary_large_image">
 </head>
@@ -139,7 +139,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./transcript_plots.html">Transcript plots</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -165,7 +165,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./transcript_plots.html" class="sidebar-item-text sidebar-link">
+  <a href="./transcript_plots.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Transcript plots</span></a>
   </div>
 </li>
@@ -209,32 +209,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#install" id="toc-install" class="nav-link active" data-scroll-target="#install">Install</a></li>
-  <li><a href="#basic-workflow" id="toc-basic-workflow" class="nav-link" data-scroll-target="#basic-workflow">Basic workflow</a>
-  <ul class="collapse">
-  <li><a href="#plot-transcript-module" id="toc-plot-transcript-module" class="nav-link" data-scroll-target="#plot-transcript-module">Plot transcript module</a></li>
-  <li><a href="#gene-report-module" id="toc-gene-report-module" class="nav-link" data-scroll-target="#gene-report-module">Gene report module</a></li>
-  </ul></li>
-  <li><a href="#initialization" id="toc-initialization" class="nav-link" data-scroll-target="#initialization">1. Initialization</a>
-  <ul class="collapse">
-  <li><a href="#gene-specific-transcripts" id="toc-gene-specific-transcripts" class="nav-link" data-scroll-target="#gene-specific-transcripts">Gene-Specific Transcripts</a></li>
-  <li><a href="#gene-summary" id="toc-gene-summary" class="nav-link" data-scroll-target="#gene-summary">Gene Summary</a></li>
-  </ul></li>
-  <li><a href="#statistical-analysis" id="toc-statistical-analysis" class="nav-link" data-scroll-target="#statistical-analysis">Statistical Analysis</a></li>
-  <li><a href="#likelihood-ratio-test" id="toc-likelihood-ratio-test" class="nav-link" data-scroll-target="#likelihood-ratio-test">Likelihood Ratio Test</a>
-  <ul class="collapse">
-  <li><a href="#gene-specific-transcripts-1" id="toc-gene-specific-transcripts-1" class="nav-link" data-scroll-target="#gene-specific-transcripts-1">Gene-Specific Transcripts</a></li>
-  <li><a href="#gene-summary-1" id="toc-gene-summary-1" class="nav-link" data-scroll-target="#gene-summary-1">Gene Summary</a></li>
-  </ul></li>
-  <li><a href="#statistical-analysis-1" id="toc-statistical-analysis-1" class="nav-link" data-scroll-target="#statistical-analysis-1">Statistical Analysis</a></li>
-  <li><a href="#likelihood-ratio-test-1" id="toc-likelihood-ratio-test-1" class="nav-link" data-scroll-target="#likelihood-ratio-test-1">Likelihood Ratio Test</a>
-  <ul class="collapse">
-  <li><a href="#gene-specific-transcripts-2" id="toc-gene-specific-transcripts-2" class="nav-link" data-scroll-target="#gene-specific-transcripts-2">Gene-Specific Transcripts</a></li>
-  <li><a href="#gene-summary-2" id="toc-gene-summary-2" class="nav-link" data-scroll-target="#gene-summary-2">Gene Summary</a></li>
-  </ul></li>
-  <li><a href="#statistical-analysis-2" id="toc-statistical-analysis-2" class="nav-link" data-scroll-target="#statistical-analysis-2">Statistical Analysis</a></li>
-  <li><a href="#likelihood-ratio-test-2" id="toc-likelihood-ratio-test-2" class="nav-link" data-scroll-target="#likelihood-ratio-test-2">Likelihood Ratio Test</a></li>
-  <li><a href="#isoform-rating" id="toc-isoform-rating" class="nav-link" data-scroll-target="#isoform-rating">Isoform Rating</a></li>
+  <li><a href="#transcriptplots" id="toc-transcriptplots" class="nav-link active" data-scroll-target="#transcriptplots">TranscriptPlots</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/cobioda/allos/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -243,12 +218,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">allos</h1>
+<h1 class="title">Transcript plots</h1>
 </div>
 
 <div>
   <div class="description">
-    Storage and visualization of long read based single cell datasets
+    The TranscriptPlots class is defined to facilitate the visualization of transcript structures.
   </div>
 </div>
 
@@ -266,158 +241,106 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
-<section id="install" class="level2">
-<h2 class="anchored" data-anchor-id="install">Install</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install allos</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="basic-workflow" class="level2">
-<h2 class="anchored" data-anchor-id="basic-workflow">Basic workflow</h2>
-<section id="plot-transcript-module" class="level3">
-<h3 class="anchored" data-anchor-id="plot-transcript-module">Plot transcript module</h3>
-<p>Plot transcript module can be used on its own to explore the structure on known and especialy new transcripts. The long read sequencing methods are great to discovar new isoforms and it is often important to compare their structure with known isoforms. Transcript’s structure can be visualized with <strong>draw_transcript</strong> function from custom coordiantes or directly by indicating a valid Ensemble id.</p>
-<div id="cell-6" class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> allos.transcript_plots <span class="im">as</span> ptr</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="3c05f3ea6565f746" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2025-01-26T23:46:38.820030Z&quot;,&quot;start_time&quot;:&quot;2025-01-26T23:46:36.940432Z&quot;}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> allos.transcript_data <span class="im">import</span> TranscriptData</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Multiple transcripts can be vizualized on one panel with the function draw_transcripts_list where the transcripts’ ids are provided as a list. The list can be a mix of known and novev, custom defined transcripts:</p>
-<div id="cell-8" class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ptr.TranscriptPlots.draw_transcripts_list([<span class="st">"ENSMUST00000030636"</span>, <span class="st">"ENSMUST00000105867"</span>, <span class="st">"ENSMUST00000105868"</span>, <span class="st">"ENSMUST00000130253"</span>, <span class="st">"ENSMUST00000127279"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e365d4f8336d010c" class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib.request</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="da91337b" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2025-01-26T23:51:29.141281Z&quot;,&quot;start_time&quot;:&quot;2025-01-26T23:50:02.229095Z&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example Ensembl URLs for mouse GRCm39 (release 109)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>gtf_url <span class="op">=</span> <span class="st">"ftp://ftp.ensembl.org/pub/release-109/gtf/mus_musculus/Mus_musculus.GRCm39.109.gtf.gz"</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#fasta_url = "ftp://ftp.ensembl.org/pub/release-109/fasta/mus_musculus/dna/Mus_musculus.GRCm39.dna.primary_assembly.fa.gz"</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>data_dir <span class="op">=</span> Path(<span class="st">"data"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>data_dir.mkdir(exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>gtf_file_local <span class="op">=</span> data_dir <span class="op">/</span> <span class="st">"Mus_musculus.GRCm39.109.gtf.gz"</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>fasta_file_local <span class="op">=</span> data_dir <span class="op">/</span> <span class="st">"Mus_musculus.GRCm39.dna.primary_assembly.fa.gz"</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Download if not already present</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> gtf_file_local.is_file():</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Downloading </span><span class="sc">{</span>gtf_url<span class="sc">}</span><span class="ss">..."</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    urllib.request.urlretrieve(gtf_url, gtf_file_local)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#if not fasta_file_local.is_file():</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">#print(f"Downloading {fasta_url}...")</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">#urllib.request.urlretrieve(fasta_url, fasta_file_local)</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Instantiate your TranscriptData</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>td <span class="op">=</span> TranscriptData(</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    gtf_file<span class="op">=</span>gtf_file_local,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    reference_fasta<span class="op">=</span>fasta_file_local</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Now you can make queries like:</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>example_transcript_id <span class="op">=</span> <span class="st">"ENSMUST00000070533"</span>  <span class="co"># e.g., for mouse</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>exons <span class="op">=</span> td.get_exons(example_transcript_id)</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Exons:"</span>, exons)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Exons: +--------------+----------------+------------+-----------+-------+
+|   Chromosome | Source         | Feature    |     Start | +22   |
+|   (category) | (object)       | (object)   |   (int64) | ...   |
+|--------------+----------------+------------+-----------+-------|
+|            1 | ensembl_havana | exon       |   3740774 | ...   |
+|            1 | ensembl_havana | exon       |   3491924 | ...   |
+|            1 | ensembl_havana | exon       |   3284704 | ...   |
++--------------+----------------+------------+-----------+-------+
+Stranded PyRanges object has 3 rows and 26 columns from 1 chromosomes.
+For printing, the PyRanges was sorted on Chromosome and Strand.
+22 hidden columns: End, Score, Strand, Frame, gene_id, gene_version, ... (+ 16 more.)</code></pre>
+</div>
+</div>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/transcript_plots.py#L13" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="transcriptplots" class="level3">
+<h3 class="anchored" data-anchor-id="transcriptplots">TranscriptPlots</h3>
+<blockquote class="blockquote">
+<pre><code> TranscriptPlots (gtf_file=None, reference_fasta=None)</code></pre>
+</blockquote>
+<p><em>Initialize self. See help(type(self)) for accurate signature.</em></p>
+<p>To initialise class:</p>
+<div id="55cfbcb0a0f402fd" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2025-01-27T00:19:43.173411Z&quot;,&quot;start_time&quot;:&quot;2025-01-27T00:18:15.496398Z&quot;}" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>tp <span class="op">=</span> TranscriptPlots(gtf_file_local)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To plot a panel for one or several transcripts:</p>
+<div id="92bde4864f78003b" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2025-01-27T00:11:28.405855Z&quot;,&quot;start_time&quot;:&quot;2025-01-27T00:11:27.785451Z&quot;}" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>tp.draw_transcripts_list([<span class="st">"ENSMUST00000107851"</span>, <span class="st">"ENSMUST00000107846"</span>, <span class="st">"ENSMUST00000107847"</span>], colors<span class="op">=</span>ghibli)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-3-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="001_transcript_plots_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-</section>
-<section id="gene-report-module" class="level3">
-<h3 class="anchored" data-anchor-id="gene-report-module">Gene report module</h3>
-<p>Offers a complete pipeline to discover and visualize differentially expressed and switching isoforms among different cell types and conditions in long reads based single RNA-seq data. Allos supports several technologies and tools producing long reads based scRNA seq datasets: Oxford Nanopore, PacBio, Smartseq2 and such tools as Sicelore, Isocsceles, Kallisto etc. The output from other tools can be adapted to a universal reader.</p>
-<div id="cell-10" class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> allos.gene_report <span class="im">as</span> gr</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-</section>
-<section id="initialization" class="level2">
-<h2 class="anchored" data-anchor-id="initialization">1. Initialization</h2>
-<p>The AnnDataIso object initializes with:</p>
-<p>Input: AnnData object and an optional cell types DataFrame. ### Setup: Filters genes with multiple isoforms. Calculates isoform percentages per gene for each cell type. Prepares the data for downstream analyses. ### Usage:</p>
-<div id="cell-12" class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> al.readers_tests.download_test_data()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>File downloaded successfully
-File extracted successfully</code></pre>
+<p>To retrieve information about a transcript of interest:</p>
+<div id="7eb107dc85ec0d98" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2025-01-27T00:21:34.010516Z&quot;,&quot;start_time&quot;:&quot;2025-01-27T00:21:31.900579Z&quot;}" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>tp.get_transcript_info(<span class="st">"ENSMUST00000107847"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>{'transcript_id': 'ENSMUST00000107847',
+ 'transcript_name': 'Clta-203',
+ 'transcript_type': 'unknown',
+ 'cds_start': 44012791,
+ 'cds_end': 44032400,
+ 'chromosome': '4',
+ 'strand': '+'}</code></pre>
 </div>
 </div>
-<div id="cell-13" class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>adata_iso <span class="op">=</span> al.switch_search.create_iso_adata(path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-14" class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>adata_iso <span class="op">=</span> al.anndata_iso.AnnDataIso(adata_iso)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>“draw_transcript_list_unscaled” keeps the structure of transcripts but shortens the introns. It is useful to compare the structure of transcipts with extremely long introns:</p>
+<div id="3324519c8dd46eaf" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2025-01-27T00:29:56.570419Z&quot;,&quot;start_time&quot;:&quot;2025-01-27T00:29:54.825677Z&quot;}" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>tp.draw_transcripts_list_unscaled([<span class="st">"ENSMUST00000107851"</span>, <span class="st">"ENSMUST00000107846"</span>, <span class="st">"ENSMUST00000107847"</span>], colors<span class="op">=</span>ghibli)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 100x100 with 0 Axes&gt;</code></pre>
+<div>
+<figure class="figure">
+<p><img src="001_transcript_plots_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img"></p>
+</figure>
 </div>
 </div>
-<ol start="4" type="1">
-<li>Data Visualization</li>
-</ol>
-<ol type="a">
-<li>Isoform Summary Method: plot_isoforms_summary() Purpose: Summarizes isoform switching and frequencies across genes. Subplots: Bar plot: Percentage of genes with multiple isoforms. Bar plot: Frequency of isoforms per gene. Boxplot: Number of genes expressed per cell type. Usage:</li>
-</ol>
-<section id="gene-specific-transcripts" class="level3">
-<h3 class="anchored" data-anchor-id="gene-specific-transcripts">Gene-Specific Transcripts</h3>
-<p>Method: plot_transcripts_per_cell_type() Visualizes isoform expression across cell types for a specific gene. Parameters: gene_name: The gene to visualize. trs_to_show: List of transcript IDs to include (optional). Usage:</p>
-<div id="cell-17" class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>adata_iso.plot_transcripts_per_cell_type(<span class="st">"GeneName"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="gene-summary" class="level3">
-<h3 class="anchored" data-anchor-id="gene-summary">Gene Summary</h3>
-<p>Method: draw_gene_summary() Purpose: Generates a comprehensive visualization of transcript counts, per-cell-type breakdown, and transcripts structures for a specific gene. Parameters: gene_name: Target gene for visualization. trs_to_show: List of transcripts to highlight. Usage:</p>
-<div id="cell-19" class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>adata_iso.draw_gene_summary(<span class="st">"GeneName"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-</section>
-<section id="statistical-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="statistical-analysis">Statistical Analysis</h2>
-<ol type="a">
-<li>Find Switching Isoforms Method: find_switching_isoforms() Purpose: Identifies genes with significant isoform switching between cell types using statistical tests. Parameters: cell_group_column: Column specifying cell group labels. min_count: Minimum expression count threshold. min_diff: Minimum expression difference for isoform detection. Usage:</li>
-</ol>
-<div id="cell-21" class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>switching_genes <span class="op">=</span> adata_iso.find_switching_isoforms(cell_group_column<span class="op">=</span><span class="st">"cell_type"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="likelihood-ratio-test" class="level2">
-<h2 class="anchored" data-anchor-id="likelihood-ratio-test">Likelihood Ratio Test</h2>
-<p>Method: __compare_groups() Purpose: Tests for significant isoform usage differences between two groups. Parameters: group_1_label and group_2_label: Names of the groups to compare. cell_group_column: Column specifying cell group labels. gene_id: Gene ID to test.</p>
-<div id="cell-23" class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>adata_iso.plot_isoforms_summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<section id="gene-specific-transcripts-1" class="level3">
-<h3 class="anchored" data-anchor-id="gene-specific-transcripts-1">Gene-Specific Transcripts</h3>
-<p>Method: plot_transcripts_per_cell_type() Visualizes isoform expression across cell types for a specific gene. Parameters: gene_name: The gene to visualize. trs_to_show: List of transcript IDs to include (optional). Usage:</p>
-<div id="cell-25" class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>adata_iso.plot_transcripts_per_cell_type(<span class="st">"GeneName"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="gene-summary-1" class="level3">
-<h3 class="anchored" data-anchor-id="gene-summary-1">Gene Summary</h3>
-<p>Method: draw_gene_summary() Purpose: Generates a comprehensive visualization of transcript counts, per-cell-type breakdown, and transcripts structures for a specific gene. Parameters: gene_name: Target gene for visualization. trs_to_show: List of transcripts to highlight. Usage:</p>
-<div id="cell-27" class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>adata_iso.draw_gene_summary(<span class="st">"GeneName"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-</section>
-<section id="statistical-analysis-1" class="level2">
-<h2 class="anchored" data-anchor-id="statistical-analysis-1">Statistical Analysis</h2>
-<ol type="a">
-<li>Find Switching Isoforms Method: find_switching_isoforms() Purpose: Identifies genes with significant isoform switching between cell types using statistical tests. Parameters: cell_group_column: Column specifying cell group labels. min_count: Minimum expression count threshold. min_diff: Minimum expression difference for isoform detection. Usage:</li>
-</ol>
-<div id="cell-29" class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>switching_genes <span class="op">=</span> adata_iso.find_switching_isoforms(cell_group_column<span class="op">=</span><span class="st">"cell_type"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="likelihood-ratio-test-1" class="level2">
-<h2 class="anchored" data-anchor-id="likelihood-ratio-test-1">Likelihood Ratio Test</h2>
-<p>Method: __compare_groups() Purpose: Tests for significant isoform usage differences between two groups. Parameters: group_1_label and group_2_label: Names of the groups to compare. cell_group_column: Column specifying cell group labels. gene_id: Gene ID to test.</p>
-<div id="cell-31" class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>adata_iso.plot_isoforms_summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<section id="gene-specific-transcripts-2" class="level3">
-<h3 class="anchored" data-anchor-id="gene-specific-transcripts-2">Gene-Specific Transcripts</h3>
-<p>Method: plot_transcripts_per_cell_type() Visualizes isoform expression across cell types for a specific gene. Parameters: gene_name: The gene to visualize. trs_to_show: List of transcript IDs to include (optional). Usage:</p>
-<div id="cell-33" class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>adata_iso.plot_transcripts_per_cell_type(<span class="st">"GeneName"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="gene-summary-2" class="level3">
-<h3 class="anchored" data-anchor-id="gene-summary-2">Gene Summary</h3>
-<p>Method: draw_gene_summary() Purpose: Generates a comprehensive visualization of transcript counts, per-cell-type breakdown, and transcripts structures for a specific gene. Parameters: gene_name: Target gene for visualization. trs_to_show: List of transcripts to highlight. Usage:</p>
-<div id="cell-35" class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>adata_iso.draw_gene_summary(<span class="st">"GeneName"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-</section>
-<section id="statistical-analysis-2" class="level2">
-<h2 class="anchored" data-anchor-id="statistical-analysis-2">Statistical Analysis</h2>
-<ol type="a">
-<li>Find Switching Isoforms Method: find_switching_isoforms() Purpose: Identifies genes with significant isoform switching between cell types using statistical tests. Parameters: cell_group_column: Column specifying cell group labels. min_count: Minimum expression count threshold. min_diff: Minimum expression difference for isoform detection. Usage:</li>
-</ol>
-<div id="cell-37" class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>switching_genes <span class="op">=</span> adata_iso.find_switching_isoforms(cell_group_column<span class="op">=</span><span class="st">"cell_type"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="likelihood-ratio-test-2" class="level2">
-<h2 class="anchored" data-anchor-id="likelihood-ratio-test-2">Likelihood Ratio Test</h2>
-<p>Method: __compare_groups() Purpose: Tests for significant isoform usage differences between two groups. Parameters: group_1_label and group_2_label: Names of the groups to compare. cell_group_column: Column specifying cell group labels. gene_id: Gene ID to test.</p>
-</section>
-<section id="isoform-rating" class="level2">
-<h2 class="anchored" data-anchor-id="isoform-rating">Isoform Rating</h2>
-<p>Major vs.&nbsp;Minor Isoforms Method: find_major_minor_isoforms() Purpose: Identifies major and minor isoforms for each gene across cell types. Usage:</p>
-<div id="cell-41" class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>major_isoforms <span class="op">=</span> adata_iso.find_major_minor_isoforms()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<p>If neither gtf nor fasta is provided, the transcripts can be provided as ensembl id and the coordinates will be fetched from ensembl api.</p>
 
 
 </section>

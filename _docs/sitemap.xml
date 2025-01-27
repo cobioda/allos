@@ -1,15 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://a-diamant.github.io/allos/index.html</loc>
-    <lastmod>2024-03-07T12:39:09.204Z</lastmod>
+    <loc>https://cobioda.github.io/allos/index.html</loc>
+    <lastmod>2025-01-27T00:36:31.808Z</lastmod>
   </url>
   <url>
-    <loc>https://a-diamant.github.io/allos/plot_transcripts.html</loc>
-    <lastmod>2024-03-07T12:39:09.580Z</lastmod>
+    <loc>https://cobioda.github.io/allos/006_gene_report.html</loc>
+    <lastmod>2025-01-27T00:36:40.053Z</lastmod>
   </url>
   <url>
-    <loc>https://a-diamant.github.io/allos/gene_report.html</loc>
-    <lastmod>2024-03-07T11:08:20.631Z</lastmod>
+    <loc>https://cobioda.github.io/allos/004_anndata_iso.html</loc>
+    <lastmod>2025-01-27T00:36:38.092Z</lastmod>
+  </url>
+  <url>
+    <loc>https://cobioda.github.io/allos/002_transcript_data.html</loc>
+    <lastmod>2025-01-27T00:36:32.736Z</lastmod>
+  </url>
+  <url>
+    <loc>https://cobioda.github.io/allos/palettes.html</loc>
+    <lastmod>2025-01-27T00:36:34.241Z</lastmod>
+  </url>
+  <url>
+    <loc>https://cobioda.github.io/allos/transcript_plots.html</loc>
+    <lastmod>2025-01-27T00:40:35.740Z</lastmod>
+  </url>
+  <url>
+    <loc>https://cobioda.github.io/allos/003_readers_tests.html</loc>
+    <lastmod>2025-01-27T00:36:39.697Z</lastmod>
+  </url>
+  <url>
+    <loc>https://cobioda.github.io/allos/005_switch_search.html</loc>
+    <lastmod>2025-01-27T00:36:40.286Z</lastmod>
+  </url>
+  <url>
+    <loc>https://cobioda.github.io/allos/0100_test_.html</loc>
+    <lastmod>2025-01-27T00:36:31.718Z</lastmod>
   </url>
 </urlset>
