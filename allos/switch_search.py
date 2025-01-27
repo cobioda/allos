@@ -120,52 +120,35 @@ class SwitchSearch(sc.AnnData):
     isoform 'switch' detection methods, plus helper plots and caches.
     """
 
-    def __init__(self, anndata, cell_types=None):
-        """
-        anndata: A scanpy.AnnData object
-        cell_types: Pandas Series or list of cell-type labels (optional)
-        """
-        super().__init__(anndata.X, obs=anndata.obs.copy(),
-                         var=anndata.var.copy(), uns=anndata.uns.copy(),
-                         obsm=anndata.obsm.copy(), varm=anndata.varm.copy(),
-                         layers=anndata.layers.copy())
-
-        # Basic coloring scheme (feel free to adjust)
-        self.colors = ["#BF045B", "#038C33", "#73BF86", "#D9B29C", "#A65F46",
+    def __init__(self, anndata: ad.AnnData, cell_types: pd.DataFrame = None):
+        self.colors = ["#BF045B", "#038C33", "#73BF86", "#D9B29C", "#A65F46", 
                        "#D9C252", "#F2BF91", "#A69C94", "#D9763D", "#8C2F1B"]
         self.relevant_genes = None
+        # Caches for single-group and combined fits:
+        self._single_fit_cache = {}    # (group_label, gene_id) -> (nll, alpha) or None
+        self._combined_fit_cache = {}  # (group1_label, group2_label, gene_id) -> (nll, alpha) or None
 
-        # Caches for Dirichlet single-group and combined fits
-        self._single_fit_cache = {}    # (group_label, gene_id) -> (nll, alpha)
-        self._combined_fit_cache = {}  # (group1, group2, gene_id) -> (nll, alpha)
+        self._init_as_actual(anndata.copy())
+        if 'batch' in self.obs_keys():
+            del self.obs['batch']
+        self.obs['barcodes'] = self.obs['cell_type'].index
+        if 'transcriptId' not in self.var_keys():
+            self.gene_counts = self.var.reset_index().groupby(by='geneId').count()
+            self.var['transcriptId'] = self.var.index
 
-        # Add cell_type column if provided
+        self.__filtered_anndata = self.__filter_isodata()
+        if 'barcodes' not in self.__filtered_anndata.obs_keys():
+            self.__filtered_anndata.obs['barcodes'] = self.__filtered_anndata.obs.index
+
         if cell_types is not None:
             self.obs['cell_type'] = cell_types
-        elif 'cell_type' not in self.obs.columns:
-            # If you want a fallback
-            self.obs['cell_type'] = "Unknown"
-
-        # Keep track of multi-isoform filtering
-        self.__filtered_anndata = self.__filter_isodata()
-
-        # Just to keep track of gene/transcript counts
-        # We'll do a quick groupby on var
-        df_count = self.var.reset_index().groupby('geneId').count()
-        if 'transcriptId' not in df_count.columns:
-            # If user didn't have transcriptId, set them
-            self.var['transcriptId'] = self.var_names
-            df_count = self.var.reset_index().groupby('geneId').count()
-        self.gene_counts = df_count
-
-        # Precompute isoform percentage matrix in .obsm, if desired
-        df = self.__filtered_anndata.to_df().set_index(self.__filtered_anndata.obs.index)
-        df_t = df.transpose()
-        df_t[['transcriptId', 'geneId']] = self.__filtered_anndata.var[['transcriptId', 'geneId']]
-        df_m_iso = self.iso_percent(df_t)
-        # Drop the last 2 columns (transcriptId, geneId) after iso_percent
-        df_m_iso = df_m_iso.iloc[:, :-2].transpose()
+        df = self.__filtered_anndata.to_df().set_index(self.__filtered_anndata.obs['barcodes'])
+        df = df.transpose()
+        df[['transcriptId', 'geneId']] = self.__filtered_anndata.var[['transcriptId', 'geneId']]
+        df_m_iso = self.iso_percent(df)
+        df_m_iso = df_m_iso.iloc[0:,:-2].transpose()
         self.__filtered_anndata.obsm['Iso_prct'] = df_m_iso
+
 
     ###########################################################################
     # Internal: filter raw data to multi-isoform genes
