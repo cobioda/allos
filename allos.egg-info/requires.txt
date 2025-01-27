@@ -11,5 +11,6 @@ pandas
 fastcore
 pyranges
 pyfaidx
+numpy
 
 [dev]
