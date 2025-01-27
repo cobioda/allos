@@ -200,7 +200,7 @@ class SwitchSearch(sc.AnnData):
             return self._single_fit_cache[cache_key]
 
         group_data = self[self.obs[cell_group_column] == group_label]
-        if 'geneId' not in group_data.var.columns:
+        if 'geneId' not in group_data.var.columns:     
             return (np.nan, None)
 
         mask_gene = (group_data.var['geneId'] == gene_id)
@@ -467,7 +467,7 @@ class SwitchSearch(sc.AnnData):
             axis=1
         )
         isoswitch_df = pd.concat([isoswitch_df, per_expr], axis=1)
-        isoswitch_df.sort_values(by='adj_pval', inplace=True)
+        # isoswitch_df.sort_values(by='adj_pval', inplace=True)
 
         return isoswitch_df
 
