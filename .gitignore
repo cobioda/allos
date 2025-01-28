@@ -4,3 +4,4 @@ nbs/data
 .venv
 .idea
 nbs_tmp
+sample_isomatrix*.txt
