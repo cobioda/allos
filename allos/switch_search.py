@@ -172,13 +172,11 @@ class SwitchSearch(sc.AnnData):
         """
         iso_perc_df = df.copy(deep=True)
 
-        # Identify the columns that match 'barcodes_regex' (your usage may vary)
-        # For demonstration, let's just assume every column except geneId/transcriptId is a "barcode"
-        # or do a more custom approach if needed.
+        # Identify the columns that match 'barcodes_regex'
+        # For demonstration, let's just assume every column except geneId/transcriptId is a "barcode".
         if len(iso_perc_df.filter(regex=(barcodes_regex)).columns) < 1:
             raise ValueError("No cell-barcode columns were identified. Check 'barcodes_regex' or your column naming.")
 
-        # For each gene, sum across columns -> transform
         cols_barcodes = iso_perc_df.filter(regex=(barcodes_regex)).columns
         gene_sums = iso_perc_df.groupby(['geneId'])[cols_barcodes].transform('sum')
         iso_perc_df[cols_barcodes] = iso_perc_df[cols_barcodes] / gene_sums
@@ -301,12 +299,37 @@ class SwitchSearch(sc.AnnData):
             "transcript_ids": transcripts
         }
 
-    def __filter_genes(self, group_1_label, group_2_label, cell_group_column,
-                       min_count=9, min_diff=0.1):
+    ###########################################################################
+    # Updated version of __filter_genes with filter_loud parameter
+    ###########################################################################
+    def __filter_genes(
+        self,
+        group_1_label,
+        group_2_label,
+        cell_group_column,
+        min_count=9,
+        min_diff=0.1,
+        filter_loud=False
+    ):
         """
         Restrict to genes present in both groups at min_count, and
         that differ in overall transcript usage by at least min_diff.
         Returns a new SwitchSearch containing the filtered data.
+
+        Parameters
+        ----------
+        group_1_label : str
+            Label/name of group 1.
+        group_2_label : str
+            Label/name of group 2.
+        cell_group_column : str
+            Column in self.obs that defines the cell groups/types.
+        min_count : int
+            Minimum total read threshold (group1 + group2) for a gene to be considered.
+        min_diff : float
+            Minimum difference in overall transcript usage for the gene to remain.
+        filter_loud : bool
+            If True, prints debugging info about how many genes pass each filtering step.
         """
         group_1 = self[self.obs[cell_group_column] == group_1_label]
         group_2 = self[self.obs[cell_group_column] == group_2_label]
@@ -317,6 +340,12 @@ class SwitchSearch(sc.AnnData):
 
         # Genes passing total read threshold
         valid_genes_mask = total_gene_counts > min_count
+        if filter_loud:
+            n_genes_initial = self.shape[1]
+            n_genes_passing_count = np.sum(valid_genes_mask)
+            print(f"[filter_genes] Step 1: Genes passing total read threshold (> {min_count}): "
+                  f"{n_genes_passing_count} / {n_genes_initial}")
+
         adata_slice = self[:, valid_genes_mask]
 
         # Now each group's slice
@@ -327,20 +356,32 @@ class SwitchSearch(sc.AnnData):
         nz2 = (group_2_slice.X != 0).sum(axis=0) > min_count
         final_valid_genes = nz1 & nz2
 
+        if filter_loud:
+            n_after_nz1 = np.sum(nz1)
+            n_after_nz2 = np.sum(nz2)
+            n_after_nz_combined = np.sum(final_valid_genes)
+            print(f"[filter_genes] Step 2: Genes with > {min_count} nonzero cells in group 1: {n_after_nz1}")
+            print(f"[filter_genes]         Genes with > {min_count} nonzero cells in group 2: {n_after_nz2}")
+            print(f"[filter_genes]         Intersection passing: {n_after_nz_combined}")
+
         filtered_data = adata_slice[:, final_valid_genes]
 
-        # Additional pass to exclude genes whose transcripts do not differ by > min_diff in usage
+        # Additional pass: exclude genes whose transcripts do not differ by > min_diff
         unique_gene_ids = np.unique(filtered_data.var['geneId'])
+        to_remove = []
         for gene_id in unique_gene_ids:
-            sub1 = filtered_data[(filtered_data.obs[cell_group_column] == group_1_label),
-                                 (filtered_data.var['geneId'] == gene_id)]
-            sub2 = filtered_data[(filtered_data.obs[cell_group_column] == group_2_label),
-                                 (filtered_data.var['geneId'] == gene_id)]
+            sub1 = filtered_data[
+                (filtered_data.obs[cell_group_column] == group_1_label),
+                (filtered_data.var['geneId'] == gene_id)
+            ]
+            sub2 = filtered_data[
+                (filtered_data.obs[cell_group_column] == group_2_label),
+                (filtered_data.var['geneId'] == gene_id)
+            ]
             X1 = sub1.X.astype(float).toarray()
             X2 = sub2.X.astype(float).toarray()
             if X1.sum() == 0 or X2.sum() == 0:
-                # remove this gene entirely
-                filtered_data = filtered_data[:, filtered_data.var['geneId'] != gene_id]
+                to_remove.append(gene_id)
                 continue
             percent_1 = X1 / X1.sum()
             percent_2 = X2 / X2.sum()
@@ -350,7 +391,17 @@ class SwitchSearch(sc.AnnData):
                     diff_found = True
                     break
             if not diff_found:
-                filtered_data = filtered_data[:, filtered_data.var['geneId'] != gene_id]
+                to_remove.append(gene_id)
+
+        # Remove those genes in 'to_remove'
+        before_remove_count = filtered_data.shape[1]
+        filtered_data = filtered_data[:, ~filtered_data.var['geneId'].isin(to_remove)]
+        after_remove_count = filtered_data.shape[1]
+
+        if filter_loud:
+            print(f"[filter_genes] Step 3: Genes failing min_diff={min_diff} threshold: {len(to_remove)}")
+            print(f"[filter_genes]         Genes before removal: {before_remove_count}, "
+                  f"after removal: {after_remove_count}")
 
         return SwitchSearch(filtered_data)
 
@@ -360,26 +411,20 @@ class SwitchSearch(sc.AnnData):
     def __scanpy_wilcoxon_switching_isoforms(self, cell_labels_column='cell_type',
                                              min_fdr=0.05, min_log_fold_change=0.3):
         """
-        Mimics the 'get_isoswitches' function defined in pevious R packages, but uses 'self' as the AnnData object.
+        Mimics the 'get_isoswitches' function from R packages, but uses 'self' as the AnnData object.
         Returns a DataFrame of switching isoforms based on Scanpy's rank_genes_groups (Wilcoxon).
         """
         import scanpy as sc
 
-        # We'll work on a copy to avoid mutating 'self'
         adata = self.copy()
-
-        # If the anndata is empty, return empty DataFrame
         if adata.shape[0] == 0:
             return pd.DataFrame()
 
-        # By default, ensure transcriptId is in var
         if 'transcriptId' not in adata.var.columns:
             adata.var['transcriptId'] = adata.var_names
 
-        # Make sure the label column is categorical
         adata.obs[cell_labels_column] = adata.obs[cell_labels_column].astype('category')
         groups = adata.obs[cell_labels_column].cat.categories
-
         if len(groups) < 2:
             return pd.DataFrame()
 
@@ -418,10 +463,6 @@ class SwitchSearch(sc.AnnData):
             return pd.DataFrame()
 
         marker_df = pd.concat(marker_results_list.values(), ignore_index=True)
-
-        # If 'transcriptId' isn't in var, try resetting index
-        if 'transcriptId' not in adata.var.columns:
-            adata.var.reset_index(inplace=True)
 
         # Map transcripts to genes
         transcript_to_gene = adata.var.set_index('transcriptId')['geneId'].to_dict()
@@ -481,13 +522,16 @@ class SwitchSearch(sc.AnnData):
     ###########################################################################
     # Public method: find_switching_isoforms
     ###########################################################################
-    def find_switching_isoforms(self,
-                                cell_group_column='cell_type',
-                                min_count=30,
-                                min_diff=0.2,
-                                method="ScanpyWilcoxon",
-                                min_fdr=0.05,
-                                min_log_fold_change=0.5):
+    def find_switching_isoforms(
+        self,
+        cell_group_column='cell_type',
+        min_count=30,
+        min_diff=0.2,
+        method="ScanpyWilcoxon",
+        min_fdr=0.05,
+        min_log_fold_change=0.5,
+        filter_loud=False
+    ):
         """
         Finds switching isoforms. By default uses a Wilcoxon-based approach
         (Scanpy's rank_genes_groups). If you want the original Dirichlet-based
@@ -495,14 +539,14 @@ class SwitchSearch(sc.AnnData):
 
         For Dirichlet:
             - min_count, min_diff apply
+            - filter_loud: if True, prints debug info during filtering
         For Wilcoxon:
             - min_fdr, min_log_fold_change apply
+            - filter_loud is ignored
 
-        Returns a DataFrame of results, stored in self.relevant_genes (Dirichlet)
-        or returned directly (Wilcoxon).
+        Returns a DataFrame of results (for Wilcoxon) or sets self.relevant_genes (for Dirichlet).
         """
         if method == "Dirichlet":
-            # Original approach: LRT
             if 'geneId' not in self.var.columns:
                 return pd.DataFrame()
 
@@ -510,9 +554,16 @@ class SwitchSearch(sc.AnnData):
             gene_ids = self.var['geneId'].unique()
 
             results = []
+            from itertools import combinations
             for (g1, g2) in combinations(cell_types, 2):
-                # filter the data for these two groups
-                filtered_adata = self.__filter_genes(g1, g2, cell_group_column, min_count, min_diff)
+                # filter the data for these two groups, with optional debugging
+                filtered_adata = self.__filter_genes(
+                    g1, g2,
+                    cell_group_column=cell_group_column,
+                    min_count=min_count,
+                    min_diff=min_diff,
+                    filter_loud=filter_loud
+                )
                 # run a test on every gene in gene_ids
                 for gene_id in gene_ids:
                     if gene_id not in filtered_adata.var['geneId'].values:
@@ -531,7 +582,6 @@ class SwitchSearch(sc.AnnData):
                             'transcript_ids': item['transcript_ids']
                         })
 
-            # Store as DataFrame
             results_df = pd.DataFrame(results)
             self.relevant_genes = results_df
             return results_df
@@ -566,8 +616,7 @@ class SwitchSearch(sc.AnnData):
         di = df['is_major'].to_dict()
         d = {}
         for (k, v) in di.items():
-            # count how many cell types this transcript was major in
-            d[k] = len(v.split(',')) - 1
+            d[k] = len(v.split(',')) - 1  # how many cell types was this transcript "major"?
 
         # example logic: transcripts that are major in exactly 1 cell type
         tr_ids = list(set(k for (k, v) in d.items() if v == 1))
@@ -672,8 +721,6 @@ class SwitchSearch(sc.AnnData):
         Plots how many genes have exactly k isoforms, for k=1,2,3,...
         """
         iso_per_gene = self.gene_counts
-        # If the groupby gave 'geneId' as index, we have a column named e.g. "index"
-        # or it might have "transcriptId" as the count. Adjust if needed.
         freq_counts = iso_per_gene['transcriptId'].value_counts()
 
         if _ax is None:
@@ -713,7 +760,6 @@ class SwitchSearch(sc.AnnData):
             ax.bar(x, mono_iso, bottom=multiple_iso, color=self.colors[1])
             ax.text(0, multiple_iso/2, lab_multi, ha="center", va="center", color="white")
             ax.text(0, multiple_iso + mono_iso/2, lab_mono, ha="center", va="center", color="white")
-            # Show total transcripts
             ax.bar(x_tr, len(self.var['transcriptId']), color=self.colors[2])
             plt.show()
         else:
@@ -729,7 +775,6 @@ class SwitchSearch(sc.AnnData):
     def plot_isoforms_summary(self):
         """
         Simple summary combining multiple subplots in one figure.
-        Adjust to your figure layout tools (e.g., plt.subplot) as needed.
         """
         fig = plt.figure(figsize=(14, 4))
 
@@ -764,7 +809,6 @@ class SwitchSearch(sc.AnnData):
             ext = f"/lookup/id/{tid_stripped}?expand=1"
             r = requests.get(server + ext, headers={"Content-Type": "application/json"})
             if not r.ok:
-                # returns display_name or raises
                 tr_common_names.append(tid)
                 continue
             decoded = r.json()
@@ -779,7 +823,7 @@ class SwitchSearch(sc.AnnData):
         """
         Query Ensembl for the exon coordinates for the given transcript.
         Return (list_of_exons, strand).
-        Each element in list_of_exons is a dict with 'start'/'end' from Ensembl.
+        Each element in list_of_exons is a tuple (start, end).
         """
         tid_stripped = transcript_id.split('.')[0] if '.' in transcript_id else transcript_id
         server = "https://rest.ensembl.org"
@@ -910,10 +954,7 @@ class SwitchSearch(sc.AnnData):
             start_lim = sys.maxsize
             end_lim = -sys.maxsize
             for e, s in zip(e_list, s_list):
-                if s == 1:
-                    s0, e0 = sorted(e, key=lambda x: x[0])[0][0], sorted(e, key=lambda x: x[0])[-1][1]
-                else:
-                    s0, e0 = sorted(e, key=lambda x: x[0])[0][0], sorted(e, key=lambda x: x[0])[-1][1]
+                s0, e0 = sorted(e, key=lambda x: x[0])[0][0], sorted(e, key=lambda x: x[0])[-1][1]
                 start_lim = min(start_lim, s0)
                 end_lim = max(end_lim, e0)
             return (start_lim, end_lim)
@@ -992,9 +1033,6 @@ class SwitchSearch(sc.AnnData):
             return g
 
     def trsct_counts_cell_type(self, gene_name, trs_to_show=[]):
-        """
-        Convenience wrapper to show transcript counts for the given gene across cell types.
-        """
         self._trsct_counts_cell_type(gene_name, trs_to_show, None)
 
     def plot_switching_isoforms_boxplot(self, gene_name, trs_to_show=[]):
@@ -1024,7 +1062,6 @@ class SwitchSearch(sc.AnnData):
         """
         Example that composes multiple subplots: a violin plot by cell_type,
         a stacked bar usage plot, and the transcripts structure diagram.
-        You can adapt to your own figure arrangement library or approach.
         """
         fig = plt.figure(figsize=(12, 12))
 
