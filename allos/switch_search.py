@@ -360,87 +360,95 @@ class SwitchSearch(sc.AnnData):
     def __scanpy_wilcoxon_switching_isoforms(self, cell_labels_column='cell_type',
                                              min_fdr=0.05, min_log_fold_change=0.3):
         """
-        Uses Scanpy's rank_genes_groups (Wilcoxon) to find transcripts that
-        significantly differ between pairs of cell types. We then filter for
-        changes in usage. Returns a DataFrame of results.
+        Mimics the 'get_isoswitches' function defined in pevious R packages, but uses 'self' as the AnnData object.
+        Returns a DataFrame of switching isoforms based on Scanpy's rank_genes_groups (Wilcoxon).
         """
-        # Work on a copy to avoid side effects
+        import scanpy as sc
+
+        # We'll work on a copy to avoid mutating 'self'
         adata = self.copy()
 
+        # If the anndata is empty, return empty DataFrame
         if adata.shape[0] == 0:
             return pd.DataFrame()
 
-        # Make sure 'transcriptId' is in var
+        # By default, ensure transcriptId is in var
         if 'transcriptId' not in adata.var.columns:
             adata.var['transcriptId'] = adata.var_names
 
+        # Make sure the label column is categorical
         adata.obs[cell_labels_column] = adata.obs[cell_labels_column].astype('category')
         groups = adata.obs[cell_labels_column].cat.categories
+
         if len(groups) < 2:
             return pd.DataFrame()
 
-        # We'll do pairwise group tests in both directions
+        from itertools import combinations
+        group_contrasts = list(combinations(groups, 2))
         marker_results_list = {}
-        try:
-            from itertools import combinations
-            for g1, g2 in combinations(groups, 2):
-                # rank_genes_groups for g1 vs g2
-                sc.tl.rank_genes_groups(adata, groupby=cell_labels_column,
-                                        groups=[g1], reference=g2,
-                                        method='wilcoxon', n_genes=adata.shape[1])
-                df1 = sc.get.rank_genes_groups_df(adata, group=g1)
-                df1['group_1'] = g1
-                df1['group_2'] = g2
-                df1['contrast'] = f"{g1}__{g2}"
 
-                # rank_genes_groups for g2 vs g1
-                sc.tl.rank_genes_groups(adata, groupby=cell_labels_column,
-                                        groups=[g2], reference=g1,
-                                        method='wilcoxon', n_genes=adata.shape[1])
-                df2 = sc.get.rank_genes_groups_df(adata, group=g2)
-                df2['group_1'] = g2
-                df2['group_2'] = g1
-                df2['contrast'] = f"{g1}__{g2}"
+        # Perform Wilcoxon-based tests for each pair in both directions
+        for group_1, group_2 in group_contrasts:
+            try:
+                sc.tl.rank_genes_groups(
+                    adata, groupby=cell_labels_column, groups=[group_1],
+                    reference=group_2, method='wilcoxon', n_genes=adata.shape[0]
+                )
+                df1 = sc.get.rank_genes_groups_df(adata, group=group_1)
+                df1['group_1'] = group_1
+                df1['group_2'] = group_2
+                df1['contrast'] = f"{group_1}__{group_2}"
+
+                sc.tl.rank_genes_groups(
+                    adata, groupby=cell_labels_column, groups=[group_2],
+                    reference=group_1, method='wilcoxon', n_genes=adata.shape[0]
+                )
+                df2 = sc.get.rank_genes_groups_df(adata, group=group_2)
+                df2['group_1'] = group_2
+                df2['group_2'] = group_1
+                df2['contrast'] = f"{group_1}__{group_2}"
 
                 if not df1.empty and not df2.empty:
-                    merged_key = df1['contrast'].iloc[0]
-                    marker_results_list[merged_key] = pd.concat([df1, df2], ignore_index=True)
-        except ValueError:
-            pass
+                    marker_results_list[df1['contrast'].iloc[0]] = pd.concat([df1, df2], ignore_index=True)
+
+            except ValueError:
+                pass  # skip if it fails
 
         if not marker_results_list:
             return pd.DataFrame()
 
         marker_df = pd.concat(marker_results_list.values(), ignore_index=True)
 
+        # If 'transcriptId' isn't in var, try resetting index
+        if 'transcriptId' not in adata.var.columns:
+            adata.var.reset_index(inplace=True)
+
         # Map transcripts to genes
         transcript_to_gene = adata.var.set_index('transcriptId')['geneId'].to_dict()
         marker_df['geneId'] = marker_df['names'].map(transcript_to_gene)
 
-        # cell counts
+        # Add cell counts
         cell_counts = adata.obs[cell_labels_column].value_counts()
         marker_df['n_cells_group_1'] = marker_df['group_1'].map(cell_counts)
         marker_df['n_cells_group_2'] = marker_df['group_2'].map(cell_counts)
         marker_df['total_cells'] = marker_df['n_cells_group_1'] + marker_df['n_cells_group_2']
 
-        # Adjust p-values (FDR) & filter by log fold change
+        # Adjust p-values and filter
         marker_df['adj_pval'] = multipletests(marker_df['pvals_adj'], method='fdr_bh')[1]
         marker_df_filtered = marker_df[
             (marker_df['adj_pval'] <= min_fdr) &
             (marker_df['logfoldchanges'].abs() >= min_log_fold_change)
         ]
 
-        # Add direction of fold change for each row
-        def assign_direction(local_df):
-            return local_df.assign(
+        def assign_direction(df):
+            return df.assign(
                 direction=np.where(
-                    local_df['group_1'] == local_df['contrast'].str.split("__").str[0],
-                    local_df['logfoldchanges'],
-                    -local_df['logfoldchanges']
+                    df['group_1'] == df['contrast'].str.split("__").str[0],
+                    df['logfoldchanges'],
+                    -df['logfoldchanges']
                 )
             )
 
-        # Keep only transcripts that differ in at least 2 directions or have multi usage
         isoswitch_df = (
             marker_df_filtered
             .groupby(['geneId', 'contrast'])
@@ -454,20 +462,19 @@ class SwitchSearch(sc.AnnData):
             ))
         )
 
-        # Optionally compute percent-expression. Adjust if you prefer something else.
-        def calculate_percent_expression(_adata, grp_col, grp, transcript):
-            sub = _adata[_adata.obs[grp_col] == grp, transcript]
-            return (sub.X > 0).mean() * 100
+        def calculate_percent_expression(adata, groupby_column, group, transcript):
+            subset = adata[adata.obs[groupby_column] == group, transcript]
+            return (subset.X > 0).mean() * 100
 
-        per_expr = isoswitch_df.apply(
+        percent_expressions = isoswitch_df.apply(
             lambda row: pd.Series({
                 'percent_expressed_group_1': calculate_percent_expression(adata, cell_labels_column, row['group_1'], row['names']),
-                'percent_expressed_group_2': calculate_percent_expression(adata, cell_labels_column, row['group_2'], row['names']),
+                'percent_expressed_group_2': calculate_percent_expression(adata, cell_labels_column, row['group_2'], row['names'])
             }),
             axis=1
         )
-        isoswitch_df = pd.concat([isoswitch_df, per_expr], axis=1)
-        # isoswitch_df.sort_values(by='adj_pval', inplace=True)
+        isoswitch_df = pd.concat([isoswitch_df, percent_expressions], axis=1)
+        isoswitch_df.sort_values(by='adj_pval', inplace=True)
 
         return isoswitch_df
 
