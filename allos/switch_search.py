@@ -411,20 +411,26 @@ class SwitchSearch(sc.AnnData):
     def __scanpy_wilcoxon_switching_isoforms(self, cell_labels_column='cell_type',
                                              min_fdr=0.05, min_log_fold_change=0.3):
         """
-        Mimics the 'get_isoswitches' function from R packages, but uses 'self' as the AnnData object.
+        Mimics the 'get_isoswitches' function you provided, but uses 'self' as the AnnData object.
         Returns a DataFrame of switching isoforms based on Scanpy's rank_genes_groups (Wilcoxon).
         """
         import scanpy as sc
 
+        # We'll work on a copy to avoid mutating 'self'
         adata = self.copy()
+
+        # If the anndata is empty, return empty DataFrame
         if adata.shape[0] == 0:
             return pd.DataFrame()
 
+        # By default, ensure transcriptId is in var
         if 'transcriptId' not in adata.var.columns:
             adata.var['transcriptId'] = adata.var_names
 
+        # Make sure the label column is categorical
         adata.obs[cell_labels_column] = adata.obs[cell_labels_column].astype('category')
         groups = adata.obs[cell_labels_column].cat.categories
+
         if len(groups) < 2:
             return pd.DataFrame()
 
@@ -463,6 +469,10 @@ class SwitchSearch(sc.AnnData):
             return pd.DataFrame()
 
         marker_df = pd.concat(marker_results_list.values(), ignore_index=True)
+
+        # If 'transcriptId' isn't in var, try resetting index
+        if 'transcriptId' not in adata.var.columns:
+            adata.var.reset_index(inplace=True)
 
         # Map transcripts to genes
         transcript_to_gene = adata.var.set_index('transcriptId')['geneId'].to_dict()
