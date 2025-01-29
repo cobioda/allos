@@ -11,9 +11,12 @@ import shutil
 from pathlib import Path
 
 
+
 # %% ../nbs/003_readers_tests.ipynb 3
 from pathlib import Path
 import os
+import pandas as pd
+
 
 def get_resource_path(filename):
     """Dynamically find the correct path to resources/ regardless of execution location."""
@@ -29,20 +32,20 @@ def get_resource_path(filename):
     # Debug: Print where it's looking
     print(f"\n🔎 Looking for file at: {resource_path}")
 
-    # If file is missing, print directory structure
+    # If file is missing, include directory structure in error message
     if not resource_path.exists():
-        print("❌ File not found!")
-        print(f"📂 Checking directory structure of: {resource_path.parent}")
-
-        # Print all files and folders inside the expected resources directory
+        dir_structure = f"\n📂 Directory structure of {resource_path.parent}:\n"
+        
+        # Collect the folder and file structure
         for root, dirs, files in os.walk(resource_path.parent):
             level = root.replace(str(resource_path.parent), "").count(os.sep)
             indent = " " * (level * 4)
-            print(f"{indent}📁 {Path(root).name}/")
+            dir_structure += f"{indent}📁 {Path(root).name}/\n"
             for f in files:
-                print(f"{indent}    📄 {f}")
+                dir_structure += f"{indent}    📄 {f}\n"
 
-        raise FileNotFoundError(f"\n❌ File not found at: {resource_path}")
+        # Raise an error including the directory structure
+        raise FileNotFoundError(f"\n❌ File not found at: {resource_path}\n{dir_structure}")
 
     print(f"✅ File found at: {resource_path}")
     return resource_path
@@ -51,6 +54,7 @@ def get_resource_path(filename):
 file_path = get_resource_path("e18.mouse.clusters.csv")
 df = pd.read_csv(file_path)
 print(f"\n✅ Successfully loaded: {file_path}")
+
 
 
 
