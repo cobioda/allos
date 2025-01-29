@@ -19,6 +19,8 @@ from scipy.stats import chi2
 from statsmodels.stats.multitest import multipletests
 import scanpy as sc
 import requests
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 ###############################################################################
 # Helper functions for Dirichlet-Multinomial Negative Log-Likelihood + MLE
@@ -124,6 +126,9 @@ class SwitchSearch(sc.AnnData):
     """
 
     def __init__(self, anndata: ad.AnnData):
+        warnings.simplefilter(action='ignore', category=FutureWarning)
+
+
         self.colors = ["#BF045B", "#038C33", "#73BF86", "#D9B29C", 
                        "#A65F46", "#D9C252", "#F2BF91", "#A69C94", 
                        "#D9763D", "#8C2F1B"]

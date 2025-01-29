@@ -8,33 +8,51 @@ import urllib
 import urllib.request
 import gzip
 import shutil
+from pathlib import Path
+
 
 # %% ../nbs/003_readers_tests.ipynb 4
-def download_test_data(url: str = "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3748nnn/GSM3748087/suppl/GSM3748087%5F190c.isoforms.matrix.txt.gz") -> str:
+from pathlib import Path
+import urllib.request
+import gzip
+import shutil
+
+#| export
+def download_test_data(
+    url: str = "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3748nnn/GSM3748087/suppl/GSM3748087%5F190c.isoforms.matrix.txt.gz",
+    output_filename: str = None
+) -> str:
     """
-    Downloads a test data file from a specified URL, saves it locally, and extracts it.
+    Downloads a test data file from a specified URL, saves it one directory back in `../data/`, and extracts it.
 
     Parameters:
     url (str): The URL of the file to be downloaded. Defaults to a pre-defined test dataset.
+    output_filename (str, optional): Custom name for the extracted file. Defaults to "sample_isomatrix.txt".
 
     Returns:
-    str: The absolute path of the extracted file if the download is successful, or None if it fails.
+    str: The absolute path of the extracted file if successful. If the file already exists, return its path instead.
     """
+    data_dir = Path("..") / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
+
     print(f"Starting download of test data from {url}")
 
     # Extract filename from the URL
     filename = url.split('/')[-1]
-    compressed_file = filename
+    compressed_file = data_dir / filename
 
-    # Generate a unique filename for the extracted file
-    base_extracted_file = "sample_isomatrix"
-    counter = 1
-    extracted_file = f"{base_extracted_file}.txt"
-    while os.path.exists(extracted_file):
-        extracted_file = f"{base_extracted_file}_{counter}.txt"
-        counter += 1
+    # Determine output file path
+    if output_filename:
+        extracted_file = data_dir / output_filename
+    else:
+        extracted_file = data_dir / "sample_isomatrix.txt"
 
-    # Download the file from the given URL
+    # If the extracted file already exists, return its path
+    if extracted_file.exists():
+        print(f"File already exists: {extracted_file}")
+        return str(extracted_file.resolve())
+
+    # Download the file
     try:
         urllib.request.urlretrieve(url, compressed_file)
         print("File downloaded successfully")
@@ -47,16 +65,15 @@ def download_test_data(url: str = "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3
         with gzip.open(compressed_file, 'rb') as f_in:
             with open(extracted_file, 'wb') as f_out:
                 shutil.copyfileobj(f_in, f_out)
-        print("File extracted successfully")
-        return os.path.abspath(extracted_file)
+        print(f"File extracted successfully: {extracted_file}")
+        return str(extracted_file.resolve())
     except Exception as e:
         print(f"Failed to extract the file: {e}")
         return None
     finally:
         # Clean up the compressed file
-        if os.path.exists(compressed_file):
-            os.remove(compressed_file)
-
+        if compressed_file.exists():
+            compressed_file.unlink()
 
 
 
