@@ -211,13 +211,6 @@ import warnings
 from scipy.sparse import csr_matrix
 import scanpy as sc
 from anndata import AnnData
-#| export
-
-import pandas as pd
-import warnings
-from scipy.sparse import csr_matrix
-import scanpy as sc
-from anndata import AnnData
 
 def read_sicelore_isomatrix(
     file_path: str,
@@ -247,18 +240,8 @@ def read_sicelore_isomatrix(
     anndata.AnnData
         An AnnData object containing numeric data in `.X` and metadata in `.var`.
     """
-    try:
-        # Read in the file, expecting rows to be features initially
-        df = pd.read_csv(file_path, sep='\t', index_col=0)
-    except FileNotFoundError:
-        warnings.warn(f"❌ File not found: {file_path}", stacklevel=2)
-        return None
-    except pd.errors.EmptyDataError:
-        warnings.warn(f"❌ File is empty: {file_path}", stacklevel=2)
-        return None
-    except Exception as e:
-        warnings.warn(f"❌ Error reading file {file_path}: {e}", stacklevel=2)
-        return None
+    # Read in the file, expecting rows to be features initially
+    df = pd.read_csv(file_path, sep='\t', index_col=0)
 
     # Optionally remove rows marked as "undef" in the transcript column
     if remove_undef and (transcript_id_label in df.columns):
@@ -281,7 +264,7 @@ def read_sicelore_isomatrix(
     try:
         numeric_data = df.values.astype('float32')
     except ValueError:
-        warnings.warn(f"❌ Non-numeric data found in {file_path}. Cannot convert to float.", stacklevel=2)
+        print("Error: Non-numeric data present in the DataFrame. Cannot convert to float.")
         return None
 
     if sparse:
