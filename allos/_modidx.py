@@ -159,4 +159,10 @@ d = { 'settings': { 'branch': 'main',
                                                                                                                    'allos/transcript_plots.py'),
                                         'allos.transcript_plots.TranscriptPlots.get_transcript_info': ( 'transcript_plots.html#transcriptplots.get_transcript_info',
                                                                                                         'allos/transcript_plots.py')},
-            'allos.visuals': {}}}
+            'allos.visuals': { 'allos.visuals.calculate_density': ('visuals.html#calculate_density', 'allos/visuals.py'),
+                               'allos.visuals.get_dens': ('visuals.html#get_dens', 'allos/visuals.py'),
+                               'allos.visuals.normal_reference_bandwidth': ('visuals.html#normal_reference_bandwidth', 'allos/visuals.py'),
+                               'allos.visuals.plot_density': ('visuals.html#plot_density', 'allos/visuals.py'),
+                               'allos.visuals.plot_density_multi': ('visuals.html#plot_density_multi', 'allos/visuals.py'),
+                               'allos.visuals.plot_transcripts': ('visuals.html#plot_transcripts', 'allos/visuals.py'),
+                               'allos.visuals.wkde2d': ('visuals.html#wkde2d', 'allos/visuals.py')}}}
