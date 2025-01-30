@@ -13,6 +13,7 @@ allos/readers_tests.py
 allos/switch_search.py
 allos/transcript_data.py
 allos/transcript_plots.py
+allos/visuals.py
 allos.egg-info/PKG-INFO
 allos.egg-info/SOURCES.txt
 allos.egg-info/dependency_links.txt
@@ -20,3 +21,4 @@ allos.egg-info/entry_points.txt
 allos.egg-info/not-zip-safe
 allos.egg-info/requires.txt
 allos.egg-info/top_level.txt
+allos/resources/e18.mouse.clusters.csv
