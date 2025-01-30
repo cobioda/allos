@@ -57,7 +57,7 @@ def get_resource_path(filename):
 
 
 
-# %% ../nbs/003_readers_tests.ipynb 7
+# %% ../nbs/003_readers_tests.ipynb 6
 from pathlib import Path
 import urllib.request
 import gzip
@@ -130,7 +130,7 @@ def download_test_data(
 
 
 
-# %% ../nbs/003_readers_tests.ipynb 8
+# %% ../nbs/003_readers_tests.ipynb 7
 import os
 import pandas as pd
 import scanpy as sc
@@ -213,7 +213,7 @@ def iso_concat(data_inputs, batch_info=None, batch_type='path'):
 
 
 
-# %% ../nbs/003_readers_tests.ipynb 9
+# %% ../nbs/003_readers_tests.ipynb 8
 import pandas as pd
 import warnings
 from scipy.sparse import csr_matrix
