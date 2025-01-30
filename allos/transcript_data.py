@@ -10,6 +10,7 @@ from functools import lru_cache
 import pyranges as pr
 from pyfaidx import Fasta
 import logging
+import re
 
 # %% ../nbs/002_transcript_data.ipynb 3
 class TranscriptData:
@@ -546,9 +547,8 @@ class TranscriptData:
         df.sort_values("transcript_count", ascending=False, inplace=True)
         df.reset_index(drop=True, inplace=True)
         return df
-
-
-    def get_gene_names_for_transcripts(self, transcript_ids: List[str]) -> List[Optional[str]]:
+    
+    def get_gene_names_for_transcripts(self, transcript_ids: List[str], ignore_after_period: bool = True) -> List[Optional[str]]:
         """
         Given a list of transcript IDs, return a list of the same length
         where each element is the corresponding gene_name from the GTF.
@@ -557,11 +557,17 @@ class TranscriptData:
 
         Args:
             transcript_ids (List[str]): A list of transcript IDs.
+            ignore_after_period (bool): If True, strip the version suffix after the period.
 
         Returns:
             List[Optional[str]]: A parallel list of gene names or None.
         """
+        # Optionally strip the version suffix using regex
+        if ignore_after_period:
+            transcript_ids = [re.sub(r"\.\d+$", "", tid) for tid in transcript_ids]
+
         df = self.gr.df
+        # Fix this check so it actually tests for "gene_name":
         if "gene_name" not in df.columns:
             logging.warning("No 'gene_name' column in GTF; cannot retrieve gene names.")
             return [None] * len(transcript_ids)
@@ -570,7 +576,6 @@ class TranscriptData:
         subset = df[df.transcript_id.isin(transcript_ids)]
 
         # Build a dict: transcript_id -> set/list of gene_names from the annotation
-        # (Typically, each transcript maps to exactly one gene_name, but we handle edge cases by taking the first.)
         mapping = (
             subset
             .groupby("transcript_id")["gene_name"]
@@ -588,3 +593,5 @@ class TranscriptData:
                 result.append(None)
 
         return result
+
+
