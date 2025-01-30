@@ -16,6 +16,7 @@ class TranscriptPlots:
     def __init__(self, gtf_file=None, reference_fasta=None):
         self.transcript_data = None
         if gtf_file is not None:
+            from allos.transcript_data import TranscriptData
             self.transcript_data = TranscriptData(gtf_file=gtf_file, reference_fasta=reference_fasta)
 
     def get_transcript_info(self, transcript_id):

@@ -12,31 +12,36 @@ from pathlib import Path
 
 
 
-# %% ../nbs/003_readers_tests.ipynb 3
+# %% ../nbs/003_readers_tests.ipynb 4
 from pathlib import Path
 import os
 import pandas as pd
 
 
-def get_resource_path(filename):
-    """Dynamically find the correct path to resources/ regardless of execution location."""
-    # Detect execution environment
-    if "__file__" in globals():
-        project_root = Path(__file__).resolve().parent.parent  # Running from library (allos/)
-    else:
-        project_root = Path.cwd().parent  # Running from notebooks (nbs/)
+import os
+from pathlib import Path
 
-    # Construct full path
+def get_resource_path(filename):
+    """Dynamically find the correct path to the 'resources/' directory based on execution location."""
+    # Detect if running from the library (allos/) or a notebook (nbs/)
+    if "__file__" in globals():
+        # Running from the library, path is relative to the project root
+        project_root = Path(__file__).resolve().parent
+    else:
+        # Running from a notebook, path is two levels up
+        project_root = Path.cwd().resolve().parents[0]
+
+    # Construct the full path to the resource file
     resource_path = project_root / "resources" / filename
 
-    # Debug: Print where it's looking
+    # Debug message for locating the file
     print(f"\n🔎 Looking for file at: {resource_path}")
 
-    # If file is missing, include directory structure in error message
+    # If the file does not exist, generate an error with the directory structure
     if not resource_path.exists():
         dir_structure = f"\n📂 Directory structure of {resource_path.parent}:\n"
         
-        # Collect the folder and file structure
+        # Traverse and collect folder structure
         for root, dirs, files in os.walk(resource_path.parent):
             level = root.replace(str(resource_path.parent), "").count(os.sep)
             indent = " " * (level * 4)
@@ -52,11 +57,7 @@ def get_resource_path(filename):
 
 
 
-
-
-
-
-# %% ../nbs/003_readers_tests.ipynb 5
+# %% ../nbs/003_readers_tests.ipynb 7
 from pathlib import Path
 import urllib.request
 import gzip
@@ -122,7 +123,7 @@ def download_test_data(
 
 
 
-# %% ../nbs/003_readers_tests.ipynb 6
+# %% ../nbs/003_readers_tests.ipynb 8
 import os
 import pandas as pd
 import scanpy as sc
@@ -205,7 +206,7 @@ def iso_concat(data_inputs, batch_info=None, batch_type='path'):
 
 
 
-# %% ../nbs/003_readers_tests.ipynb 7
+# %% ../nbs/003_readers_tests.ipynb 9
 import pandas as pd
 import warnings
 from scipy.sparse import csr_matrix
