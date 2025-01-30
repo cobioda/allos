@@ -63,63 +63,54 @@ import urllib.request
 import gzip
 import shutil
 
-#| export
 def download_test_data(
     url: str = "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3748nnn/GSM3748087/suppl/GSM3748087%5F190c.isoforms.matrix.txt.gz",
     output_filename: str = None
 ) -> str:
     """
-    Downloads a test data file from a specified URL, saves it one directory back in `../data/`, and extracts it.
+    Download test data to the correct directory, dynamically adjusting based on the execution context.
 
-    Parameters:
-    url (str): The URL of the file to be downloaded. Defaults to a pre-defined test dataset.
-    output_filename (str, optional): Custom name for the extracted file. Defaults to "sample_isomatrix.txt".
+    Parameters
+    ----------
+    url : str
+        URL to download the data from.
+    output_filename : str, optional
+        Name of the file to save the data as (default: name from the URL).
 
-    Returns:
-    str: The absolute path of the extracted file if successful. If the file already exists, return its path instead.
+    Returns
+    -------
+    str
+        Path to the downloaded file.
     """
-    data_dir = Path("..") / "data"
+    import os
+    from pathlib import Path
+    import urllib.request
+
+    # Determine base directory based on context (notebook or CI/library)
+    if "__file__" in globals():  # CI or running from library
+        base_dir = Path(__file__).resolve().parent / "resources"
+    else:  # Notebook context
+        base_dir = Path.cwd().resolve()
+
+    # Ensure data directory exists
+    data_dir = base_dir / "data"
     data_dir.mkdir(parents=True, exist_ok=True)
 
-    print(f"Starting download of test data from {url}")
-
-    # Extract filename from the URL
-    filename = url.split('/')[-1]
-    compressed_file = data_dir / filename
-
-    # Determine output file path
+    # Determine output path
     if output_filename:
-        extracted_file = data_dir / output_filename
+        output_path = data_dir / output_filename
     else:
-        extracted_file = data_dir / "sample_isomatrix.txt"
+        output_path = data_dir / Path(url).name
 
-    # If the extracted file already exists, return its path
-    if extracted_file.exists():
-        print(f"File already exists: {extracted_file}")
-        return str(extracted_file.resolve())
+    # Download file if it doesn't exist
+    if not output_path.is_file():
+        print(f"\n🔄 Downloading {url} to {output_path}...")
+        urllib.request.urlretrieve(url, output_path)
+        print("✅ Download complete.")
+    else:
+        print(f"✅ File already exists at: {output_path}")
 
-    # Download the file
-    try:
-        urllib.request.urlretrieve(url, compressed_file)
-        print("File downloaded successfully")
-    except Exception as e:
-        print(f"Failed to download the file: {e}")
-        return None
-
-    # Extract the file
-    try:
-        with gzip.open(compressed_file, 'rb') as f_in:
-            with open(extracted_file, 'wb') as f_out:
-                shutil.copyfileobj(f_in, f_out)
-        print(f"File extracted successfully: {extracted_file}")
-        return str(extracted_file.resolve())
-    except Exception as e:
-        print(f"Failed to extract the file: {e}")
-        return None
-    finally:
-        # Clean up the compressed file
-        if compressed_file.exists():
-            compressed_file.unlink()
+    return str(output_path.resolve())
 
 
 
@@ -212,6 +203,12 @@ import warnings
 from scipy.sparse import csr_matrix
 import scanpy as sc
 from anndata import AnnData
+import os
+import pandas as pd
+import warnings
+from scipy.sparse import csr_matrix
+import scanpy as sc
+from anndata import AnnData
 
 def read_sicelore_isomatrix(
     file_path: str,
@@ -241,8 +238,16 @@ def read_sicelore_isomatrix(
     anndata.AnnData
         An AnnData object containing numeric data in `.X` and metadata in `.var`.
     """
-    # Read in the file, expecting rows to be features initially
-    df = pd.read_csv(file_path, sep='\t', index_col=0)
+    # Validate file path
+    if not file_path or not os.path.isfile(file_path):
+        raise ValueError(f"Invalid or non-existent file path: {file_path}")
+
+    try:
+        # Read in the file, expecting rows to be features initially
+        df = pd.read_csv(file_path, sep='\t', index_col=0)
+    except Exception as e:
+        print(f"Error reading file at {file_path}: {e}")
+        raise
 
     # Optionally remove rows marked as "undef" in the transcript column
     if remove_undef and (transcript_id_label in df.columns):
@@ -265,8 +270,8 @@ def read_sicelore_isomatrix(
     try:
         numeric_data = df.values.astype('float32')
     except ValueError:
-        print("Error: Non-numeric data present in the DataFrame. Cannot convert to float.")
-        return None
+        print(f"Error: Non-numeric data present in the DataFrame from file: {file_path}")
+        raise
 
     if sparse:
         numeric_data = csr_matrix(numeric_data)
