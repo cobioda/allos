@@ -546,3 +546,45 @@ class TranscriptData:
         df.sort_values("transcript_count", ascending=False, inplace=True)
         df.reset_index(drop=True, inplace=True)
         return df
+
+
+    def get_gene_names_for_transcripts(self, transcript_ids: List[str]) -> List[Optional[str]]:
+        """
+        Given a list of transcript IDs, return a list of the same length
+        where each element is the corresponding gene_name from the GTF.
+        If a transcript is not found or if no 'gene_name' column exists,
+        the result will contain None for that transcript.
+
+        Args:
+            transcript_ids (List[str]): A list of transcript IDs.
+
+        Returns:
+            List[Optional[str]]: A parallel list of gene names or None.
+        """
+        df = self.gr.df
+        if "gene_name" not in df.columns:
+            logging.warning("No 'gene_name' column in GTF; cannot retrieve gene names.")
+            return [None] * len(transcript_ids)
+
+        # Filter to only the rows with the requested transcript IDs
+        subset = df[df.transcript_id.isin(transcript_ids)]
+
+        # Build a dict: transcript_id -> set/list of gene_names from the annotation
+        # (Typically, each transcript maps to exactly one gene_name, but we handle edge cases by taking the first.)
+        mapping = (
+            subset
+            .groupby("transcript_id")["gene_name"]
+            .apply(lambda x: list(x.unique()))
+            .to_dict()
+        )
+
+        # For each transcript in the input, pick the first gene_name from the mapping
+        result = []
+        for tid in transcript_ids:
+            possible_names = mapping.get(tid, [])
+            if len(possible_names) > 0:
+                result.append(possible_names[0])
+            else:
+                result.append(None)
+
+        return result
