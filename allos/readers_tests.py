@@ -63,12 +63,15 @@ import urllib.request
 import gzip
 import shutil
 
+
 def download_test_data(
     url: str = "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3748nnn/GSM3748087/suppl/GSM3748087%5F190c.isoforms.matrix.txt.gz",
-    output_filename: str = None
+    output_filename: str = None,
+    decompress: bool = True
 ) -> str:
     """
     Download test data to the correct directory, dynamically adjusting based on the execution context.
+    Optionally decompresses gzip files if detected.
 
     Parameters
     ----------
@@ -76,11 +79,13 @@ def download_test_data(
         URL to download the data from.
     output_filename : str, optional
         Name of the file to save the data as (default: name from the URL).
+    decompress : bool, optional
+        Whether to decompress the file if it is a gzip archive (default True).
 
     Returns
     -------
     str
-        Path to the downloaded file.
+        Path to the downloaded or decompressed file.
     """
     import os
     from pathlib import Path
@@ -110,7 +115,18 @@ def download_test_data(
     else:
         print(f"✅ File already exists at: {output_path}")
 
+    # Automatically decompress if the file is a gzip and decompression is enabled
+    if decompress and output_path.suffix == ".gz":
+        decompressed_output = output_path.with_suffix('')  # Remove .gz suffix
+        print(f"\n🔄 Decompressing {output_path} to {decompressed_output}...")
+        with gzip.open(output_path, 'rb') as f_in:
+            with open(decompressed_output, 'wb') as f_out:
+                shutil.copyfileobj(f_in, f_out)
+        print("✅ Decompression complete.")
+        return str(decompressed_output.resolve())
+
     return str(output_path.resolve())
+
 
 
 
