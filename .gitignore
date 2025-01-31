@@ -6,3 +6,4 @@ nbs/data
 nbs_tmp
 sample_isomatrix*.txt
 data/*
+allos/data/*
