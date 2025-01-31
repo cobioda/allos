@@ -13,6 +13,8 @@ import pyranges as pr
 from pyfaidx import Fasta
 import logging
 import re
+from typing import Any, Dict
+
 
 # %% ../nbs/002_transcript_data.ipynb 4
 class TranscriptData:
@@ -595,5 +597,69 @@ class TranscriptData:
                 result.append(None)
 
         return result
+    
+    def get_transcript_info(self, transcript_id: str) -> Dict[str, Any]:
+        """
+        Return a dictionary with basic info about the given transcript, including:
+        - transcript_id
+        - transcript_name (if available in the GTF, else "unknown")
+        - transcript_type (if available in the GTF, else "unknown")
+        - cds_start, cds_end (based on min/max of CDS ranges if present, else None)
+        - chromosome
+        - strand (either '+' or '-')
+        """
+        df = self.gr.df
+        sub = df[df.transcript_id == transcript_id]
+
+        # If we didn't find this transcript at all, return an empty dict or raise an error.
+        if sub.empty:
+            logging.warning(f"Transcript {transcript_id} not found in GTF.")
+            return {}
+
+        # Pull transcript_name, transcript_type from columns if they exist
+        # (these column names vary in different GTF sources).
+        if "transcript_name" in sub.columns:
+            transcript_name = sub["transcript_name"].dropna().unique()
+            if len(transcript_name) > 0:
+                transcript_name = transcript_name[0]
+            else:
+                transcript_name = "unknown"
+        else:
+            transcript_name = "unknown"
+        
+        if "transcript_type" in sub.columns:
+            transcript_type = sub["transcript_type"].dropna().unique()
+            if len(transcript_type) > 0:
+                transcript_type = transcript_type[0]
+            else:
+                transcript_type = "unknown"
+        else:
+            transcript_type = "unknown"
+
+        # Derive chromosome and strand from any row of this transcript
+        # (assuming a consistent chromosome/strand for all features).
+        chromosome = str(sub["Chromosome"].iloc[0])
+        strand_symbol = str(sub["Strand"].iloc[0])  # '+' or '-'
+
+        # Compute the CDS boundaries using our existing get_cds() method.
+        cds_ranges = self.get_cds(transcript_id)
+        if len(cds_ranges) > 0:
+            cds_df = cds_ranges.df
+            cds_start = int(cds_df["Start"].min())
+            cds_end = int(cds_df["End"].max())
+        else:
+            cds_start = None
+            cds_end = None
+
+        return {
+            "transcript_id": transcript_id,
+            "transcript_name": transcript_name,
+            "transcript_type": transcript_type,
+            "cds_start": cds_start,
+            "cds_end": cds_end,
+            "chromosome": chromosome,
+            "strand": strand_symbol
+        }
+
 
 
