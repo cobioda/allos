@@ -2,7 +2,8 @@
 
 # %% auto 0
 __all__ = ['subset_common_cells', 'transfer_obs', 'get_sot_gene_matrix', 'compute_transcript_abundance_pct',
-           'filter_transcripts_by_abundance', 'gene_wise_correlation', 'gene_wise_bland_altman']
+           'compute_whole_data_transcript_abundance', 'filter_transcripts_by_abundance', 'gene_wise_correlation',
+           'gene_wise_bland_altman']
 
 # %% ../nbs/007_preprocesing.ipynb 1
 from .readers_tests import *
@@ -154,16 +155,60 @@ def compute_transcript_abundance_pct(adata):
 
 
 # %% ../nbs/007_preprocesing.ipynb 7
+def compute_whole_data_transcript_abundance(adata):
+    """
+    Compute transcript abundance percentages for the entire dataset by aggregating 
+    transcript counts across all cells into a single composite sample.
+    
+    This function sums the transcript counts over all cells, constructs a new AnnData 
+    with a single observation, and then computes transcript abundance percentages 
+    using compute_transcript_abundance_pct.
+    
+    Parameters
+    ----------
+    adata : AnnData
+        AnnData object with transcript-level counts. Must have a 'geneId' column in adata.var.
+    
+    Returns
+    -------
+    AnnData
+        A new AnnData object with one observation representing the aggregated data 
+        where X holds transcript abundance percentages.
+    """
+    import numpy as np
+
+    # Convert adata.X to a dense array if it's sparse
+    if hasattr(adata.X, "toarray"):
+        counts_dense = adata.X.toarray()
+    else:
+        counts_dense = adata.X
+
+    # Sum transcript counts over all cells (i.e. aggregate along axis 0)
+    aggregated_counts = np.sum(counts_dense, axis=0, keepdims=True)
+
+    # Create a new obs DataFrame for the aggregated sample.
+    # Use the first observation as a template and set its index to a unique name.
+    aggregated_obs = adata.obs.iloc[[0]].copy()
+    aggregated_obs.index = ["All_data"]
+
+    # Create a new AnnData object with the aggregated transcript counts.
+    aggregated_adata = sc.AnnData(X=aggregated_counts, obs=aggregated_obs, var=adata.var.copy())
+
+    # Compute transcript abundance percentages on the aggregated data.
+    return compute_transcript_abundance_pct(aggregated_adata)
+
+
+# %% ../nbs/007_preprocesing.ipynb 8
 def filter_transcripts_by_abundance(adata, threshold_pct, verbose=False):
     """
     Filter transcripts from an AnnData object based on their overall transcript abundance percentage,
-    computed by summing transcript and gene counts over all cells.
+    computed by aggregating transcript counts across all cells and leveraging overall gene counts.
 
     The overall abundance percentage for each transcript is calculated as:
     
         overall_pct = (total transcript count) / (total gene count for its gene) * 100
 
-    This function uses the compute_transcript_abundance_pct function internally to leverage the gene
+    This function uses the compute_whole_data_transcript_abundance function internally to leverage the gene
     mapping information (via the 'geneId' in adata.var). Transcripts with an overall abundance
     percentage below the specified threshold (threshold_pct) are filtered out.
 
@@ -181,8 +226,8 @@ def filter_transcripts_by_abundance(adata, threshold_pct, verbose=False):
     AnnData
         A new AnnData object with the filtered transcript matrix.
     """
-    # Use compute_transcript_abundance_pct to access the gene mapping in adata.var
-    pct_adata = compute_transcript_abundance_pct(adata)
+    # Use compute_whole_data_transcript_abundance to access the gene mapping in adata.var
+    pct_adata = compute_whole_data_transcript_abundance(adata)
     gene_ids = pct_adata.var['geneId'].values
     # Create an inverse mapping: for each transcript, get the index of its unique gene
     _, inverse = np.unique(gene_ids, return_inverse=True)
@@ -226,7 +271,7 @@ def filter_transcripts_by_abundance(adata, threshold_pct, verbose=False):
     return new_adata
 
 
-# %% ../nbs/007_preprocesing.ipynb 13
+# %% ../nbs/007_preprocesing.ipynb 14
 import math
 import pandas as pd
 import numpy as np
@@ -453,7 +498,7 @@ def gene_wise_correlation(
     
 
 
-# %% ../nbs/007_preprocesing.ipynb 15
+# %% ../nbs/007_preprocesing.ipynb 16
 import math
 import pandas as pd
 import numpy as np
