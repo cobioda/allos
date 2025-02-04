@@ -11,7 +11,7 @@ import requests
 import sys
 import matplotlib.pyplot as plt
 
-# %% ../nbs/001_transcript_plots.ipynb 7
+# %% ../nbs/001_transcript_plots.ipynb 8
 class TranscriptPlots:
     def __init__(self, gtf_file=None, reference_fasta=None):
         self.transcript_data = None
@@ -41,7 +41,7 @@ class TranscriptPlots:
             data_dict['strand'] = row["Strand"]
 
         return data_dict
-
+    
     def _get_coord_from_tscrpt_id(self, transcript_id):
         if self.transcript_data is None:
             if '.' in transcript_id:
@@ -66,7 +66,7 @@ class TranscriptPlots:
         else:
             return self.transcript_data.get_exon_coords_and_strand(transcript_id)
 
-    def _draw_transcript(self, exons, direction, color, transcript_name, offset=0, start_override=None, end_override=None, no_render=False):
+    def _draw_transcript(self, exons, direction, color, transcript_name, offset=0, start_override=None, end_override=None, no_render=False, with_cds=False):
         if not no_render:
             plt.axes()
             plt.xlim((-0.1, 1))
@@ -76,7 +76,8 @@ class TranscriptPlots:
             fig = plt.gcf()
             fig.set_size_inches(20, 2)
         height = 0.2
-        plt.plot([offset + 0.1, offset + 0.1], linestyle='solid', linewidth=0.5, c='grey')
+        cds_start, cds_end = 0, 0
+        # plt.plot([offset + 0.1, offset + 0.1], linestyle='solid', linewidth=0.5, c='grey')
         j = 0
         k = 1
         if direction == 1:
@@ -89,14 +90,26 @@ class TranscriptPlots:
             k = 0
         real_start = pos_start
         real_end = pos_end
+        if with_cds:
+            t_info = self.get_transcript_info(transcript_name)
+            cds_start, cds_end = t_info['cds_start'], t_info['cds_end']
         if start_override is not None and end_override is not None:
             pos_start = start_override
             pos_end = end_override
         total_length = pos_end - pos_start
         total_length_with_margin = 1.05 * total_length
         pos_start_with_margin = pos_start - 0.025*total_length
+         # Draw introns as separate lines
+        for i in range(len(exons) - 1):
+            intron_start = exons[i][j]
+            intron_end = exons[i + 1][k]
+            plt.plot([(intron_start - pos_start_with_margin)/total_length_with_margin, (intron_end - pos_start_with_margin)/total_length_with_margin], [offset + 0.1, offset + 0.1], color='black', linestyle='-', linewidth=1)
         for i, exon in enumerate(exons):
-            rectangle = plt.Rectangle(((exon[j] - pos_start_with_margin)/total_length_with_margin,offset), (exon[k] - exon[j])/total_length_with_margin, height, fc=color,ec="black")
+            edgecolor= 'black'
+            if exon[j] <= cds_end and exon[k] >= cds_start:
+                edgecolor = 'red'  # Make CDS more visible
+                color = 'red'
+            rectangle = plt.Rectangle(((exon[j] - pos_start_with_margin)/total_length_with_margin,offset), (exon[k] - exon[j])/total_length_with_margin, height, fc=color,ec="black",edgecolor=edgecolor)
             plt.gca().add_patch(rectangle)
         if i > 0:
             arrow = None
@@ -113,7 +126,7 @@ class TranscriptPlots:
         if not no_render:
             plt.show()
 
-    def _draw_transcripts_list(self, trs_to_show, _ax, colors=None):
+    def _draw_transcripts_list(self, trs_to_show, _ax, colors=None, draw_cds=False):
         transcripts_id = trs_to_show
         exons = []
         directions = []
@@ -146,15 +159,17 @@ class TranscriptPlots:
         i = 0
         (start, end) = get_limits(exons, directions)
         for (ex, di, co, name) in zip(exons, directions, colors, transcripts_id):
-            self._draw_transcript(ex, di, co, name, offset= -0.5 * i, start_override=start, end_override=end, no_render=True)
+            self._draw_transcript(ex, di, co, name, offset= -0.5 * i, start_override=start, end_override=end, no_render=True, with_cds=draw_cds)
             i+=1
         if _ax is None:
             plt.show()
         else:
             return plt
 
-    def draw_transcripts_list(self, transcripts_ids, colors=None):
-        self._draw_transcripts_list(transcripts_ids, None, colors)
+    def draw_transcripts_list(self, transcripts_ids, colors=None, draw_cds=False):
+        if draw_cds and self.transcript_data is None:
+            raise Exception('A GTF file is compulsory in order to display the CDS region')
+        self._draw_transcripts_list(transcripts_ids, None, colors, draw_cds=draw_cds)
 
     def draw_transcripts_list_unscaled(self, transcripts_id, colors=None):
         exons = []
@@ -251,5 +266,4 @@ class TranscriptPlots:
             self._draw_transcript(ex, di, co, name, offset= -0.5 * i, start_override=fake_se[i][0], end_override=fake_se[i][1], no_render=True)
             i+=1
         plt.show()
-
 
