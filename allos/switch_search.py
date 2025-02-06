@@ -9,19 +9,25 @@ __all__ = ['chunk_list', 'compute_batch_size', 'process_gene_batch', 'process_pa
 import anndata as ad
 
 # %% ../nbs/005_switch_search.ipynb 4
-import numpy as np, pandas as pd, warnings
+import numpy as np
+import pandas as pd
+import warnings
+
 from scipy.special import gammaln
 from scipy.optimize import minimize
 from itertools import combinations
 from scipy.stats import chi2
 from statsmodels.stats.multitest import multipletests
-import scanpy as sc, anndata as ad
+
+import scanpy as sc
+import anndata as ad
 
 # Parallelization and JIT
 from joblib import Parallel, delayed
 from numba import njit
 from math import lgamma, ceil
-import time, os
+import time
+import os
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
@@ -52,18 +58,32 @@ def process_pair_wilcoxon(adata_norm, cell_labels_column, group1, group2):
     """
     adata_pair = adata_norm.copy()
     try:
-        sc.tl.rank_genes_groups(adata_pair, groupby=cell_labels_column, groups=[group1],
-                                  reference=group2, method='wilcoxon', n_genes=adata_pair.shape[0])
+        sc.tl.rank_genes_groups(
+            adata_pair,
+            groupby=cell_labels_column,
+            groups=[group1],
+            reference=group2,
+            method='wilcoxon',
+            n_genes=adata_pair.shape[0]
+        )
         df1 = sc.get.rank_genes_groups_df(adata_pair, group=group1)
         df1['group_1'] = group1
         df1['group_2'] = group2
         df1['contrast'] = f"{group1}__{group2}"
-        sc.tl.rank_genes_groups(adata_pair, groupby=cell_labels_column, groups=[group2],
-                                  reference=group1, method='wilcoxon', n_genes=adata_pair.shape[0])
+
+        sc.tl.rank_genes_groups(
+            adata_pair,
+            groupby=cell_labels_column,
+            groups=[group2],
+            reference=group1,
+            method='wilcoxon',
+            n_genes=adata_pair.shape[0]
+        )
         df2 = sc.get.rank_genes_groups_df(adata_pair, group=group2)
         df2['group_1'] = group2
         df2['group_2'] = group1
         df2['contrast'] = f"{group1}__{group2}"
+
         if not df1.empty and not df2.empty:
             return pd.concat([df1, df2], ignore_index=True)
         else:
@@ -131,6 +151,7 @@ class SwitchSearch(sc.AnnData):
         cache_key = (group_label, gene_id)
         if cache_key in self._single_fit_cache:
             return self._single_fit_cache[cache_key]
+
         group_data = self[self.obs[cell_group_column] == group_label]
         if 'geneId' not in group_data.var.columns:
             return (np.nan, None)
@@ -138,11 +159,13 @@ class SwitchSearch(sc.AnnData):
         data = group_data[:, mask_gene].X.toarray()
         if _is_log_transformed(data):
             raise ValueError("Data appears to be log-transformed. Dirichlet test expects raw counts.")
+
         total_counts = data.sum(axis=1)
         data = data[total_counts > 9]
         if data.shape[0] == 0:
             self._single_fit_cache[cache_key] = (np.nan, None)
             return (np.nan, None)
+
         nll, alpha = _dm_mle(data)
         self._single_fit_cache[cache_key] = (nll, alpha)
         return (nll, alpha)
@@ -151,6 +174,7 @@ class SwitchSearch(sc.AnnData):
         cache_key = (group_label1, group_label2, gene_id)
         if cache_key in self._combined_fit_cache:
             return self._combined_fit_cache[cache_key]
+
         group1 = self[self.obs[cell_group_column] == group_label1]
         if 'geneId' not in group1.var.columns:
             self._combined_fit_cache[cache_key] = (np.nan, None)
@@ -161,6 +185,7 @@ class SwitchSearch(sc.AnnData):
             raise ValueError("Data appears to be log-transformed. Dirichlet test expects raw counts.")
         total_counts1 = data1.sum(axis=1)
         data1 = data1[total_counts1 > 9]
+
         group2 = self[self.obs[cell_group_column] == group_label2]
         if 'geneId' not in group2.var.columns:
             self._combined_fit_cache[cache_key] = (np.nan, None)
@@ -171,9 +196,11 @@ class SwitchSearch(sc.AnnData):
             raise ValueError("Data appears to be log-transformed. Dirichlet test expects raw counts.")
         total_counts2 = data2.sum(axis=1)
         data2 = data2[total_counts2 > 9]
+
         if data1.shape[0] == 0 or data2.shape[0] == 0:
             self._combined_fit_cache[cache_key] = (np.nan, None)
             return (np.nan, None)
+
         combined_data = np.vstack([data1, data2])
         nll, alpha = _dm_mle(combined_data)
         self._combined_fit_cache[cache_key] = (nll, alpha)
@@ -184,12 +211,15 @@ class SwitchSearch(sc.AnnData):
         loss2, alpha2 = self.__fit_single_group(group_label2, gene_id, cell_group_column)
         if alpha1 is None or alpha2 is None or np.isnan(loss1) or np.isnan(loss2):
             return None
+
         loss_full, alpha_full = self.__fit_combined(group_label1, group_label2, gene_id, cell_group_column)
         if alpha_full is None or np.isnan(loss_full):
             return None
+
         chi2_stat = 2.0 * (loss_full - (loss1 + loss2))
         if chi2_stat < 0:
             return None
+
         K = len(alpha_full)
         p_value = 1.0 - chi2.cdf(chi2_stat, df=K)
         return chi2_stat, p_value
@@ -198,34 +228,33 @@ class SwitchSearch(sc.AnnData):
         test_result = self.__cached_LRT_test(group_1_label, group_2_label, gene_id, cell_group_column)
         if test_result is None:
             return None
+
         chi2_stat, p_value = test_result
         group1 = self[self.obs[cell_group_column] == group_1_label]
         mask_gene = (group1.var['geneId'] == gene_id)
         data1 = group1[:, mask_gene].X.toarray()
-        total_counts1 = data1.sum(axis=1)
-        cells1 = data1[total_counts1 > 9]
+        n_cells_group_1 = group1.shape[0]
+
         group2 = self[self.obs[cell_group_column] == group_2_label]
         mask_gene2 = (group2.var['geneId'] == gene_id)
         data2 = group2[:, mask_gene2].X.toarray()
-        total_counts2 = data2.sum(axis=1)
-        cells2 = data2[total_counts2 > 9]
-        if cells1.shape[0] == 0 or cells2.shape[0] == 0:
-            return None
-        n_cells_group_1 = cells1.shape[0]
-        n_cells_group_2 = cells2.shape[0]
+        n_cells_group_2 = group2.shape[0]
         total_cells = n_cells_group_1 + n_cells_group_2
-        transcript_ids = self.var.loc[self.var['geneId'] == gene_id, 'transcriptId'].values
+
         def compute_metrics(counts):
             gene_totals = counts.sum(axis=1, keepdims=True)
-            proportions = counts / gene_totals
+            proportions = np.divide(counts, gene_totals, out=np.zeros_like(counts, dtype=float), where=(gene_totals != 0))
             avg_usage = proportions.mean(axis=0)
             pct_expressed = (counts > 0).mean(axis=0) * 100
             return avg_usage, pct_expressed
-        avg_usage1, pct_expr1 = compute_metrics(cells1)
-        avg_usage2, pct_expr2 = compute_metrics(cells2)
+
+        avg_usage1, pct_expr1 = compute_metrics(data1)
+        avg_usage2, pct_expr2 = compute_metrics(data2)
         log_fc = np.log((avg_usage1 + 1e-6) / (avg_usage2 + 1e-6))
         contrast = f"{group_1_label}__{group_2_label}"
+
         results = []
+        transcript_ids = self.var.loc[self.var['geneId'] == gene_id, 'transcriptId'].values
         for j, tid in enumerate(transcript_ids):
             result_dict = {
                 "gene_id": gene_id,
@@ -245,6 +274,7 @@ class SwitchSearch(sc.AnnData):
                 "percent_expressed_group_2": pct_expr2[j]
             }
             results.append(result_dict)
+
         return results
 
     # Public method so that module-level functions can call it.
@@ -252,68 +282,82 @@ class SwitchSearch(sc.AnnData):
         return self.__compare_groups(group1, group2, cell_group_column, gene)
 
     def __filter_genes(self, group_1_label, group_2_label, cell_group_column,
-                         min_count=9, min_diff=0.1, filter_loud=False):
+                       min_count=9, min_log_fold_change=0.5, filter_loud=False):
         group_1 = self[self.obs[cell_group_column] == group_1_label]
         group_2 = self[self.obs[cell_group_column] == group_2_label]
         gene_counts_1 = np.array(group_1.X.sum(axis=0)).flatten()
         gene_counts_2 = np.array(group_2.X.sum(axis=0)).flatten()
         total_gene_counts = gene_counts_1 + gene_counts_2
         valid_genes_mask = total_gene_counts > min_count
+
         if filter_loud:
             n_genes_initial = self.shape[1]
             n_genes_passing_count = np.sum(valid_genes_mask)
             print(f"[filter_genes] Genes passing count threshold: {n_genes_passing_count} / {n_genes_initial}")
+
         adata_slice = self[:, valid_genes_mask]
         group_1_slice = adata_slice[adata_slice.obs[cell_group_column] == group_1_label]
         group_2_slice = adata_slice[adata_slice.obs[cell_group_column] == group_2_label]
         nz1 = (group_1_slice.X != 0).sum(axis=0) > min_count
         nz2 = (group_2_slice.X != 0).sum(axis=0) > min_count
         final_valid_genes = nz1 & nz2
+
         if filter_loud:
             print(f"[filter_genes] Genes with sufficient nonzero counts in both groups: {np.sum(final_valid_genes)}")
+
         filtered_data = adata_slice[:, final_valid_genes]
         unique_gene_ids = np.unique(filtered_data.var['geneId'])
         to_remove = []
         for gene_id in unique_gene_ids:
             sub1 = filtered_data[(filtered_data.obs[cell_group_column] == group_1_label),
-                                  (filtered_data.var['geneId'] == gene_id)]
+                                 (filtered_data.var['geneId'] == gene_id)]
             sub2 = filtered_data[(filtered_data.obs[cell_group_column] == group_2_label),
-                                  (filtered_data.var['geneId'] == gene_id)]
+                                 (filtered_data.var['geneId'] == gene_id)]
             X1 = sub1.X.astype(float).toarray()
             X2 = sub2.X.astype(float).toarray()
             if X1.sum() == 0 or X2.sum() == 0:
                 to_remove.append(gene_id)
                 continue
+
             percent_1 = X1 / X1.sum()
             percent_2 = X2 / X2.sum()
-            diff_found = any(abs(percent_1[:, j].sum() - percent_2[:, j].sum()) > min_diff 
-                             for j in range(percent_1.shape[1]))
-            if not diff_found:
+
+            col_sum1 = percent_1.sum(axis=0)
+            col_sum2 = percent_2.sum(axis=0)
+            log_fold_changes = np.abs(np.log((col_sum1 + 1e-6) / (col_sum2 + 1e-6)))
+            lfc_found = np.any(log_fold_changes >= min_log_fold_change)
+            if not lfc_found:
                 to_remove.append(gene_id)
+
         filtered_data = filtered_data[:, ~filtered_data.var['geneId'].isin(to_remove)]
         return SwitchSearch(filtered_data)
 
     def __scanpy_wilcoxon_switching_isoforms(self, cell_labels_column='cell_type',
-                                               min_fdr=0.05, min_log_fold_change=0.3,
-                                               n_jobs=1):
+                                             min_fdr=0.05, min_log_fold_change=0.3,
+                                             n_jobs=1):
         adata_norm = self.copy()
         if adata_norm.shape[0] == 0:
             return pd.DataFrame()
+
         if 'transcriptId' not in adata_norm.var.columns:
             adata_norm.var['transcriptId'] = adata_norm.var_names
+
         adata_norm.obs[cell_labels_column] = adata_norm.obs[cell_labels_column].astype('category')
         if hasattr(adata_norm.X, "toarray"):
             X_dense = adata_norm.X.toarray()
         else:
             X_dense = adata_norm.X
+
         if not _is_log_transformed(X_dense):
             lib_sizes = X_dense.sum(axis=1, keepdims=True)
             lib_sizes[lib_sizes == 0] = 1
             X_norm = (X_dense / lib_sizes) * 1e6
             adata_norm.X = np.log1p(X_norm)
+
         groups = adata_norm.obs[cell_labels_column].cat.categories
         if len(groups) < 2:
             return pd.DataFrame()
+
         pairs = list(combinations(groups, 2))
         if n_jobs == 1:
             results_list = [process_pair_wilcoxon(adata_norm, cell_labels_column, pair[0], pair[1])
@@ -321,22 +365,27 @@ class SwitchSearch(sc.AnnData):
         else:
             results_list = Parallel(n_jobs=n_jobs, backend="loky")(
                 delayed(process_pair_wilcoxon)(adata_norm, cell_labels_column, pair[0], pair[1])
-                for pair in pairs)
+                for pair in pairs
+            )
         results_list = [r for r in results_list if r is not None]
         if not results_list:
             return pd.DataFrame()
+
         marker_df = pd.concat(results_list, ignore_index=True)
         transcript_to_gene = adata_norm.var.set_index('transcriptId')['geneId'].to_dict()
         marker_df['geneId'] = marker_df['names'].map(transcript_to_gene)
+
         cell_counts = adata_norm.obs[cell_labels_column].value_counts()
         marker_df['n_cells_group_1'] = marker_df['group_1'].map(cell_counts)
         marker_df['n_cells_group_2'] = marker_df['group_2'].map(cell_counts)
         marker_df['total_cells'] = marker_df['n_cells_group_1'] + marker_df['n_cells_group_2']
+
         marker_df['adj_pval'] = multipletests(marker_df['pvals_adj'], method='fdr_bh')[1]
         marker_df_filtered = marker_df[
             (marker_df['adj_pval'] <= min_fdr) &
             (marker_df['logfoldchanges'].abs() >= min_log_fold_change)
         ]
+
         def assign_direction(df):
             return df.assign(
                 direction=np.where(
@@ -345,6 +394,7 @@ class SwitchSearch(sc.AnnData):
                     -df['logfoldchanges']
                 )
             )
+
         isoswitch_df = (
             marker_df_filtered
             .groupby(['geneId', 'contrast'])
@@ -357,9 +407,11 @@ class SwitchSearch(sc.AnnData):
                 x['direction'].abs().sum() != 0
             ))
         )
+
         def calculate_percent_expression(adata, groupby_column, group, transcript):
             subset = adata[adata.obs[groupby_column] == group, transcript]
             return (subset.X > 0).mean() * 100
+
         percent_expressions = isoswitch_df.apply(
             lambda row: pd.Series({
                 'percent_expressed_group_1': calculate_percent_expression(adata_norm, cell_labels_column, row['group_1'], row['names']),
@@ -367,8 +419,10 @@ class SwitchSearch(sc.AnnData):
             }),
             axis=1
         )
+
         isoswitch_df = pd.concat([isoswitch_df, percent_expressions], axis=1)
         isoswitch_df = isoswitch_df.loc[:, ~isoswitch_df.columns.duplicated()]
+
         isoswitch_df.sort_values(by='adj_pval', inplace=True)
         isoswitch_df = isoswitch_df.rename(columns={
             "geneId": "gene_id",
@@ -376,30 +430,35 @@ class SwitchSearch(sc.AnnData):
             "logfoldchanges": "log_fold_change",
             "adj_pval": "p_value"
         })
-        cols_order = ["gene_id", "transcript_id", "group_1", "group_2", "contrast",
-                      "p_value", "log_fold_change", "n_cells_group_1", "n_cells_group_2",
-                      "total_cells", "percent_expressed_group_1", "percent_expressed_group_2"]
+
+        cols_order = [
+            "gene_id", "transcript_id", "group_1", "group_2", "contrast",
+            "p_value", "log_fold_change", "n_cells_group_1", "n_cells_group_2",
+            "total_cells", "percent_expressed_group_1", "percent_expressed_group_2"
+        ]
         return isoswitch_df
 
-    # --- Public method: Dirichlet test with parallelization by comparison ---
     def find_switching_isoforms_dirichlet(self,
                                           cell_group_column='cell_type',
                                           min_count=30,
-                                          min_diff=0.2,
+                                          min_log_fold_change=0.5,
                                           filter_loud=False,
                                           n_jobs=1,
-                                          batch_size=None):
+                                          batch_size=None,
+                                          min_fdr=0.05):
         if 'geneId' not in self.var.columns:
             return pd.DataFrame()
+
         cell_types = self.obs[cell_group_column].unique()
         comparisons = list(combinations(cell_types, 2))
         results = []
+
         def process_comparison(g1, g2):
             filtered_ss = self.__filter_genes(
                 g1, g2,
                 cell_group_column=cell_group_column,
                 min_count=min_count,
-                min_diff=min_diff,
+                min_log_fold_change=min_log_fold_change,
                 filter_loud=filter_loud
             )
             gene_ids = list(np.unique(filtered_ss.var['geneId']))
@@ -411,6 +470,7 @@ class SwitchSearch(sc.AnnData):
                 if res is not None:
                     res_comparison.extend(res)
             return res_comparison
+
         if n_jobs == 1:
             for g1, g2 in comparisons:
                 results.extend(process_comparison(g1, g2))
@@ -421,24 +481,178 @@ class SwitchSearch(sc.AnnData):
             for res in parallel_results:
                 if res:
                     results.extend(res)
+
         results_df = pd.DataFrame(results)
-        cols_order = ["gene_id", "transcript_id", "group_1", "group_2", "contrast",
-                      "p_value", "chi2_stat", "log_fold_change", "avg_usage_group_1", "avg_usage_group_2",
-                      "n_cells_group_1", "n_cells_group_2", "total_cells",
-                      "percent_expressed_group_1", "percent_expressed_group_2"]
+        cols_order = [
+            "gene_id", "transcript_id", "group_1", "group_2", "contrast",
+            "p_value", "chi2_stat", "log_fold_change", "avg_usage_group_1",
+            "avg_usage_group_2", "n_cells_group_1", "n_cells_group_2",
+            "total_cells", "percent_expressed_group_1", "percent_expressed_group_2",
+            "adj_pval"
+        ]
+        if not results_df.empty and 'p_value' in results_df.columns:
+            results_df['adj_pval'] = multipletests(results_df['p_value'], method='fdr_bh')[1]
+            results_df = results_df[results_df['adj_pval'] <= min_fdr]
+
         results_df = results_df[[col for col in cols_order if col in results_df.columns]]
         self.relevant_genes = results_df
         return results_df
+
+    ###########################################################################
+    # UPDATED: Flattened parallel approach for Dirichlet test (nested).
+    ###########################################################################
+    def find_switching_isoforms_dirichlet_nested(self,
+                                                 primary_group_column='cell_type',
+                                                 secondary_group_column='condition',
+                                                 min_count=30,
+                                                 min_log_fold_change=0.5,
+                                                 filter_loud=False,
+                                                 n_jobs=1,
+                                                 batch_size=None,
+                                                 min_fdr=0.05):
+        """
+        Flattened Dirichlet test comparing secondary groups (e.g., case vs. control)
+        within each primary group (e.g., cell type). A single Parallel block
+        runs over all (primary_group, pair_of_secondary_groups) tasks.
+        """
+        primary_groups = self.obs[primary_group_column].unique()
+
+        # 1) Gather all tasks (one per (primary, secondary_group1, secondary_group2)).
+        tasks = []
+        for primary in primary_groups:
+            subset = self[self.obs[primary_group_column] == primary]
+            if secondary_group_column not in subset.obs.columns:
+                continue
+            secondary_groups = subset.obs[secondary_group_column].unique()
+            if len(secondary_groups) < 2:
+                continue
+            comparisons = list(combinations(secondary_groups, 2))
+            for (g1, g2) in comparisons:
+                tasks.append((primary, g1, g2))
+
+        # 2) Define a function to process one task.
+        def process_one_task(primary, cond1, cond2):
+            # Subset to just this primary group
+            subset = self[self.obs[primary_group_column] == primary].copy()
+            nested_ss = SwitchSearch(subset)
+            # Filter genes for these two conditions
+            filtered_ss = nested_ss._SwitchSearch__filter_genes(
+                cond1, cond2,
+                cell_group_column=secondary_group_column,
+                min_count=min_count,
+                min_log_fold_change=min_log_fold_change,
+                filter_loud=filter_loud
+            )
+            gene_ids = list(np.unique(filtered_ss.var['geneId']))
+            if not gene_ids:
+                return []
+            local_results = []
+            for gene in gene_ids:
+                res = filtered_ss.compare_gene(cond1, cond2, secondary_group_column, gene)
+                if res is not None:
+                    # Annotate each result row with the primary group
+                    for entry in res:
+                        entry["primary_group"] = primary
+                    local_results.extend(res)
+            return local_results
+
+        # 3) Run in parallel (flattened).
+        if n_jobs == 1:
+            results_raw = []
+            for t in tasks:
+                results_raw.extend(process_one_task(*t))
+        else:
+            parallel_res = Parallel(n_jobs=n_jobs, backend="loky")(
+                delayed(process_one_task)(*t) for t in tasks
+            )
+            results_raw = [item for sublist in parallel_res for item in sublist]
+
+        results_df = pd.DataFrame(results_raw)
+        if results_df.empty:
+            return results_df
+
+        # Adjust p-values and filter
+        if 'p_value' in results_df.columns:
+            results_df['adj_pval'] = multipletests(results_df['p_value'], method='fdr_bh')[1]
+            results_df = results_df[results_df['adj_pval'] <= min_fdr]
+
+        cols_order = [
+            "primary_group", "gene_id", "transcript_id",
+            "group_1", "group_2", "contrast", "p_value", "chi2_stat",
+            "log_fold_change", "avg_usage_group_1", "avg_usage_group_2",
+            "n_cells_group_1", "n_cells_group_2", "total_cells",
+            "percent_expressed_group_1", "percent_expressed_group_2", "adj_pval"
+        ]
+        return results_df[[c for c in cols_order if c in results_df.columns]]
 
     def find_switching_isoforms_wilcoxon(self,
                                          cell_group_column='cell_type',
                                          min_fdr=0.05,
                                          min_log_fold_change=0.5,
                                          n_jobs=1):
-        return self.__scanpy_wilcoxon_switching_isoforms(cell_labels_column=cell_group_column,
-                                                           min_fdr=min_fdr,
-                                                           min_log_fold_change=min_log_fold_change,
-                                                           n_jobs=n_jobs)
+        return self.__scanpy_wilcoxon_switching_isoforms(
+            cell_labels_column=cell_group_column,
+            min_fdr=min_fdr,
+            min_log_fold_change=min_log_fold_change,
+            n_jobs=n_jobs
+        )
+
+    ###########################################################################
+    # UPDATED: Flattened parallel approach for Wilcoxon test (nested).
+    ###########################################################################
+    def find_switching_isoforms_wilcoxon_nested(self,
+                                                primary_group_column='cell_type',
+                                                secondary_group_column='condition',
+                                                min_fdr=0.05,
+                                                min_log_fold_change=0.5,
+                                                n_jobs=1):
+        """
+        Flattened Wilcoxon test comparing secondary groups (e.g., case vs. control)
+        within each primary group (e.g., cell type). A single Parallel block
+        runs over all primary groups.
+        """
+        primary_groups = self.obs[primary_group_column].unique()
+
+        # 1) Gather tasks (one per primary group).
+        tasks = []
+        for primary in primary_groups:
+            tasks.append(primary)
+
+        # 2) Define a function to process one primary group.
+        def process_one_task(primary):
+            subset = self[self.obs[primary_group_column] == primary].copy()
+            if secondary_group_column not in subset.obs.columns:
+                return pd.DataFrame()
+
+            nested_ss = SwitchSearch(subset)
+            # Reuse the single-level Wilcoxon method on the secondary group column
+            nested_res = nested_ss._SwitchSearch__scanpy_wilcoxon_switching_isoforms(
+                cell_labels_column=secondary_group_column,
+                min_fdr=min_fdr,
+                min_log_fold_change=min_log_fold_change,
+                n_jobs=1  # ensure single-threaded for this step
+            )
+            if not nested_res.empty:
+                nested_res["primary_group"] = primary
+            return nested_res
+
+        # 3) Run in parallel (flattened).
+        if n_jobs == 1:
+            results = []
+            for p in tasks:
+                df_res = process_one_task(p)
+                if not df_res.empty:
+                    results.append(df_res)
+        else:
+            parallel_res = Parallel(n_jobs=n_jobs, backend="loky")(
+                delayed(process_one_task)(p) for p in tasks
+            )
+            results = [df for df in parallel_res if not df.empty]
+
+        if results:
+            return pd.concat(results, ignore_index=True)
+        else:
+            return pd.DataFrame()
 
 
 # %% ../nbs/005_switch_search.ipynb 5
