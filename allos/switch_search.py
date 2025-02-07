@@ -706,7 +706,7 @@ def create_iso_adata(
     # Return the AnnData object containing isoform counts
     return adata_iso
 
-# %% ../nbs/005_switch_search.ipynb 23
+# %% ../nbs/005_switch_search.ipynb 22
 def get_top_n_isoforms(adata, gene_id, top_n=5, strip=False):
     """
     Get the top_n transcript IDs for a given gene based on overall average expression.
