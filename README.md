@@ -115,36 +115,22 @@ sicelore_mouse_data
         var: 'geneId'
 
 ``` python
-sicelore_mouse_data.var
+sicelore_mouse_data.var.head(10).style
 ```
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-&#10;    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-&#10;    .dataframe thead th {
-        text-align: right;
-    }
+<style type="text/css">
 </style>
 
-|                       | geneId |
+|                       | geneId |
 |-----------------------|--------|
-| transcriptId          |        |
+| transcriptId          |        |
 | ENSMUST00000156717.1  | Klc2   |
 | ENSMUST00000212520.1  | Capn15 |
 | ENSMUST00000025798.12 | Klc2   |
 | ENSMUST00000231280.1  | Eva1c  |
 | ENSMUST00000039286.4  | Atg5   |
-| ...                   | ...    |
-| ENSMUST00000127375.1  | Snx11  |
-| ENSMUST00000125687.1  | Camta2 |
-| ENSMUST00000139277.7  | Atp5o  |
-| ENSMUST00000044234.13 | Tgfbr1 |
-| ENSMUST00000198403.1  | Ptbp2  |
-
-<p>31986 rows × 1 columns</p>
-</div>
+| ENSMUST00000144552.7  | Znhit3 |
+| ENSMUST00000112304.8  | Ppm1b  |
+| ENSMUST00000162041.7  | Gcc2   |
+| ENSMUST00000053506.6  | Bbs1   |
+| ENSMUST00000028207.12 | Crat   |

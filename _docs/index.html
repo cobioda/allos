@@ -277,7 +277,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="basic-workflow">Basic workflow</h2>
 <p>The first thing we need to work with Allos is data. Our goal is for Allos to handle many, if not all, types of single-cell isoform resolution data, making it platform and protocol agnostic. While it is important to consider the biases, strengths, limitations, and caveats of each approach, all methods utilize a transcript matrix from which a gene matrix can be derived. Allos also allows users to supply their own custom annotations in the form of a GTF or use a reference annotation. If a reference annotation is provided, all plotting functions will use the underlying GTF to retrieve the transcript information.</p>
 <p>To help you follow the basic workflow, we provide an easy way to download one of our test datasets. The Sicelore dataset comprises 1,121 single-cell transcriptomes from two technical replicates derived from an embryonic day 18 (E18) mouse brain, consisting of 951 cells and 190 cells. The dataset was generated using the 10x Genomics Chromium system and sequenced with both Oxford Nanopore and Illumina platforms, producing 322 million Nanopore reads and 70 million Illumina reads for the 951-cell replicate, and 32 million Nanopore reads with 43 million Illumina reads for the 190-cell replicate. The dataset captured a median of 2,427 genes and 6,047 UMIs per cell, enabling the identification of 33,002 annotated transcript isoforms and 4,388 novel isoforms. Major cell types in the dataset include radial glia, cycling radial glia, intermediate progenitors, Cajal-Retzius cells, and maturing GABAergic and glutamatergic neurons, providing a detailed resource for studying transcriptome-wide alternative splicing, isoform expression, and sequence diversity during mouse brain development.</p>
-<div id="cell-8" class="cell">
+<div id="cell-8" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> allos.preprocessing <span class="im">as</span> pp</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>sicelore_mouse_data <span class="op">=</span> pp.process_mouse_data()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -301,81 +301,74 @@ Test data (mouse_2) downloaded successfully</code></pre>
 </div>
 </div>
 <p>In this dataset, we observe the mouse data organized in a cell-by-transcript matrix format. This structure allows us to examine the expression levels of individual transcripts across different cells. Additionally, each transcript is associated with a specific gene, providing a hierarchical view of gene expression. This organization is crucial for understanding the relationship between transcripts and their corresponding genes.</p>
-<div id="cell-10" class="cell">
+<div id="cell-10" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sicelore_mouse_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div class="cell-output cell-output-display" data-execution_count="2">
 <pre><code>View of AnnData object with n_obs × n_vars = 1109 × 31986
     obs: 'batch', 'cell_type'
     var: 'geneId'</code></pre>
 </div>
 </div>
-<div id="cell-11" class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>sicelore_mouse_data.var</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
+<div id="cell-11" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>sicelore_mouse_data.var.head(<span class="dv">10</span>).style</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<style type="text/css">
+</style>
 
-
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table id="T_8256a" class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">geneId</th>
+<th class="blank level0" data-quarto-table-cell-role="th">&nbsp;</th>
+<th id="T_8256a_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">geneId</th>
 </tr>
 <tr class="even">
-<th data-quarto-table-cell-role="th">transcriptId</th>
-<th data-quarto-table-cell-role="th"></th>
+<th class="index_name level0" data-quarto-table-cell-role="th">transcriptId</th>
+<th class="blank col0" data-quarto-table-cell-role="th">&nbsp;</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">ENSMUST00000156717.1</td>
-<td>Klc2</td>
+<td id="T_8256a_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">ENSMUST00000156717.1</td>
+<td id="T_8256a_row0_col0" class="data row0 col0">Klc2</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">ENSMUST00000212520.1</td>
-<td>Capn15</td>
+<td id="T_8256a_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">ENSMUST00000212520.1</td>
+<td id="T_8256a_row1_col0" class="data row1 col0">Capn15</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">ENSMUST00000025798.12</td>
-<td>Klc2</td>
+<td id="T_8256a_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">ENSMUST00000025798.12</td>
+<td id="T_8256a_row2_col0" class="data row2 col0">Klc2</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">ENSMUST00000231280.1</td>
-<td>Eva1c</td>
+<td id="T_8256a_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">ENSMUST00000231280.1</td>
+<td id="T_8256a_row3_col0" class="data row3 col0">Eva1c</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">ENSMUST00000039286.4</td>
-<td>Atg5</td>
+<td id="T_8256a_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">ENSMUST00000039286.4</td>
+<td id="T_8256a_row4_col0" class="data row4 col0">Atg5</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">...</td>
-<td>...</td>
+<td id="T_8256a_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">ENSMUST00000144552.7</td>
+<td id="T_8256a_row5_col0" class="data row5 col0">Znhit3</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">ENSMUST00000127375.1</td>
-<td>Snx11</td>
+<td id="T_8256a_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">ENSMUST00000112304.8</td>
+<td id="T_8256a_row6_col0" class="data row6 col0">Ppm1b</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">ENSMUST00000125687.1</td>
-<td>Camta2</td>
+<td id="T_8256a_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">ENSMUST00000162041.7</td>
+<td id="T_8256a_row7_col0" class="data row7 col0">Gcc2</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">ENSMUST00000139277.7</td>
-<td>Atp5o</td>
+<td id="T_8256a_level0_row8" class="row_heading level0 row8" data-quarto-table-cell-role="th">ENSMUST00000053506.6</td>
+<td id="T_8256a_row8_col0" class="data row8 col0">Bbs1</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">ENSMUST00000044234.13</td>
-<td>Tgfbr1</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">ENSMUST00000198403.1</td>
-<td>Ptbp2</td>
+<td id="T_8256a_level0_row9" class="row_heading level0 row9" data-quarto-table-cell-role="th">ENSMUST00000028207.12</td>
+<td id="T_8256a_row9_col0" class="data row9 col0">Crat</td>
 </tr>
 </tbody>
 </table>
-
-<p>31986 rows × 1 columns</p>
-</div>
 </div>
 </div>
 
