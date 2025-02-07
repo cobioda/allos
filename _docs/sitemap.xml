@@ -1,39 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://cobioda.github.io/allos/index.html</loc>
-    <lastmod>2025-01-27T00:36:31.808Z</lastmod>
+    <loc>https://cobioda.github.io/allos/metacells.html</loc>
+    <lastmod>2025-02-07T13:03:59.058Z</lastmod>
   </url>
   <url>
-    <loc>https://cobioda.github.io/allos/006_gene_report.html</loc>
-    <lastmod>2025-01-27T00:36:40.053Z</lastmod>
+    <loc>https://cobioda.github.io/allos/008_visuals.html</loc>
+    <lastmod>2025-02-07T13:03:59.246Z</lastmod>
   </url>
   <url>
     <loc>https://cobioda.github.io/allos/004_anndata_iso.html</loc>
-    <lastmod>2025-01-27T00:36:38.092Z</lastmod>
-  </url>
-  <url>
-    <loc>https://cobioda.github.io/allos/002_transcript_data.html</loc>
-    <lastmod>2025-01-27T00:36:32.736Z</lastmod>
+    <lastmod>2025-02-07T11:56:17.102Z</lastmod>
   </url>
   <url>
     <loc>https://cobioda.github.io/allos/palettes.html</loc>
-    <lastmod>2025-01-27T00:36:34.241Z</lastmod>
+    <lastmod>2025-02-07T11:56:16.802Z</lastmod>
   </url>
   <url>
     <loc>https://cobioda.github.io/allos/transcript_plots.html</loc>
-    <lastmod>2025-01-27T00:40:35.740Z</lastmod>
+    <lastmod>2025-02-07T13:03:58.518Z</lastmod>
   </url>
   <url>
-    <loc>https://cobioda.github.io/allos/003_readers_tests.html</loc>
-    <lastmod>2025-01-27T00:36:39.697Z</lastmod>
+    <loc>https://cobioda.github.io/allos/006_gene_report.html</loc>
+    <lastmod>2025-02-07T11:56:17.278Z</lastmod>
   </url>
   <url>
-    <loc>https://cobioda.github.io/allos/005_switch_search.html</loc>
-    <lastmod>2025-01-27T00:36:40.286Z</lastmod>
+    <loc>https://cobioda.github.io/allos/switch_search.html</loc>
+    <lastmod>2025-02-07T13:05:15.630Z</lastmod>
   </url>
   <url>
-    <loc>https://cobioda.github.io/allos/0100_test_.html</loc>
-    <lastmod>2025-01-27T00:36:31.718Z</lastmod>
+    <loc>https://cobioda.github.io/allos/transcript_data.html</loc>
+    <lastmod>2025-02-07T13:04:51.730Z</lastmod>
+  </url>
+  <url>
+    <loc>https://cobioda.github.io/allos/index.html</loc>
+    <lastmod>2025-02-07T13:03:58.038Z</lastmod>
+  </url>
+  <url>
+    <loc>https://cobioda.github.io/allos/readers_tests.html</loc>
+    <lastmod>2025-02-07T13:03:59.034Z</lastmod>
+  </url>
+  <url>
+    <loc>https://cobioda.github.io/allos/007_preprocesing.html</loc>
+    <lastmod>2025-02-07T13:03:59.142Z</lastmod>
   </url>
 </urlset>

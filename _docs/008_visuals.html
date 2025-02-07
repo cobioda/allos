@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="The module provides several palettes that are recomended to be used with plotting functions offered by Allos.">
 
-<title>Palettes – allos</title>
+<title>visuals – allos</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -104,17 +103,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="Palettes – allos">
-<meta property="og:description" content="The module provides several palettes that are recomended to be used with plotting functions offered by Allos.">
-<meta property="og:image" content="https://cobioda.github.io/allos/000_palettes_files/figure-html/cell-2-output-1.png">
+<meta property="og:title" content="allos">
+<meta property="og:description" content="Storage and visualization of long read based single cell datasets">
+<meta property="og:image" content="https://cobioda.github.io/allos/008_visuals_files/figure-html/cell-5-output-2.png">
 <meta property="og:site_name" content="allos">
-<meta property="og:image:height" content="203">
-<meta property="og:image:width" content="3140">
-<meta name="twitter:title" content="Palettes – allos">
-<meta name="twitter:description" content="The module provides several palettes that are recomended to be used with plotting functions offered by Allos.">
-<meta name="twitter:image" content="https://cobioda.github.io/allos/000_palettes_files/figure-html/cell-2-output-1.png">
-<meta name="twitter:image-height" content="203">
-<meta name="twitter:image-width" content="3140">
+<meta property="og:image:height" content="431">
+<meta property="og:image:width" content="759">
+<meta name="twitter:title" content="allos">
+<meta name="twitter:description" content="Storage and visualization of long read based single cell datasets">
+<meta name="twitter:image" content="https://cobioda.github.io/allos/008_visuals_files/figure-html/cell-5-output-2.png">
+<meta name="twitter:image-height" content="431">
+<meta name="twitter:image-width" content="759">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -139,7 +138,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./palettes.html">Palettes</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./008_visuals.html">008_visuals.html</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -159,7 +158,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./palettes.html" class="sidebar-item-text sidebar-link active">
+  <a href="./palettes.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Palettes</span></a>
   </div>
 </li>
@@ -207,7 +206,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./008_visuals.html" class="sidebar-item-text sidebar-link">
+  <a href="./008_visuals.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">008_visuals.html</span></a>
   </div>
 </li>
@@ -222,64 +221,322 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#plot_transcripts" id="toc-plot_transcripts" class="nav-link active" data-scroll-target="#plot_transcripts">plot_transcripts</a></li>
+  <li><a href="#plot_density" id="toc-plot_density" class="nav-link" data-scroll-target="#plot_density">plot_density</a></li>
+  <li><a href="#calculate_density" id="toc-calculate_density" class="nav-link" data-scroll-target="#calculate_density">calculate_density</a></li>
+  <li><a href="#get_dens" id="toc-get_dens" class="nav-link" data-scroll-target="#get_dens">get_dens</a></li>
+  <li><a href="#wkde2d" id="toc-wkde2d" class="nav-link" data-scroll-target="#wkde2d">wkde2d</a></li>
+  <li><a href="#normal_reference_bandwidth" id="toc-normal_reference_bandwidth" class="nav-link" data-scroll-target="#normal_reference_bandwidth">normal_reference_bandwidth</a></li>
+  <li><a href="#plot_density_multi" id="toc-plot_density_multi" class="nav-link" data-scroll-target="#plot_density_multi">plot_density_multi</a></li>
+  <li><a href="#plot_transcript_exspression_dotplot" id="toc-plot_transcript_exspression_dotplot" class="nav-link" data-scroll-target="#plot_transcript_exspression_dotplot">plot_transcript_exspression_dotplot</a></li>
+  <li><a href="#plot_transcript_expression_violin" id="toc-plot_transcript_expression_violin" class="nav-link" data-scroll-target="#plot_transcript_expression_violin">plot_transcript_expression_violin</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/cobioda/allos/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Palettes</h1>
-</div>
-
-<div>
-  <div class="description">
-    The module provides several palettes that are recomended to be used with plotting functions offered by Allos.
-  </div>
-</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
-
-
-</header>
 
 
 <!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
-<div id="cell-2" class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the color palette</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>sns.palplot(synthwave)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000_palettes_files/figure-html/cell-2-output-1.png" width="1570" height="101" class="figure-img"></p>
-</figure>
+<div id="cell-1" class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> allos.readers_tests <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> allos.preprocessing <span class="im">import</span> subset_common_cells, transfer_obs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<div id="cell-2" class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>combined_mouse_data <span class="op">=</span> process_mouse_data()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+🔎 Looking for file at: /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/e18.mouse.clusters.csv
+✅ File found at: /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/e18.mouse.clusters.csv
+✅ File already exists at: /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_1.txt.gz
+
+🔄 Decompressing /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_1.txt.gz to /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_1.txt...
+✅ Decompression complete.
+Test data (mouse_1) downloaded successfully
+✅ File already exists at: /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_2.txt.gz
+
+🔄 Decompressing /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_2.txt.gz to /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_2.txt...
+✅ Decompression complete.
+Test data (mouse_2) downloaded successfully</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/anndata/_core/anndata.py:1754: UserWarning: Observation names are not unique. To make them unique, call `.obs_names_make_unique`.
+  utils.warn_names_duplicates("obs")</code></pre>
 </div>
 </div>
 <div id="cell-3" class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>sns.palplot(ghibli)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scanpy <span class="im">as</span> sc</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> allos.preprocessing <span class="im">import</span> get_sot_gene_matrix</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-4" class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mouse_data_gene <span class="op">=</span> get_sot_gene_matrix(combined_mouse_data)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>sc.pp.normalize_total(mouse_data_gene,target_sum <span class="op">=</span> <span class="fl">1e6</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>sc.pp.log1p(mouse_data_gene)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>sc.pp.neighbors(mouse_data_gene)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>sc.tl.umap(mouse_data_gene)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>sc.pl.umap(mouse_data_gene, color <span class="op">=</span> <span class="st">'cell_type'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/scanpy/tools/_utils.py:41: UserWarning: You’re trying to run this on 12561 dimensions of `.X`, if you really want this, set `use_rep='X'`.
+         Falling back to preprocessing with `sc.pp.pca` and default params.
+  warnings.warn(
+/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/tqdm/auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm</code></pre>
+</div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="000_palettes_files/figure-html/cell-3-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="008_visuals_files/figure-html/cell-5-output-2.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
+<div id="cell-5" class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>sc.pl.umap(mouse_data_gene, color <span class="op">=</span> <span class="st">'Clta'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="008_visuals_files/figure-html/cell-6-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-6" class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>sc.pp.normalize_total(combined_mouse_data,target_sum <span class="op">=</span> <span class="fl">1e6</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>sc.pp.log1p(combined_mouse_data)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>sc.pp.neighbors(combined_mouse_data)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>sc.tl.umap(combined_mouse_data)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>sc.pl.umap(combined_mouse_data, color <span class="op">=</span> <span class="st">'cell_type'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/scanpy/preprocessing/_normalization.py:207: UserWarning: Received a view of an AnnData. Making a copy.
+  view_to_actual(adata)
+/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/scanpy/tools/_utils.py:41: UserWarning: You’re trying to run this on 31986 dimensions of `.X`, if you really want this, set `use_rep='X'`.
+         Falling back to preprocessing with `sc.pp.pca` and default params.
+  warnings.warn(</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="008_visuals_files/figure-html/cell-7-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<pre><code>/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/fastcore/docscrape.py:230: UserWarning: Unknown section Parameters:
+  else: warn(msg)
+/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/fastcore/docscrape.py:230: UserWarning: Unknown section Returns:
+  else: warn(msg)</code></pre>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/visuals.py#L15" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="plot_transcripts" class="level3">
+<h3 class="anchored" data-anchor-id="plot_transcripts">plot_transcripts</h3>
+<blockquote class="blockquote">
+<pre><code> plot_transcripts (adata, gene_id=None, transcripts=None)</code></pre>
+</blockquote>
+<p><em>Plot the UMAP with the specified transcripts or transcripts associated with the given gene ID.</em></p>
+<div id="cell-8" class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>plot_transcripts(combined_mouse_data, gene_id<span class="op">=</span><span class="st">'Clta'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="008_visuals_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-9" class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>plot_transcripts(combined_mouse_data, transcripts<span class="op">=</span>[<span class="st">'ENSMUST00000170241.7'</span>,<span class="st">'ENSMUST00000107849.9'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="008_visuals_files/figure-html/cell-10-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/visuals.py#L229" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="plot_density" class="level3">
+<h3 class="anchored" data-anchor-id="plot_density">plot_density</h3>
+<blockquote class="blockquote">
+<pre><code> plot_density (adata, feature, basis='umap', adjust=1.0, cmap='viridis')</code></pre>
+</blockquote>
+<p><em>Simple scatterplot colored by the weighted density of <code>feature</code>.</em></p>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/visuals.py#L183" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="calculate_density" class="level3">
+<h3 class="anchored" data-anchor-id="calculate_density">calculate_density</h3>
+<blockquote class="blockquote">
+<pre><code> calculate_density (adata, feature, basis='umap', adjust=1.0,
+                    map_to_cells=True)</code></pre>
+</blockquote>
+<p><em>1) Extract coordinates from adata.obsm[f”X_{basis}”]. 2) Extract expression vector for <code>feature</code>. 3) Run the weighted KDE. 4) If map_to_cells=True, return per-cell densities; else return the full grid.</em></p>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/visuals.py#L154" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="get_dens" class="level3">
+<h3 class="anchored" data-anchor-id="get_dens">get_dens</h3>
+<blockquote class="blockquote">
+<pre><code> get_dens (points, dens)</code></pre>
+</blockquote>
+<p><em>Map each 2D point to the approximate density in <code>dens["z"]</code>. This mimics the R code that uses findInterval. points: shape (n_cells, 2) dens : dict with ‘x’, ‘y’, ‘z’, from wkde2d Returns a 1D np.array of densities (one per row in points).</em></p>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/visuals.py#L76" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="wkde2d" class="level3">
+<h3 class="anchored" data-anchor-id="wkde2d">wkde2d</h3>
+<blockquote class="blockquote">
+<pre><code> wkde2d (x, y, w=None, h=None, adjust=1.0, n=100, lims=None)</code></pre>
+</blockquote>
+<p><em>Python equivalent of your R ‘wkde2d’ function: x, y: coordinates (1D arrays) for each observation. w : weight vector (same length as x, y). h : tuple or scalar for bandwidth in the x/y directions (if None, use approximate). adjust: bandwidth adjustment scalar. n : number of grid points in each direction. lims: [x_min, x_max, y_min, y_max] to define the grid. Returns a dict with {‘x’: gx, ‘y’: gy, ‘z’: Z}, analogous to R’s list(x=…, y=…, z=…).</em></p>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/visuals.py#L56" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="normal_reference_bandwidth" class="level3">
+<h3 class="anchored" data-anchor-id="normal_reference_bandwidth">normal_reference_bandwidth</h3>
+<blockquote class="blockquote">
+<pre><code> normal_reference_bandwidth (x)</code></pre>
+</blockquote>
+<p><em>Approximate the normal-reference (Silverman’s) bandwidth for 1D data. R’s ks::hpi uses a more sophisticated pilot estimation, but this is often ‘close enough’ for large data.</em></p>
+<div id="cell-15" class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>plot_density(combined_mouse_data, <span class="st">'ENSMUST00000170241.7'</span>, basis<span class="op">=</span> <span class="st">'umap'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="008_visuals_files/figure-html/cell-16-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/visuals.py#L251" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="plot_density_multi" class="level3">
+<h3 class="anchored" data-anchor-id="plot_density_multi">plot_density_multi</h3>
+<blockquote class="blockquote">
+<pre><code> plot_density_multi (adata, features, basis='umap', adjust=1.0,
+                     cmap='viridis')</code></pre>
+</blockquote>
+<p><em>Plot one or multiple features’ density on the specified 2D embedding. - If ‘features’ is a single string, makes one subplot. - If ‘features’ is a list of strings, makes multiple side-by-side subplots.</em></p>
+<div id="cell-17" class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>plot_density_multi(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    adata<span class="op">=</span>combined_mouse_data,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    features<span class="op">=</span>[<span class="st">'ENSMUST00000170241.7'</span>, <span class="st">'ENSMUST00000107849.9'</span>],</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    basis<span class="op">=</span><span class="st">'umap'</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="008_visuals_files/figure-html/cell-18-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/visuals.py#L302" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="plot_transcript_exspression_dotplot" class="level3">
+<h3 class="anchored" data-anchor-id="plot_transcript_exspression_dotplot">plot_transcript_exspression_dotplot</h3>
+<blockquote class="blockquote">
+<pre><code> plot_transcript_exspression_dotplot (adata, gene_id,
+                                      cell_labels_column='cell_type',
+                                      top_n=5)</code></pre>
+</blockquote>
+<p>*Plot isoform expression for a selected gene across cell types, with dot color = average expression, and dot size = percent of cells expressing. Two legends: a colorbar for average expression, and a bubble-size legend for pct_expressing.</p>
+<p>DIFFERENT LAYOUT APPROACH: - We use a single figure+axes with plt.tight_layout(rect=[…]) to reserve space on the right. - We place the bubble-size legend as an “in-figure” legend using bbox_to_anchor, so it won’t be cut off.*</p>
+<div id="cell-19" class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>plot_transcript_exspression_dotplot(combined_mouse_data, gene_id<span class="op">=</span><span class="st">'Clta'</span>, top_n<span class="op">=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="008_visuals_files/figure-html/cell-20-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/visuals.py#L498" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="plot_transcript_expression_violin" class="level3">
+<h3 class="anchored" data-anchor-id="plot_transcript_expression_violin">plot_transcript_expression_violin</h3>
+<blockquote class="blockquote">
+<pre><code> plot_transcript_expression_violin (adata, gene_id,
+                                    cell_labels_column='cell_type',
+                                    top_n=5, figsize_per_isoform=(4, 4))</code></pre>
+</blockquote>
+<p><em>Plot isoform expression for a selected gene across cell types, using violin plots (with each cell’s expression as a point).</em></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 25%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>adata</td>
+<td>AnnData</td>
+<td></td>
+<td>Single-cell AnnData object with .obs (cells) and .var (features).</td>
+</tr>
+<tr class="even">
+<td>gene_id</td>
+<td>str</td>
+<td></td>
+<td>The gene ID to filter isoforms by (adata.var[‘geneId’]).</td>
+</tr>
+<tr class="odd">
+<td>cell_labels_column</td>
+<td>str</td>
+<td>cell_type</td>
+<td>Column name in adata.obs specifying the cell type or cluster label.</td>
+</tr>
+<tr class="even">
+<td>top_n</td>
+<td>int</td>
+<td>5</td>
+<td>If not None, keeps only the top-n isoforms by overall mean expression.</td>
+</tr>
+<tr class="odd">
+<td>figsize_per_isoform</td>
+<td>tuple</td>
+<td>(4, 4)</td>
+<td>Width and height (in inches) for each isoform subplot.</td>
+</tr>
+</tbody>
+</table>
+<div id="cell-21" class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>plot_transcript_expression_violin(combined_mouse_data,  gene_id<span class="op">=</span><span class="st">'Clta'</span>, top_n<span class="op">=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="008_visuals_files/figure-html/cell-22-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-22" class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nbdev<span class="op">;</span> nbdev.nbdev_export()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -704,4 +961,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/cobioda/allos/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/cobioda/allos/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="The module provides several palettes that are recomended to be used with plotting functions offered by Allos.">
 
-<title>Palettes – allos</title>
+<title>preprocesing – allos</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -104,17 +103,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="Palettes – allos">
-<meta property="og:description" content="The module provides several palettes that are recomended to be used with plotting functions offered by Allos.">
-<meta property="og:image" content="https://cobioda.github.io/allos/000_palettes_files/figure-html/cell-2-output-1.png">
+<meta property="og:title" content="allos">
+<meta property="og:description" content="Storage and visualization of long read based single cell datasets">
+<meta property="og:image" content="https://cobioda.github.io/allos/007_preprocesing_files/figure-html/cell-15-output-1.png">
 <meta property="og:site_name" content="allos">
-<meta property="og:image:height" content="203">
-<meta property="og:image:width" content="3140">
-<meta name="twitter:title" content="Palettes – allos">
-<meta name="twitter:description" content="The module provides several palettes that are recomended to be used with plotting functions offered by Allos.">
-<meta name="twitter:image" content="https://cobioda.github.io/allos/000_palettes_files/figure-html/cell-2-output-1.png">
-<meta name="twitter:image-height" content="203">
-<meta name="twitter:image-width" content="3140">
+<meta property="og:image:height" content="1463">
+<meta property="og:image:width" content="1475">
+<meta name="twitter:title" content="allos">
+<meta name="twitter:description" content="Storage and visualization of long read based single cell datasets">
+<meta name="twitter:image" content="https://cobioda.github.io/allos/007_preprocesing_files/figure-html/cell-15-output-1.png">
+<meta name="twitter:image-height" content="1463">
+<meta name="twitter:image-width" content="1475">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -139,7 +138,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./palettes.html">Palettes</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./007_preprocesing.html">007_preprocesing.html</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -159,7 +158,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./palettes.html" class="sidebar-item-text sidebar-link active">
+  <a href="./palettes.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Palettes</span></a>
   </div>
 </li>
@@ -201,7 +200,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./007_preprocesing.html" class="sidebar-item-text sidebar-link">
+  <a href="./007_preprocesing.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">007_preprocesing.html</span></a>
   </div>
 </li>
@@ -222,64 +221,482 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#subset_common_cells" id="toc-subset_common_cells" class="nav-link active" data-scroll-target="#subset_common_cells">subset_common_cells</a></li>
+  <li><a href="#transfer_obs" id="toc-transfer_obs" class="nav-link" data-scroll-target="#transfer_obs">transfer_obs</a></li>
+  <li><a href="#get_sot_gene_matrix" id="toc-get_sot_gene_matrix" class="nav-link" data-scroll-target="#get_sot_gene_matrix">get_sot_gene_matrix</a></li>
+  <li><a href="#compute_transcript_abundance_pct" id="toc-compute_transcript_abundance_pct" class="nav-link" data-scroll-target="#compute_transcript_abundance_pct">compute_transcript_abundance_pct</a></li>
+  <li><a href="#compute_whole_data_transcript_abundance" id="toc-compute_whole_data_transcript_abundance" class="nav-link" data-scroll-target="#compute_whole_data_transcript_abundance">compute_whole_data_transcript_abundance</a></li>
+  <li><a href="#filter_transcripts_by_abundance" id="toc-filter_transcripts_by_abundance" class="nav-link" data-scroll-target="#filter_transcripts_by_abundance">filter_transcripts_by_abundance</a></li>
+  <li><a href="#gene_wise_correlation" id="toc-gene_wise_correlation" class="nav-link" data-scroll-target="#gene_wise_correlation">gene_wise_correlation</a></li>
+  <li><a href="#gene_wise_bland_altman" id="toc-gene_wise_bland_altman" class="nav-link" data-scroll-target="#gene_wise_bland_altman">gene_wise_bland_altman</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/cobioda/allos/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Palettes</h1>
-</div>
-
-<div>
-  <div class="description">
-    The module provides several palettes that are recomended to be used with plotting functions offered by Allos.
-  </div>
-</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
-
-
-</header>
 
 
 <!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
-<div id="cell-2" class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the color palette</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>sns.palplot(synthwave)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000_palettes_files/figure-html/cell-2-output-1.png" width="1570" height="101" class="figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/preprocessing.py#L17" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="subset_common_cells" class="level3">
+<h3 class="anchored" data-anchor-id="subset_common_cells">subset_common_cells</h3>
+<blockquote class="blockquote">
+<pre><code> subset_common_cells (dataset1:anndata._core.anndata.AnnData,
+                      dataset2:anndata._core.anndata.AnnData)</code></pre>
+</blockquote>
+<p><em>Subset <code>dataset1</code> to only include cells that are also present in <code>dataset2</code>.</em></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 38%">
+<col style="width: 52%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dataset1</td>
+<td>AnnData</td>
+<td>First dataset to be subsetted.</td>
+</tr>
+<tr class="even">
+<td>dataset2</td>
+<td>AnnData</td>
+<td>Second dataset to compare with.</td>
+</tr>
+<tr class="odd">
+<td><strong>Returns</strong></td>
+<td><strong>AnnData</strong></td>
+<td><strong>Subset of <code>dataset1</code> containing only cells also found in <code>dataset2</code>.</strong></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/preprocessing.py#L35" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="transfer_obs" class="level3">
+<h3 class="anchored" data-anchor-id="transfer_obs">transfer_obs</h3>
+<blockquote class="blockquote">
+<pre><code> transfer_obs (dataset1:anndata._core.anndata.AnnData,
+               dataset2:anndata._core.anndata.AnnData)</code></pre>
+</blockquote>
+<p><em>Transfer <code>.obs</code> metadata from <code>dataset1</code> to <code>dataset2</code> one by one, while preserving the <code>.var</code> DataFrame of <code>dataset2</code>.</em></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 38%">
+<col style="width: 52%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dataset1</td>
+<td>AnnData</td>
+<td>Source AnnData object with .obs metadata to transfer.</td>
+</tr>
+<tr class="even">
+<td>dataset2</td>
+<td>AnnData</td>
+<td>Target AnnData object to receive .obs metadata.</td>
+</tr>
+<tr class="odd">
+<td><strong>Returns</strong></td>
+<td><strong>AnnData</strong></td>
+<td><strong>The modified <code>dataset2</code> with .obs from <code>dataset1</code> transferred.</strong></td>
+</tr>
+</tbody>
+</table>
 <div id="cell-3" class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>sns.palplot(ghibli)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>combined_mouse_data <span class="op">=</span> process_mouse_data()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+🔎 Looking for file at: /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/e18.mouse.clusters.csv
+✅ File found at: /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/e18.mouse.clusters.csv
+✅ File already exists at: /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_1.txt.gz
+
+🔄 Decompressing /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_1.txt.gz to /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_1.txt...
+✅ Decompression complete.
+Test data (mouse_1) downloaded successfully
+✅ File already exists at: /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_2.txt.gz
+
+🔄 Decompressing /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_2.txt.gz to /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_2.txt...
+✅ Decompression complete.
+Test data (mouse_2) downloaded successfully</code></pre>
+</div>
+</div>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/preprocessing.py#L62" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="get_sot_gene_matrix" class="level3">
+<h3 class="anchored" data-anchor-id="get_sot_gene_matrix">get_sot_gene_matrix</h3>
+<blockquote class="blockquote">
+<pre><code> get_sot_gene_matrix (adata)</code></pre>
+</blockquote>
+<p><em>Construct a gene-level count matrix from transcript-level data.</em></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 38%">
+<col style="width: 52%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>adata</td>
+<td>AnnData</td>
+<td>Input AnnData with transcript-level counts. Must have a column <code>geneId</code><br>in <code>adata.var</code> containing the gene ID for each transcript.</td>
+</tr>
+<tr class="even">
+<td><strong>Returns</strong></td>
+<td><strong>AnnData</strong></td>
+<td><strong>A new AnnData object where columns (var) represent unique genes, <br>and values are aggregated transcript counts.</strong></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/preprocessing.py#L115" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="compute_transcript_abundance_pct" class="level3">
+<h3 class="anchored" data-anchor-id="compute_transcript_abundance_pct">compute_transcript_abundance_pct</h3>
+<blockquote class="blockquote">
+<pre><code> compute_transcript_abundance_pct (adata)</code></pre>
+</blockquote>
+<p>*Compute transcript abundance percentages (“percent spliced in”) for each transcript within its gene. For each cell and transcript, this is computed as:</p>
+<p>transcript_pct = (transcript count / total gene count) * 100*</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 38%">
+<col style="width: 52%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>adata</td>
+<td>AnnData</td>
+<td>AnnData object with transcript-level counts. Must have a column ‘geneId’ in adata.var.</td>
+</tr>
+<tr class="even">
+<td><strong>Returns</strong></td>
+<td><strong>AnnData</strong></td>
+<td><strong>A new AnnData object with the same obs and var as the input, where X holds <br>transcript abundance percentages.</strong></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/preprocessing.py#L158" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="compute_whole_data_transcript_abundance" class="level3">
+<h3 class="anchored" data-anchor-id="compute_whole_data_transcript_abundance">compute_whole_data_transcript_abundance</h3>
+<blockquote class="blockquote">
+<pre><code> compute_whole_data_transcript_abundance (adata)</code></pre>
+</blockquote>
+<p>*Compute transcript abundance percentages for the entire dataset by aggregating transcript counts across all cells into a single composite sample.</p>
+<p>This function sums the transcript counts over all cells, constructs a new AnnData with a single observation, and then computes transcript abundance percentages using compute_transcript_abundance_pct.*</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 38%">
+<col style="width: 52%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>adata</td>
+<td>AnnData</td>
+<td>AnnData object with transcript-level counts. Must have a ‘geneId’ column in adata.var.</td>
+</tr>
+<tr class="even">
+<td><strong>Returns</strong></td>
+<td><strong>AnnData</strong></td>
+<td><strong>A new AnnData object with one observation representing the aggregated data <br>where X holds transcript abundance percentages.</strong></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/preprocessing.py#L202" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="filter_transcripts_by_abundance" class="level3">
+<h3 class="anchored" data-anchor-id="filter_transcripts_by_abundance">filter_transcripts_by_abundance</h3>
+<blockquote class="blockquote">
+<pre><code> filter_transcripts_by_abundance (adata, threshold_pct, verbose=False)</code></pre>
+</blockquote>
+<p>*Filter transcripts from an AnnData object based on their overall transcript abundance percentage, computed by aggregating transcript counts across all cells and leveraging overall gene counts.</p>
+<p>The overall abundance percentage for each transcript is calculated as:</p>
+<pre><code>overall_pct = (total transcript count) / (total gene count for its gene) * 100</code></pre>
+<p>This function uses the compute_whole_data_transcript_abundance function internally to leverage the gene mapping information (via the ‘geneId’ in adata.var). Transcripts with an overall abundance percentage below the specified threshold (threshold_pct) are filtered out.*</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 25%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>adata</td>
+<td>AnnData</td>
+<td></td>
+<td>AnnData object with transcript-level counts. Must have a ‘geneId’ column in adata.var.</td>
+</tr>
+<tr class="even">
+<td>threshold_pct</td>
+<td>float</td>
+<td></td>
+<td>Minimum overall transcript abundance percentage required to keep a transcript.</td>
+</tr>
+<tr class="odd">
+<td>verbose</td>
+<td>bool</td>
+<td>False</td>
+<td>If True, prints the number of transcripts kept and the threshold used. Default is False.</td>
+</tr>
+<tr class="even">
+<td><strong>Returns</strong></td>
+<td><strong>AnnData</strong></td>
+<td></td>
+<td><strong>A new AnnData object with the filtered transcript matrix.</strong></td>
+</tr>
+</tbody>
+</table>
+<div id="cell-8" class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>combined_mouse_data_filtered <span class="op">=</span> filter_transcripts_by_abundance(combined_mouse_data, threshold_pct<span class="op">=</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-9" class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>combined_mouse_data_filtered</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>AnnData object with n_obs × n_vars = 1109 × 24917
+    obs: 'batch', 'cell_type'
+    var: 'geneId'</code></pre>
+</div>
+</div>
+<div id="cell-10" class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>combined_mouse_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>View of AnnData object with n_obs × n_vars = 1109 × 31986
+    obs: 'batch', 'cell_type'
+    var: 'geneId'</code></pre>
+</div>
+</div>
+<div id="cell-11" class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>gene_adata <span class="op">=</span> get_sot_gene_matrix(combined_mouse_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-12" class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>gene_adata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>AnnData object with n_obs × n_vars = 1109 × 12561
+    obs: 'batch', 'cell_type'</code></pre>
+</div>
+</div>
+<pre><code>/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/fastcore/docscrape.py:230: UserWarning: Unknown section Note
+  else: warn(msg)</code></pre>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/preprocessing.py#L282" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="gene_wise_correlation" class="level3">
+<h3 class="anchored" data-anchor-id="gene_wise_correlation">gene_wise_correlation</h3>
+<blockquote class="blockquote">
+<pre><code> gene_wise_correlation (adata_1, adata_2, label_1='Short_Reads',
+                        label_2='Long_Reads', density_hist=True,
+                        facet_obs=None)</code></pre>
+</blockquote>
+<p><em>Generalized function to compute gene-level counts for each dataset, merge them, and plot a log correlation. If facet_obs is specified, creates per-category plots.</em></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 25%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>adata_1</td>
+<td>AnnData</td>
+<td></td>
+<td>First AnnData, presumably transcript-level. Must have a ‘geneId’ column in .var.</td>
+</tr>
+<tr class="even">
+<td>adata_2</td>
+<td>AnnData</td>
+<td></td>
+<td>Second AnnData, presumably transcript-level. Must have a ‘geneId’ column in .var.</td>
+</tr>
+<tr class="odd">
+<td>label_1</td>
+<td>str</td>
+<td>Short_Reads</td>
+<td>Label for the first dataset in the merged DataFrame and on plots.</td>
+</tr>
+<tr class="even">
+<td>label_2</td>
+<td>str</td>
+<td>Long_Reads</td>
+<td>Label for the second dataset in the merged DataFrame and on plots.</td>
+</tr>
+<tr class="odd">
+<td>density_hist</td>
+<td>bool</td>
+<td>True</td>
+<td>If True, display a scatter with marginal histograms. Otherwise, just a scatter.</td>
+</tr>
+<tr class="even">
+<td>facet_obs</td>
+<td>NoneType</td>
+<td>None</td>
+<td>If provided, facet by the unique categories in adata_1.obs[facet_obs] and<br>subset adata_2 identically, producing one subplot per category.</td>
+</tr>
+<tr class="odd">
+<td><strong>Returns</strong></td>
+<td><strong>pd.DataFrame</strong></td>
+<td></td>
+<td><strong>- If facet_obs is None: a DataFrame of shape [n_genes, 5] with columns:<br> [‘gene_name’, label_1, label_2, ‘log_x’, ‘log_y’].<br>- If facet_obs is not None: a concatenated DataFrame of all categories,<br> with an extra column ‘facet’ indicating the category.</strong></td>
+</tr>
+</tbody>
+</table>
+<div id="cell-14" class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>gene_wise_correlation(adata_1<span class="op">=</span>gene_adata, adata_2<span class="op">=</span>combined_mouse_data, label_1<span class="op">=</span><span class="st">"gene matrix"</span>, label_2 <span class="op">=</span> <span class="st">"isoform matrix"</span>, density_hist <span class="op">=</span> <span class="va">True</span>, facet_obs <span class="op">=</span> <span class="st">"cell_type"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="000_palettes_files/figure-html/cell-3-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="007_preprocesing_files/figure-html/cell-15-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/preprocessing.py#L507" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="gene_wise_bland_altman" class="level3">
+<h3 class="anchored" data-anchor-id="gene_wise_bland_altman">gene_wise_bland_altman</h3>
+<blockquote class="blockquote">
+<pre><code> gene_wise_bland_altman (adata_1, adata_2, label_1='Short_Reads',
+                         label_2='Long_Reads', facet_obs=None)</code></pre>
+</blockquote>
+<p>*Similar logic to gene_wise_correlation, but produces a Bland–Altman plot of the log1p-transformed gene counts. If facet_obs is given, one subplot per category.</p>
+<p>Steps: 1) (Optionally) convert each AnnData to gene-level if needed. 2) Sum counts across cells in each AnnData. 3) Merge on gene_name. 4) Bland–Altman: difference vs.&nbsp;mean of log1p(counts).*</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 25%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>adata_1</td>
+<td>AnnData</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>adata_2</td>
+<td>AnnData</td>
+<td></td>
+<td>Both should be gene-level or convertible to gene-level (e.g., via get_sot_gene_matrix).</td>
+</tr>
+<tr class="odd">
+<td>label_1</td>
+<td>str</td>
+<td>Short_Reads</td>
+<td>Label for the first dataset in merged outputs &amp; plot axes.</td>
+</tr>
+<tr class="even">
+<td>label_2</td>
+<td>str</td>
+<td>Long_Reads</td>
+<td>Label for the second dataset in merged outputs &amp; plot axes.</td>
+</tr>
+<tr class="odd">
+<td>facet_obs</td>
+<td>NoneType</td>
+<td>None</td>
+<td>If not None, create one subplot per category in <code>adata_1.obs[facet_obs]</code>.</td>
+</tr>
+<tr class="even">
+<td><strong>Returns</strong></td>
+<td><strong>pd.DataFrame</strong></td>
+<td></td>
+<td><strong>- If facet_obs is None: a single DataFrame with columns<br> [gene_name, label_1, label_2, log_x, log_y, mean_val, diff_val].<br>- If facet_obs is not None: concatenated DataFrame with all categories,<br> plus ‘facet’ indicating each category.</strong></td>
+</tr>
+</tbody>
+</table>
+<div id="cell-16" class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>gene_wise_bland_altman(adata_1<span class="op">=</span>gene_adata, adata_2<span class="op">=</span>combined_mouse_data, label_1<span class="op">=</span><span class="st">"gene matrix"</span>, label_2 <span class="op">=</span> <span class="st">"isoform matrix"</span>, facet_obs <span class="op">=</span> <span class="st">"cell_type"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="007_preprocesing_files/figure-html/cell-17-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-17" class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nbdev<span class="op">;</span> nbdev.nbdev_export()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -704,4 +1121,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/cobioda/allos/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/cobioda/allos/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

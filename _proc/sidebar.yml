@@ -2,7 +2,6 @@ website:
   sidebar:
     contents:
       - index.ipynb
-      - index.html
       - 000_palettes.ipynb
       - 001_transcript_plots.ipynb
       - 002_transcript_data.ipynb
