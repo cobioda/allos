@@ -207,7 +207,8 @@ gene_anndata = original_gene_anndata
 
 ![](index_files/figure-commonmark/cell-6-output-2.png)
 
-# Let’s examine the most differentially expressed genes across the pre-annotated cell types.
+Let’s examine the most differentially expressed genes across the
+pre-annotated cell types.
 
 ``` python
 # Perform differential expression analysis to rank genes on the gene matrix
@@ -396,7 +397,11 @@ top_n = get_top_n_isoforms(sicelore_mouse_data_copy, gene_id='Akap9', strip=True
 tp.draw_transcripts_list(top_n, draw_cds=True)
 ```
 
-![](index_files/figure-commonmark/cell-22-output-1.png)
+    WARNING:root:No CDS features found for transcript ENSMUST00000141817.
+    WARNING:root:No CDS features found for transcript ENSMUST00000177448.
+    WARNING:root:No CDS features found for transcript ENSMUST00000132058.
+
+![](index_files/figure-commonmark/cell-22-output-2.png)
 
 ``` python
 top_n = get_top_n_isoforms(sicelore_mouse_data_copy, gene_id='Akap9', strip=True, top_n=2)
@@ -418,3 +423,10 @@ vs.plot_density_multi(sicelore_mouse_data_copy, features=top_n)
 ```
 
 ![](index_files/figure-commonmark/cell-25-output-1.png)
+
+``` python
+top_n = get_top_n_isoforms(sicelore_mouse_data_copy, gene_id='Cd63', strip=True, top_n=4)
+tp.draw_transcripts_list(top_n, draw_cds=True)
+```
+
+![](index_files/figure-commonmark/cell-26-output-1.png)
