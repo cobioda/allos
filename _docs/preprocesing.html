@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="description" content="This module focuses on preprocessing single-cell RNA sequencing data, ensuring compatibility and efficiency across diverse datasets. It provides essential methods for data cleaning, normalization, and integration, facilitating seamless analysis within the Allos framework.">
 
-<title>preprocesing – allos</title>
+<title>Preprocessing – allos</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -103,14 +104,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="allos">
-<meta property="og:description" content="Storage and visualization of long read based single cell datasets">
+<meta property="og:title" content="Preprocessing – allos">
+<meta property="og:description" content="This module focuses on preprocessing single-cell RNA sequencing data, ensuring compatibility and efficiency across diverse datasets. It provides essential methods for data cleaning, normalization, and integration, facilitating seamless analysis within the Allos framework.">
 <meta property="og:image" content="https://cobioda.github.io/allos/007_preprocesing_files/figure-html/cell-15-output-1.png">
 <meta property="og:site_name" content="allos">
 <meta property="og:image:height" content="1463">
 <meta property="og:image:width" content="1475">
-<meta name="twitter:title" content="allos">
-<meta name="twitter:description" content="Storage and visualization of long read based single cell datasets">
+<meta name="twitter:title" content="Preprocessing – allos">
+<meta name="twitter:description" content="This module focuses on preprocessing single-cell RNA sequencing data, ensuring compatibility and efficiency across diverse datasets. It provides essential methods for data cleaning, normalization, and integration, facilitating seamless analysis within the Allos framework.">
 <meta name="twitter:image" content="https://cobioda.github.io/allos/007_preprocesing_files/figure-html/cell-15-output-1.png">
 <meta name="twitter:image-height" content="1463">
 <meta name="twitter:image-width" content="1475">
@@ -138,7 +139,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./007_preprocesing.html">007_preprocesing.html</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./preprocesing.html">Preprocessing</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -200,8 +201,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./007_preprocesing.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">007_preprocesing.html</span></a>
+  <a href="./preprocesing.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Preprocessing</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -238,9 +239,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="toc-actions"><ul><li><a href="https://github.com/cobioda/allos/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Preprocessing</h1>
+</div>
+
+<div>
+  <div class="description">
+    This module focuses on preprocessing single-cell RNA sequencing data, ensuring compatibility and efficiency across diverse datasets. It provides essential methods for data cleaning, normalization, and integration, facilitating seamless analysis within the Allos framework.
+  </div>
+</div>
 
 
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
 
 
 <!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
@@ -325,7 +347,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<div id="cell-3" class="cell">
+<div id="cell-4" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>combined_mouse_data <span class="op">=</span> process_mouse_data()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -341,6 +363,10 @@ Test data (mouse_1) downloaded successfully
 🔄 Decompressing /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_2.txt.gz to /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_2.txt...
 ✅ Decompression complete.
 Test data (mouse_2) downloaded successfully</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/anndata/_core/anndata.py:1754: UserWarning: Observation names are not unique. To make them unique, call `.obs_names_make_unique`.
+  utils.warn_names_duplicates("obs")</code></pre>
 </div>
 </div>
 <hr>
@@ -504,31 +530,31 @@ Test data (mouse_2) downloaded successfully</code></pre>
 </tr>
 </tbody>
 </table>
-<div id="cell-8" class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>combined_mouse_data_filtered <span class="op">=</span> filter_transcripts_by_abundance(combined_mouse_data, threshold_pct<span class="op">=</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-9" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>combined_mouse_data_filtered <span class="op">=</span> filter_transcripts_by_abundance(combined_mouse_data, threshold_pct<span class="op">=</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-9" class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>combined_mouse_data_filtered</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div id="cell-10" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>combined_mouse_data_filtered</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
 <pre><code>AnnData object with n_obs × n_vars = 1109 × 24917
     obs: 'batch', 'cell_type'
     var: 'geneId'</code></pre>
 </div>
 </div>
-<div id="cell-10" class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>combined_mouse_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div id="cell-11" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>combined_mouse_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
 <pre><code>View of AnnData object with n_obs × n_vars = 1109 × 31986
     obs: 'batch', 'cell_type'
     var: 'geneId'</code></pre>
 </div>
 </div>
-<div id="cell-11" class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>gene_adata <span class="op">=</span> get_sot_gene_matrix(combined_mouse_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-12" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>gene_adata <span class="op">=</span> get_sot_gene_matrix(combined_mouse_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-12" class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>gene_adata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div id="cell-13" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>gene_adata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
 <pre><code>AnnData object with n_obs × n_vars = 1109 × 12561
     obs: 'batch', 'cell_type'</code></pre>
 </div>
@@ -606,8 +632,8 @@ Test data (mouse_2) downloaded successfully</code></pre>
 </tr>
 </tbody>
 </table>
-<div id="cell-14" class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>gene_wise_correlation(adata_1<span class="op">=</span>gene_adata, adata_2<span class="op">=</span>combined_mouse_data, label_1<span class="op">=</span><span class="st">"gene matrix"</span>, label_2 <span class="op">=</span> <span class="st">"isoform matrix"</span>, density_hist <span class="op">=</span> <span class="va">True</span>, facet_obs <span class="op">=</span> <span class="st">"cell_type"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-15" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>gene_wise_correlation(adata_1<span class="op">=</span>gene_adata, adata_2<span class="op">=</span>combined_mouse_data, label_1<span class="op">=</span><span class="st">"gene matrix"</span>, label_2 <span class="op">=</span> <span class="st">"isoform matrix"</span>, density_hist <span class="op">=</span> <span class="va">True</span>, facet_obs <span class="op">=</span> <span class="st">"cell_type"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -681,8 +707,8 @@ Test data (mouse_2) downloaded successfully</code></pre>
 </tr>
 </tbody>
 </table>
-<div id="cell-16" class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>gene_wise_bland_altman(adata_1<span class="op">=</span>gene_adata, adata_2<span class="op">=</span>combined_mouse_data, label_1<span class="op">=</span><span class="st">"gene matrix"</span>, label_2 <span class="op">=</span> <span class="st">"isoform matrix"</span>, facet_obs <span class="op">=</span> <span class="st">"cell_type"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-17" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>gene_wise_bland_altman(adata_1<span class="op">=</span>gene_adata, adata_2<span class="op">=</span>combined_mouse_data, label_1<span class="op">=</span><span class="st">"gene matrix"</span>, label_2 <span class="op">=</span> <span class="st">"isoform matrix"</span>, facet_obs <span class="op">=</span> <span class="st">"cell_type"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -691,8 +717,8 @@ Test data (mouse_2) downloaded successfully</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-17" class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nbdev<span class="op">;</span> nbdev.nbdev_export()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-18" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nbdev<span class="op">;</span> nbdev.nbdev_export()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
