@@ -1,8 +1,8 @@
 website:
   sidebar:
     contents:
-      - index.html
       - index.ipynb
+      - index.html
       - 000_palettes.ipynb
       - 001_transcript_plots.ipynb
       - 002_transcript_data.ipynb
@@ -10,3 +10,6 @@ website:
       - 004_anndata_iso.ipynb
       - 005_switch_search.ipynb
       - 006_gene_report.ipynb
+      - 007_preprocesing.ipynb
+      - 008_visuals.ipynb
+      - 009_metacells.ipynb
