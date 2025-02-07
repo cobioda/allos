@@ -8,7 +8,7 @@
 
 <meta name="description" content="An Isoform resoloution single cell RNA-seq toolkit.">
 
-<title>allos</title>
+<title>Allos – allos</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -107,11 +107,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="allos">
+<meta property="og:title" content="Allos – allos">
 <meta property="og:description" content="An Isoform resoloution single cell RNA-seq toolkit.">
 <meta property="og:image" content="https://cobioda.github.io/allos/resources/logo_allos.png">
 <meta property="og:site_name" content="allos">
-<meta name="twitter:title" content="allos">
+<meta name="twitter:title" content="Allos – allos">
 <meta name="twitter:description" content="An Isoform resoloution single cell RNA-seq toolkit.">
 <meta name="twitter:image" content="https://cobioda.github.io/allos/resources/logo_allos.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -138,7 +138,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">allos</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Allos</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -153,7 +153,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">allos</span></a>
+ <span class="menu-text">Allos</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -237,7 +237,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">allos</h1>
+<h1 class="title">Allos</h1>
 </div>
 
 <div>
@@ -266,7 +266,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <figcaption>Allos_logo</figcaption>
 </figure>
 </div>
-<p><a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" class="img-fluid" alt="License"></a><a href="https://github.com/a-diamant/allos/actions/workflows/deploy.yaml"><img src="https://github.com/a-diamant/allos/actions/workflows/deploy.yaml/badge.svg" class="img-fluid" alt="Deploy to GitHub Pages"></a> <a href="https://github.com/a-diamant/allos/actions/workflows/pages/pages-build-deployment"><img src="https://github.com/a-diamant/allos/actions/workflows/pages/pages-build-deployment/badge.svg" class="img-fluid" alt="pages-build-deployment"></a><a target="_blank" href="https://colab.research.google.com/github/a-diamant/allos/blob/develop/nbs/index.ipynb"> <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"> </a></p>
+<p><a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" class="img-fluid" alt="License"></a><a href="https://github.com/a-diamant/allos/actions/workflows/deploy.yaml"><img src="https://github.com/a-diamant/allos/actions/workflows/deploy.yaml/badge.svg" class="img-fluid" alt="Deploy to GitHub Pages"></a> <a href="https://github.com/a-diamant/allos/actions/workflows/pages/pages-build-deployment"><img src="https://github.com/a-diamant/allos/actions/workflows/pages/pages-build-deployment/badge.svg" class="img-fluid" alt="pages-build-deployment"></a><a target="_blank" href="https://colab.research.google.com/github/a-diamant/allos/blob/develop/nbs/index.ipynb"> <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"> </a><img src="https://img.shields.io/pypi/v/allos.png" class="img-fluid" alt="PyPI - Version"></p>
 <p>Single-cell RNA sequencing (scRNA-seq) has revolutionized our understanding of cellular diversity by allowing the study of gene expression at the individual cell level. However, traditional methods of quantification obscure the most fine-grained transcriptional layer—the individual transcripts at sequence-level resolution—in favor of gene-level binning. This strategy is useful when the sequencing read length is short, as it avoids the difficult task of transcript assembly, which is made even more challenging by the nature of single-cell data.</p>
 <p>Traditional scRNA-seq methods often rely on short-read sequencing technologies, which can limit the ability to resolve full-length transcripts and isoforms. Long-read sequencing technologies, such as those provided by Oxford Nanopore and PacBio, overcome this limitation by producing reads that span entire transcripts. This capability is crucial for accurately identifying and characterizing novel isoforms and understanding the complexity of transcriptomes in single cells. By integrating long-read sequencing with single-cell approaches, researchers can gain deeper insights into cellular heterogeneity and the functional implications of transcriptomic variations.</p>
 <p>Allos is designed to give users familiar with single-cell analysis, and indeed object-oriented programming in general, an extended toolkit wrapping around Scanpy and the wider scverse to facilitate analysis workflows of this type of data. Allos is the culmination of many smaller individualized scripts packaged together into a common framework centered on anndata objects. It also contains many recreations (of varying faithfulness to their originals*) of functions proposed by others in other libraries, languages, or contexts—we by no means intend to plagiarize these methods but only expand them to a wider audience.</p>
