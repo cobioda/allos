@@ -552,46 +552,48 @@ class TranscriptData:
         df.reset_index(drop=True, inplace=True)
         return df
     
-    def get_gene_names_for_transcripts(self, transcript_ids: List[str], ignore_after_period: bool = True) -> List[Optional[str]]:
+    def get_gene_names_for_transcripts(self, transcript_ids: List[str], ignore_after_period: bool = True, alternative_column: Optional[str] = None) -> List[Optional[str]]:
         """
         Given a list of transcript IDs, return a list of the same length
-        where each element is the corresponding gene_name from the GTF.
-        If a transcript is not found or if no 'gene_name' column exists,
+        where each element is the corresponding gene name or alternative column value from the GTF.
+        If a transcript is not found or if the target column is not available in the GTF,
         the result will contain None for that transcript.
 
         Args:
             transcript_ids (List[str]): A list of transcript IDs.
             ignore_after_period (bool): If True, strip the version suffix after the period.
+            alternative_column (Optional[str]): If provided, use this column in place of 'gene_name'.
 
         Returns:
-            List[Optional[str]]: A parallel list of gene names or None.
+            List[Optional[str]]: A parallel list of gene names (or alternative column values) or None.
         """
         # Optionally strip the version suffix using regex
         if ignore_after_period:
             transcript_ids = [re.sub(r"\.\d+$", "", tid) for tid in transcript_ids]
 
         df = self.gr.df
-        # Fix this check so it actually tests for "gene_name":
-        if "gene_name" not in df.columns:
-            logging.warning("No 'gene_name' column in GTF; cannot retrieve gene names.")
+        target_column = alternative_column if alternative_column is not None else "gene_name"
+        
+        if target_column not in df.columns:
+            logging.warning(f"No '{target_column}' column in GTF; cannot retrieve gene names.")
             return [None] * len(transcript_ids)
 
         # Filter to only the rows with the requested transcript IDs
         subset = df[df.transcript_id.isin(transcript_ids)]
 
-        # Build a dict: transcript_id -> set/list of gene_names from the annotation
+        # Build a dict: transcript_id -> list of unique values from the target column in the annotation
         mapping = (
             subset
-            .groupby("transcript_id")["gene_name"]
+            .groupby("transcript_id")[target_column]
             .apply(lambda x: list(x.unique()))
             .to_dict()
         )
 
-        # For each transcript in the input, pick the first gene_name from the mapping
+        # For each transcript in the input, pick the first value from the mapping
         result = []
         for tid in transcript_ids:
             possible_names = mapping.get(tid, [])
-            if len(possible_names) > 0:
+            if possible_names:
                 result.append(possible_names[0])
             else:
                 result.append(None)
