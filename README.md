@@ -5,6 +5,13 @@
 
 ![Allos_logo](resources/logo_allos.png)
 
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)[![Deploy
+to GitHub
+Pages](https://github.com/a-diamant/allos/actions/workflows/deploy.yaml/badge.svg)](https://github.com/a-diamant/allos/actions/workflows/deploy.yaml)
+[![pages-build-deployment](https://github.com/a-diamant/allos/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/a-diamant/allos/actions/workflows/pages/pages-build-deployment)<a target="_blank" href="https://colab.research.google.com/github/a-diamant/allos/blob/develop/nbs/index.ipynb">
+<img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+
 Single-cell RNA sequencing (scRNA-seq) has revolutionized our
 understanding of cellular diversity by allowing the study of gene
 expression at the individual cell level. However, traditional methods of
@@ -131,8 +138,9 @@ print(sicelore_mouse_data.var.head(10))
     ENSMUST00000053506.6     Bbs1
     ENSMUST00000028207.12    Crat
 
-IsoAdata objects can be used just like normal anndata objects, lets take
-a look.
+IsoAdata objects are fully compatible with standard AnnData objects. We
+can use them just like any conventional AnnData instance. Let’s take a
+closer look at how they function.
 
 ``` python
 import scanpy as sc
@@ -199,8 +207,7 @@ gene_anndata = original_gene_anndata
 
 ![](index_files/figure-commonmark/cell-6-output-2.png)
 
-Lets take a look at the most differentially exspressed genes accross the
-already annotated cell types
+# Let’s examine the most differentially expressed genes across the pre-annotated cell types.
 
 ``` python
 # Perform differential expression analysis to rank genes on the gene matrix
@@ -214,7 +221,11 @@ sc.pl.rank_genes_groups(gene_anndata, n_genes=20, sharey=False, figsize=(12, 10)
 
 ![](index_files/figure-commonmark/cell-7-output-2.png)
 
-Now lets look at fifferentially exspressed transcripts.
+Now, let’s examine the differentially expressed transcripts. Unlike our
+previous focus on genes, we will shift our attention to the transcript
+level. The finest resoloution transcriptional layer. We should still see
+considerable gene wise overlap in the two rankings as we would expect in
+many cases the higher gene count to be driven by a single isoform.
 
 ``` python
 # Concatenate the gene name before the transcript ID in the transcript matrix
@@ -245,6 +256,10 @@ sc.pl.rank_genes_groups(transcript_matrix, n_genes=20, sharey=False, figsize=(12
 
 ![](index_files/figure-commonmark/cell-8-output-1.png)
 
+Lets visualise the isoforms of a specific gene Nnat based on multiple
+transcripts from this gene in the top rankings of imature GABAergic vs
+rest.
+
 ``` python
 # Perform the operations on a copy of the sicelore_mouse_data
 sicelore_mouse_data_copy = sicelore_mouse_data.copy()
@@ -262,7 +277,7 @@ sc.tl.umap(sicelore_mouse_data_copy)
 
 ``` python
 import allos.visuals as vs
-vs.plot_transcripts(sicelore_mouse_data_copy, gene_id='Hmgb2')
+vs.plot_transcripts(sicelore_mouse_data_copy, gene_id='Nnat')
 ```
 
 ![](index_files/figure-commonmark/cell-10-output-1.png)
