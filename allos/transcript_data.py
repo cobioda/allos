@@ -13,7 +13,7 @@ import pyranges as pr
 from pyfaidx import Fasta
 import logging
 import re
-from typing import Any, Dict
+from typing import Any, Dict, Union
 
 
 # %% ../nbs/002_transcript_data.ipynb 4
@@ -662,6 +662,108 @@ class TranscriptData:
             "chromosome": chromosome,
             "strand": strand_symbol
         }
+        
+    def get_exon_psi_matrix(self,
+                            gene_name: Optional[str] = None,
+                            transcript_ids: Optional[List[str]] = None,
+                            transcript_counts: Union[Dict[str, float], pd.DataFrame] = None
+                            ) -> pd.DataFrame:
+        """
+        Compute an exon PSI (percent spliced in) matrix for a gene or a given list of transcript IDs.
+        For each unique exon (defined by Chromosome, Start, End, and Strand) among the transcripts,
+        the PSI is calculated as:
+        
+            PSI = (sum of counts for transcripts including the exon) / (total counts for all transcripts)
+        
+        Args:
+            gene_name (str, optional): If provided, transcripts for this gene are retrieved.
+            transcript_ids (List[str], optional): List of transcript IDs.
+                Ignored if gene_name is provided.
+            transcript_counts (dict or pd.DataFrame): Transcript-level counts.
+                If a dict is provided, it is assumed to map transcript_id -> count (single-sample).
+                If a DataFrame is provided, its index should be transcript_ids and its columns
+                represent different samples.
+        
+        Returns:
+            pd.DataFrame: A DataFrame where each row corresponds to a unique exon, with columns:
+                - 'Chromosome', 'Start', 'End', 'Strand'
+                - For a dict input: a column 'psi' (a value in [0,1])
+                - For a DataFrame input: one column per sample (named 'psi_{sample}')
+                - 'included_transcripts': the list of transcripts that include this exon.
+        """
+        if gene_name is not None:
+            transcript_ids = self.get_transcripts_by_gene_name(gene_name)
+            if not transcript_ids:
+                logging.warning(f"No transcripts found for gene name {gene_name}.")
+                return pd.DataFrame()
+        elif transcript_ids is None:
+            logging.error("Either gene_name or transcript_ids must be provided.")
+            return pd.DataFrame()
+        
+        # Process transcript_counts
+        if transcript_counts is None:
+            logging.error("You must provide transcript_counts for PSI computation.")
+            return pd.DataFrame()
+            
+        is_multi_sample = isinstance(transcript_counts, pd.DataFrame)
+        if not is_multi_sample:
+            if isinstance(transcript_counts, dict):
+                counts_series = pd.Series(transcript_counts)
+            else:
+                logging.error("transcript_counts must be a dict or a DataFrame.")
+                return pd.DataFrame()
+            # Keep only transcripts in the provided list
+            counts_series = counts_series[counts_series.index.isin(transcript_ids)]
+            total_counts = counts_series.sum()
+        else:
+            counts_df = transcript_counts.loc[transcript_counts.index.intersection(transcript_ids)]
+            if counts_df.empty:
+                logging.error("No transcript counts found for the provided transcript IDs.")
+                return pd.DataFrame()
+            total_counts = counts_df.sum()  # Series: sample -> total count
+        
+        # Build a mapping from unique exon coordinates to the set of transcript IDs that include it.
+        exon_mapping = {}
+        for tid in transcript_ids:
+            try:
+                exons = self.get_exons(tid)
+            except Exception as e:
+                logging.warning(f"Error retrieving exons for transcript {tid}: {e}")
+                continue
+            if len(exons) == 0:
+                continue
+            # Iterate over each exon in this transcript
+            for _, row in exons.df.iterrows():
+                key = (row["Chromosome"], row["Start"], row["End"], row["Strand"])
+                exon_mapping.setdefault(key, set()).add(tid)
+        
+        # For each unique exon, compute its PSI value(s)
+        rows = []
+        for exon_key, tid_set in exon_mapping.items():
+            row_data = {"Chromosome": exon_key[0],
+                        "Start": exon_key[1],
+                        "End": exon_key[2],
+                        "Strand": exon_key[3]}
+            if is_multi_sample:
+                # Sum counts over transcripts that include this exon for each sample
+                included_counts = counts_df.loc[counts_df.index.intersection(list(tid_set))].sum()
+                psi_dict = {}
+                for sample in counts_df.columns:
+                    tot = total_counts[sample]
+                    psi = included_counts[sample] / tot if tot != 0 else np.nan
+                    psi_dict[f"psi_{sample}"] = psi
+                row_data.update(psi_dict)
+            else:
+                included_counts = counts_series[counts_series.index.isin(list(tid_set))].sum()
+                psi = included_counts / total_counts if total_counts != 0 else np.nan
+                row_data["psi"] = psi
+            row_data["included_transcripts"] = list(tid_set)
+            rows.append(row_data)
+        
+        psi_df = pd.DataFrame(rows)
+        psi_df.sort_values(["Chromosome", "Start"], inplace=True)
+        return psi_df
+
 
 
 

@@ -17,6 +17,7 @@ import sys, requests
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import matplotlib.colors as mcolors
 
 def merge_intervals(intervals):
     """Merge a list of [start, end] intervals."""
@@ -100,14 +101,13 @@ class TranscriptPlots:
             return total
 
         def mapping_fn_unscaled(x):
-            # Introns are scaled by self.intron_scale, exons remain full length
-            # => f(x) = intron_scale*(x - global_start) + (1-intron_scale)*exonic_length_before(x)
+            # Introns are scaled by self.intron_scale, exons remain full length.
             total   = x - global_start
             exonic  = exon_length_before(x)
             return self.intron_scale * total + (1 - self.intron_scale) * exonic
 
-        # Normalize so that f(global_end) == 1
         scaled_global_end = mapping_fn_unscaled(global_end)
+
         def mapping_fn_normalized(x):
             return mapping_fn_unscaled(x) / scaled_global_end
 
@@ -123,25 +123,21 @@ class TranscriptPlots:
         """
         height = 0.2
         ax = plt.gca()
-        # Optimization: cache mapping_fn results to avoid redundant computations.
         cache = {}
         def cached_map(x):
             if x not in cache:
                 cache[x] = mapping_fn(x)
             return cache[x]
 
-        # For forward-stranded transcripts, exons are [end, start] with end < start.
-        # We'll pick indices so that j is 'left' and k is 'right' in genomic sense.
         j, k = (0, 1) if direction == 1 else (1, 0)
 
-        # If we want to mark CDS regions, fetch them from the GTF-based data
         if with_cds:
             t_info = self.get_transcript_info(transcript_name)
             cds_start, cds_end = t_info['cds_start'], t_info['cds_end']
         else:
             cds_start = cds_end = None
 
-        # Draw introns (lines between consecutive exons) with low zorder to ensure they are behind rectangles
+        # Draw introns
         for i in range(len(exons) - 1):
             intron_start = cached_map(exons[i][j])
             intron_end   = cached_map(exons[i + 1][k])
@@ -149,31 +145,27 @@ class TranscriptPlots:
                     [offset + 0.1, offset + 0.1],
                     color='black', linestyle='-', linewidth=1, zorder=0)
 
-        # Draw exons as rectangles with UTR/CDS differentiation when CDS info is available.
-        # The shapes remain as originally designed but the CDS segments are drawn with the base color.
+        # Draw exons (UTR/CDS, if available)
         for idx, exon in enumerate(exons):
             exon_start_gen = exon[j]
             exon_end_gen   = exon[k]
             scaled_exon_start = cached_map(exon_start_gen)
             scaled_exon_end   = cached_map(exon_end_gen)
             width = scaled_exon_end - scaled_exon_start
-
             base_color = color
             base_edgecolor = 'black'
 
             if with_cds and (cds_start is not None) and (cds_end is not None):
-                # Determine the true genomic bounds of the exon
                 left_exon = min(exon_start_gen, exon_end_gen)
                 right_exon = max(exon_start_gen, exon_end_gen)
-                # Calculate the CDS overlap with the exon
                 coding_left = max(left_exon, cds_start)
                 coding_right = min(right_exon, cds_end)
                 coding_exists = coding_left < coding_right
 
                 if idx == 0 or idx == len(exons) - 1:
-                    # For first and last exons, split into UTR and CDS portions if CDS is present
+                    # First/last exon: possibly split UTR/CDS if needed
                     if coding_exists:
-                        # Left UTR segment (if any)
+                        # Left UTR
                         if left_exon < coding_left:
                             scaled_utr_left = cached_map(left_exon)
                             scaled_utr_right = cached_map(coding_left)
@@ -183,14 +175,14 @@ class TranscriptPlots:
                                                      utr_width, utr_height,
                                                      fc=base_color, ec=base_edgecolor, zorder=1)
                             ax.add_patch(rect_utr)
-                        # CDS segment with full height using the base color
+                        # CDS
                         scaled_cds_left = cached_map(coding_left)
                         scaled_cds_right = cached_map(coding_right)
                         cds_width = scaled_cds_right - scaled_cds_left
                         rect_cds = plt.Rectangle((scaled_cds_left, offset), cds_width, height,
                                                  fc=base_color, ec=base_edgecolor, zorder=1)
                         ax.add_patch(rect_cds)
-                        # Right UTR segment (if any)
+                        # Right UTR
                         if coding_right < right_exon:
                             scaled_utr_left = cached_map(coding_right)
                             scaled_utr_right = cached_map(right_exon)
@@ -201,16 +193,14 @@ class TranscriptPlots:
                                                      fc=base_color, ec=base_edgecolor, zorder=1)
                             ax.add_patch(rect_utr)
                     else:
-                        # Entire exon is non-coding (UTR): draw as a smaller rectangle centered vertically
+                        # Entirely non-coding
                         rect = plt.Rectangle((scaled_exon_start, offset + (height - height * 0.6) / 2),
                                              width, height * 0.6,
                                              fc=base_color, ec=base_edgecolor, zorder=1)
                         ax.add_patch(rect)
-                    continue  # Skip further processing for first/last exon
-
+                    continue
                 else:
-                    # For middle exons, use full height if coding exists and reduced height otherwise,
-                    # but always use the base color (removing the special CDS coloring).
+                    # Middle exons
                     if coding_exists:
                         rect = plt.Rectangle((scaled_exon_start, offset), width, height,
                                              fc=base_color, ec=base_edgecolor, zorder=1)
@@ -220,23 +210,25 @@ class TranscriptPlots:
                     ax.add_patch(rect)
                     continue
             else:
-                # Without CDS information, draw the exon normally at full height.
+                # No CDS info: draw a full-height exon
                 rect = plt.Rectangle((scaled_exon_start, offset), width, height,
                                      fc=base_color, ec=base_edgecolor, zorder=1)
                 ax.add_patch(rect)
 
-        # Draw an arrow to indicate transcript direction.
+        # Direction arrow
         arrow_y = offset - height/4
         if direction > 0:
-            ax.arrow(0, arrow_y, 1, 0, width=0.0015,
-                     head_length=0.01, head_width=0.1,
-                     length_includes_head=True, overhang=1, color='black')
+            ax.arrow(0, arrow_y, 1, 0,
+                     width=0.0015, head_length=0.01, head_width=0.1,
+                     length_includes_head=True, overhang=1,
+                     color='black')
         else:
-            ax.arrow(1, arrow_y, -1, 0, width=0.0015,
-                     head_length=0.01, head_width=0.1,
-                     length_includes_head=True, overhang=1, color='black')
+            ax.arrow(1, arrow_y, -1, 0,
+                     width=0.0015, head_length=0.01, head_width=0.1,
+                     length_includes_head=True, overhang=1,
+                     color='black')
 
-        # Mark the transcript's genomic start/end in global coordinates.
+        # Tick marks for transcript boundaries
         if direction == 1:
             real_start = exons[0][1]
             real_end   = exons[-1][0]
@@ -247,7 +239,6 @@ class TranscriptPlots:
         scaled_real_start = cached_map(real_start)
         scaled_real_end   = cached_map(real_end)
 
-        # Tick marks and labels at the transcript ends.
         ax.plot([scaled_real_start, scaled_real_start],
                 [arrow_y - 0.03, arrow_y + 0.03], color='black')
         ax.plot([scaled_real_end, scaled_real_end],
@@ -258,7 +249,7 @@ class TranscriptPlots:
         ax.text(scaled_real_end, arrow_y - 0.06,
                 str(real_end), ha='center', va='top', fontsize=9)
 
-        # Transcript name at right edge.
+        # Transcript name on right
         ax.text(1, offset - height,
                 transcript_name, ha='right', va='top', fontsize=12)
 
@@ -274,20 +265,15 @@ class TranscriptPlots:
             exons_list.append(t)
             directions.append(d)
 
-        # Assign colors if none provided.
         if colors is None:
             colors = [self.colors[i % len(self.colors)] for i in range(len(exons_list))]
 
-        # Build a single global mapping function from all transcripts' exons.
         mapping_fn = self._make_global_mapping(exons_list)
 
-        # Reset plotting settings to avoid artifacts.
         plt.close('all')
-
-        # Set up figure with x in [0..1] and y sized by the number of transcripts.
         plt.figure()
         plt.axes()
-        plt.xlim(-0.05, 1.05)  # the mapping covers 0..1
+        plt.xlim(-0.05, 1.05)
         plt.ylim((0.1 - 0.5 * len(exons_list), 0.3))
         plt.margins(0.2)
         plt.axis('off')
@@ -295,12 +281,10 @@ class TranscriptPlots:
         fig = plt.gcf()
         fig.set_size_inches(20, len(exons_list) * 2)
 
-        # Draw each transcript in a separate 'row' (offset in the y direction).
         for i, (ex, di, co, tid) in enumerate(zip(exons_list, directions, colors, transcripts_ids)):
             offset = -0.5 * i
             self._draw_transcript(ex, di, co, tid, mapping_fn,
                                   offset=offset, with_cds=draw_cds)
-
         if _ax is None:
             plt.show()
         else:
@@ -336,13 +320,10 @@ class TranscriptPlots:
         global_start = min(i[0] for i in union_exons)
         global_end   = max(i[1] for i in union_exons)
 
-        # Linear mapping from genomic range to [0..1], no intron compression.
         def linear_mapping(x):
             return (x - global_start) / (global_end - global_start)
 
-        # Reset plotting settings to avoid artifacts.
         plt.close('all')
-
         plt.figure()
         plt.axes()
         plt.xlim(-0.05, 1.05)
@@ -356,4 +337,957 @@ class TranscriptPlots:
             offset = -0.5 * i
             self._draw_transcript(ex, di, co, name, linear_mapping, offset=offset, with_cds=False)
         plt.show()
+
+    ########################################################################
+    # New methods from your AnnotatedTranscriptPlots snippet
+    ########################################################################
+
+    def _draw_transcript_with_top_psi(self, exons, direction, color, transcript_name, mapping_fn, offset=0):
+        """
+        Draw exons/introns and a direction arrow, aligned with the top annotation.
+        Used internally by draw_transcripts_with_global_top_psi().
+        """
+        height = 0.2
+        ax = plt.gca()
+        j, k = (0, 1) if direction == 1 else (1, 0)
+
+        # Draw introns
+        for i in range(len(exons) - 1):
+            intron_start = mapping_fn(exons[i][j])
+            intron_end = mapping_fn(exons[i + 1][k])
+            ax.plot([intron_start, intron_end],
+                    [offset + 0.1, offset + 0.1],
+                    color='black', linestyle='-', linewidth=1, zorder=0)
+
+        # Draw exons
+        for exon in exons:
+            exon_start_gen = exon[j]
+            exon_end_gen = exon[k]
+            scaled_exon_start = mapping_fn(exon_start_gen)
+            scaled_exon_end = mapping_fn(exon_end_gen)
+            width = scaled_exon_end - scaled_exon_start
+            ax.add_patch(plt.Rectangle((scaled_exon_start, offset),
+                                       width, height,
+                                       facecolor=color, edgecolor='black',
+                                       zorder=1))
+
+        # Direction arrow
+        arrow_y = offset - (height / 4)
+        if direction > 0:
+            ax.arrow(0, arrow_y, 1, 0,
+                     width=0.0015, head_length=0.01, head_width=0.1,
+                     length_includes_head=True, overhang=1,
+                     color='black')
+        else:
+            ax.arrow(1, arrow_y, -1, 0,
+                     width=0.0015, head_length=0.01, head_width=0.1,
+                     length_includes_head=True, overhang=1,
+                     color='black')
+
+        # Transcript name at far right
+        ax.text(1, offset - height, transcript_name, ha='right', va='top', fontsize=12)
+
+    def draw_transcripts_with_global_top_psi(
+        self,
+        transcripts_ids,
+        colors=None,
+        psi_df=None,
+        top_annotation_height=0.12,
+        first_psi_label='Cell Type 1',
+        second_psi_df=None,
+        second_psi_label='Cell Type 2',
+        second_bar_color='lightgrey'
+    ):
+        """
+        Draws multiple transcripts compressed with global intron scaling,
+        plus one or two top annotation bars colored by exon PSI.
+        """
+        # 1) Gather exons/directions
+        exons_list, directions = [], []
+        for tr in transcripts_ids:
+            t, d = self._get_coord_from_tscrpt_id(tr)
+            exons_list.append(t)
+            directions.append(d)
+
+        # 2) Colors
+        if colors is None:
+            colors = [self.colors[i % len(self.colors)] for i in range(len(exons_list))]
+
+        # 3) Create a 0..1 global mapping
+        mapping_fn_raw = self._make_global_mapping(exons_list)
+
+        # 4) Make the figure wide
+        plt.close('all')
+        fig, ax = plt.subplots(figsize=(28, len(exons_list)*1.6))
+
+        # 5) "Left margin" for text box, etc.
+        annotation_left_edge = 0.18
+        annotation_bar_width = 1.05
+        right_margin = 0.15
+
+        ax.set_xlim(0.0, annotation_left_edge + annotation_bar_width + right_margin)
+
+        # Y-limits for transcripts
+        y_min = -(len(exons_list)+1)*0.6
+        y_max = 1.0
+        ax.set_ylim(y_min, y_max)
+        ax.axis('off')
+
+        # Helper to shift x-coords to the right
+        def shifted_mapping(g_coord):
+            return annotation_left_edge + mapping_fn_raw(g_coord)
+
+        # 6) FIRST ANNOTATION BAR
+        annotation_bar_y = 0.45
+
+        # White rectangle for the label
+        ax.add_patch(
+            plt.Rectangle(
+                (0, annotation_bar_y),
+                annotation_left_edge,
+                top_annotation_height,
+                facecolor='white',
+                edgecolor='black',
+                zorder=10
+            )
+        )
+        # Label text
+        ax.text(
+            0.01,
+            annotation_bar_y + top_annotation_height/2,
+            first_psi_label,
+            ha='left',
+            va='center',
+            fontsize=12,
+            fontweight='bold',
+            color='black',
+            zorder=11
+        )
+
+        # Grey bar to the right
+        ax.add_patch(
+            plt.Rectangle(
+                (annotation_left_edge, annotation_bar_y),
+                annotation_bar_width,
+                top_annotation_height,
+                facecolor='lightgrey',
+                edgecolor='black',
+                zorder=0
+            )
+        )
+
+        # PSI coloring if needed
+        if psi_df is not None:
+            cmap = plt.get_cmap('coolwarm')
+            norm = mcolors.Normalize(vmin=0, vmax=1)
+            for _, row in psi_df.iterrows():
+                psi_start, psi_end, psi_val = row['Start'], row['End'], row['psi']
+                mapped_start = shifted_mapping(psi_start)
+                mapped_end   = shifted_mapping(psi_end)
+                psi_color = cmap(norm(psi_val))
+                ax.add_patch(
+                    plt.Rectangle(
+                        (max(mapped_start, annotation_left_edge), annotation_bar_y),
+                        max(mapped_end - mapped_start, 0.01),
+                        top_annotation_height,
+                        facecolor=psi_color,
+                        edgecolor='black',
+                        zorder=2,
+                        alpha=0.8
+                    )
+                )
+
+        # 7) SECOND ANNOTATION BAR
+        if second_psi_df is not None:
+            second_bar_y = annotation_bar_y + top_annotation_height
+            # White box for second label
+            ax.add_patch(
+                plt.Rectangle(
+                    (0, second_bar_y),
+                    annotation_left_edge,
+                    top_annotation_height,
+                    facecolor='white',
+                    edgecolor='black',
+                    zorder=10
+                )
+            )
+            ax.text(
+                0.01,
+                second_bar_y + top_annotation_height/2,
+                second_psi_label,
+                ha='left',
+                va='center',
+                fontsize=12,
+                fontweight='bold',
+                color='black',
+                zorder=11
+            )
+            # Grey bar
+            ax.add_patch(
+                plt.Rectangle(
+                    (annotation_left_edge, second_bar_y),
+                    annotation_bar_width,
+                    top_annotation_height,
+                    facecolor=second_bar_color,
+                    edgecolor='black',
+                    zorder=0
+                )
+            )
+
+            # Color second bar according to PSI
+            cmap2 = plt.get_cmap('coolwarm')
+            norm2 = mcolors.Normalize(vmin=0, vmax=1)
+            for _, row in second_psi_df.iterrows():
+                psi_start, psi_end, psi_val = row['Start'], row['End'], row['psi']
+                mapped_start = shifted_mapping(psi_start)
+                mapped_end   = shifted_mapping(psi_end)
+                psi_color = cmap2(norm2(psi_val))
+                ax.add_patch(
+                    plt.Rectangle(
+                        (max(mapped_start, annotation_left_edge), second_bar_y),
+                        max(mapped_end - mapped_start, 0.01),
+                        top_annotation_height,
+                        facecolor=psi_color,
+                        edgecolor='black',
+                        zorder=2,
+                        alpha=0.8
+                    )
+                )
+
+        # 8) DRAW TRANSCRIPTS
+        for i, (ex, di, co, tid) in enumerate(zip(exons_list, directions, colors, transcripts_ids)):
+            offset = -0.6 * i
+            height = 0.2
+            j, k = (0, 1) if di == 1 else (1, 0)
+
+            # Introns
+            for idx in range(len(ex)-1):
+                intron_start = shifted_mapping(ex[idx][j])
+                intron_end   = shifted_mapping(ex[idx+1][k])
+                ax.plot([intron_start, intron_end],
+                        [offset+0.1, offset+0.1],
+                        color='black', linestyle='-', linewidth=1, zorder=0)
+
+            # Exons
+            for exon in ex:
+                exon_start_gen = exon[j]
+                exon_end_gen   = exon[k]
+                scaled_start = shifted_mapping(exon_start_gen)
+                scaled_end   = shifted_mapping(exon_end_gen)
+                width = scaled_end - scaled_start
+                ax.add_patch(
+                    plt.Rectangle(
+                        (scaled_start, offset),
+                        width,
+                        height,
+                        facecolor=co,
+                        edgecolor='black',
+                        zorder=1
+                    )
+                )
+
+            # Direction arrow
+            arrow_y = offset - height/4
+            if di > 0:
+                ax.arrow(annotation_left_edge, arrow_y, 1, 0,
+                         width=0.0015, head_length=0.01, head_width=0.1,
+                         length_includes_head=True, overhang=1, color='black')
+            else:
+                ax.arrow(annotation_left_edge + 1, arrow_y, -1, 0,
+                         width=0.0015, head_length=0.01, head_width=0.1,
+                         length_includes_head=True, overhang=1, color='black')
+
+            # Transcript name on right
+            ax.text(annotation_left_edge+1.15, offset - height,
+                    tid, ha='right', va='top', fontsize=12)
+
+        # 9) Single colorbar
+        sm = plt.cm.ScalarMappable(cmap='coolwarm', norm=plt.Normalize(vmin=0, vmax=1))
+        sm.set_array([])
+        cbar = plt.colorbar(sm, ax=ax, orientation='horizontal', fraction=0.03, pad=0.04)
+        cbar.set_label('Exon PSI', fontsize=12)
+
+    #| export
+import sys, requests
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+import matplotlib.colors as mcolors
+
+def merge_intervals(intervals):
+    """Merge a list of [start, end] intervals."""
+    if not intervals:
+        return []
+    intervals = sorted(intervals, key=lambda x: x[0])
+    merged = [intervals[0]]
+    for current in intervals[1:]:
+        prev = merged[-1]
+        if current[0] <= prev[1]:
+            merged[-1] = [prev[0], max(prev[1], current[1])]
+        else:
+            merged.append(current)
+    return merged
+
+class TranscriptPlots:
+    def __init__(self, gtf_file=None, reference_fasta=None, intron_scale=0.1):
+        """
+        intron_scale: factor (between 0 and 1) by which intronic regions are compressed.
+        """
+        self.transcript_data = None
+        self.intron_scale = intron_scale
+        self.colors = ['blue', 'green', 'orange', 'purple', 'brown']
+        if gtf_file is not None:
+            from allos.transcript_data import TranscriptData
+            self.transcript_data = TranscriptData(gtf_file=gtf_file, reference_fasta=reference_fasta)
+
+    def get_transcript_info(self, transcript_id):
+        if self.transcript_data is None:
+            raise NotImplementedError("Transcript info not available; please supply a GTF file.")
+        else:
+            return self.transcript_data.get_transcript_info(transcript_id)
+
+    def _get_coord_from_tscrpt_id(self, transcript_id):
+        """
+        Returns a tuple (exon_list, strand).
+        Each exon is stored as [end, start].
+        """
+        if self.transcript_data is None:
+            if '.' in transcript_id:
+                transcript_id = transcript_id.split('.')[0]
+            server = "https://rest.ensembl.org"
+            ext = "/lookup/id/" + transcript_id + "?expand=1"
+            r = requests.get(server+ext, headers={"Content-Type": "application/json"})
+            if not r.ok:
+                r.raise_for_status()
+                sys.exit()
+            decoded = r.json()
+            exon_list = list(decoded['Exon'])
+            exon_coord = []
+            for e in exon_list:
+                exon_coord.append([e.get('end'), e.get('start')])
+            strand = decoded['strand']
+            return (exon_coord, strand)
+        else:
+            return self.transcript_data.get_exon_coords_and_strand(transcript_id)
+
+    def _make_global_mapping(self, all_exons):
+        """
+        Build a mapping function f(x) that compresses introns but leaves exons at full length,
+        normalizing the entire region to [0..1].
+        """
+        intervals = []
+        for exon_list in all_exons:
+            for e in exon_list:
+                s, e_ = min(e[0], e[1]), max(e[0], e[1])
+                intervals.append([s, e_])
+        union_exons = merge_intervals(intervals)
+        if not union_exons:
+            raise ValueError("No exonic intervals found.")
+
+        global_start = min(i[0] for i in union_exons)
+        global_end   = max(i[1] for i in union_exons)
+
+        def exon_length_before(x):
+            total = 0
+            for (a, b) in union_exons:
+                if x <= a:
+                    break
+                total += min(b, x) - a
+            return total
+
+        def mapping_fn_unscaled(x):
+            # Introns are scaled by self.intron_scale, exons remain full length.
+            total   = x - global_start
+            exonic  = exon_length_before(x)
+            return self.intron_scale * total + (1 - self.intron_scale) * exonic
+
+        scaled_global_end = mapping_fn_unscaled(global_end)
+
+        def mapping_fn_normalized(x):
+            return mapping_fn_unscaled(x) / scaled_global_end
+
+        return mapping_fn_normalized
+
+    def _draw_transcript(self, exons, direction, color, transcript_name, mapping_fn,
+                         offset=0, with_cds=False):
+        """
+        Draw the exons/introns in a single transcript using the global mapping_fn,
+        so everything lines up across transcripts with identical coordinates.
+        This version preserves the original exon shapes (including UTR/CDS splits on first and last exons)
+        but removes any special CDS coloring.
+        """
+        height = 0.2
+        ax = plt.gca()
+        cache = {}
+        def cached_map(x):
+            if x not in cache:
+                cache[x] = mapping_fn(x)
+            return cache[x]
+
+        j, k = (0, 1) if direction == 1 else (1, 0)
+
+        if with_cds:
+            t_info = self.get_transcript_info(transcript_name)
+            cds_start, cds_end = t_info['cds_start'], t_info['cds_end']
+        else:
+            cds_start = cds_end = None
+
+        # Draw introns
+        for i in range(len(exons) - 1):
+            intron_start = cached_map(exons[i][j])
+            intron_end   = cached_map(exons[i + 1][k])
+            ax.plot([intron_start, intron_end],
+                    [offset + 0.1, offset + 0.1],
+                    color='black', linestyle='-', linewidth=1, zorder=0)
+
+        # Draw exons (UTR/CDS, if available)
+        for idx, exon in enumerate(exons):
+            exon_start_gen = exon[j]
+            exon_end_gen   = exon[k]
+            scaled_exon_start = cached_map(exon_start_gen)
+            scaled_exon_end   = cached_map(exon_end_gen)
+            width = scaled_exon_end - scaled_exon_start
+            base_color = color
+            base_edgecolor = 'black'
+
+            if with_cds and (cds_start is not None) and (cds_end is not None):
+                left_exon = min(exon_start_gen, exon_end_gen)
+                right_exon = max(exon_start_gen, exon_end_gen)
+                coding_left = max(left_exon, cds_start)
+                coding_right = min(right_exon, cds_end)
+                coding_exists = coding_left < coding_right
+
+                if idx == 0 or idx == len(exons) - 1:
+                    # First/last exon: possibly split UTR/CDS if needed
+                    if coding_exists:
+                        # Left UTR
+                        if left_exon < coding_left:
+                            scaled_utr_left = cached_map(left_exon)
+                            scaled_utr_right = cached_map(coding_left)
+                            utr_width = scaled_utr_right - scaled_utr_left
+                            utr_height = height * 0.6
+                            rect_utr = plt.Rectangle((scaled_utr_left, offset + (height - utr_height) / 2),
+                                                     utr_width, utr_height,
+                                                     fc=base_color, ec=base_edgecolor, zorder=1)
+                            ax.add_patch(rect_utr)
+                        # CDS
+                        scaled_cds_left = cached_map(coding_left)
+                        scaled_cds_right = cached_map(coding_right)
+                        cds_width = scaled_cds_right - scaled_cds_left
+                        rect_cds = plt.Rectangle((scaled_cds_left, offset), cds_width, height,
+                                                 fc=base_color, ec=base_edgecolor, zorder=1)
+                        ax.add_patch(rect_cds)
+                        # Right UTR
+                        if coding_right < right_exon:
+                            scaled_utr_left = cached_map(coding_right)
+                            scaled_utr_right = cached_map(right_exon)
+                            utr_width = scaled_utr_right - scaled_utr_left
+                            utr_height = height * 0.6
+                            rect_utr = plt.Rectangle((scaled_utr_left, offset + (height - utr_height) / 2),
+                                                     utr_width, utr_height,
+                                                     fc=base_color, ec=base_edgecolor, zorder=1)
+                            ax.add_patch(rect_utr)
+                    else:
+                        # Entirely non-coding
+                        rect = plt.Rectangle((scaled_exon_start, offset + (height - height * 0.6) / 2),
+                                             width, height * 0.6,
+                                             fc=base_color, ec=base_edgecolor, zorder=1)
+                        ax.add_patch(rect)
+                    continue
+                else:
+                    # Middle exons
+                    if coding_exists:
+                        rect = plt.Rectangle((scaled_exon_start, offset), width, height,
+                                             fc=base_color, ec=base_edgecolor, zorder=1)
+                    else:
+                        rect = plt.Rectangle((scaled_exon_start, offset), width, height * 0.6,
+                                             fc=base_color, ec=base_edgecolor, zorder=1)
+                    ax.add_patch(rect)
+                    continue
+            else:
+                # No CDS info: draw a full-height exon
+                rect = plt.Rectangle((scaled_exon_start, offset), width, height,
+                                     fc=base_color, ec=base_edgecolor, zorder=1)
+                ax.add_patch(rect)
+
+        # Direction arrow
+        arrow_y = offset - height/4
+        if direction > 0:
+            ax.arrow(0, arrow_y, 1, 0,
+                     width=0.0015, head_length=0.01, head_width=0.1,
+                     length_includes_head=True, overhang=1,
+                     color='black')
+        else:
+            ax.arrow(1, arrow_y, -1, 0,
+                     width=0.0015, head_length=0.01, head_width=0.1,
+                     length_includes_head=True, overhang=1,
+                     color='black')
+
+        # Tick marks for transcript boundaries
+        if direction == 1:
+            real_start = exons[0][1]
+            real_end   = exons[-1][0]
+        else:
+            real_start = exons[-1][1]
+            real_end   = exons[0][0]
+
+        scaled_real_start = cached_map(real_start)
+        scaled_real_end   = cached_map(real_end)
+
+        ax.plot([scaled_real_start, scaled_real_start],
+                [arrow_y - 0.03, arrow_y + 0.03], color='black')
+        ax.plot([scaled_real_end, scaled_real_end],
+                [arrow_y - 0.03, arrow_y + 0.03], color='black')
+
+        ax.text(scaled_real_start, arrow_y - 0.06,
+                str(real_start), ha='center', va='top', fontsize=9)
+        ax.text(scaled_real_end, arrow_y - 0.06,
+                str(real_end), ha='center', va='top', fontsize=9)
+
+        # Transcript name on right
+        ax.text(1, offset - height,
+                transcript_name, ha='right', va='top', fontsize=12)
+
+    def _draw_transcripts_list(self, transcripts_ids, _ax, colors=None, draw_cds=False):
+        """
+        Draw multiple transcripts with the same global mapping,
+        ensuring that exons sharing coordinates line up perfectly.
+        """
+        exons_list   = []
+        directions   = []
+        for tr in transcripts_ids:
+            t, d = self._get_coord_from_tscrpt_id(tr)
+            exons_list.append(t)
+            directions.append(d)
+
+        if colors is None:
+            colors = [self.colors[i % len(self.colors)] for i in range(len(exons_list))]
+
+        mapping_fn = self._make_global_mapping(exons_list)
+
+        plt.close('all')
+        plt.figure()
+        plt.axes()
+        plt.xlim(-0.05, 1.05)
+        plt.ylim((0.1 - 0.5 * len(exons_list), 0.3))
+        plt.margins(0.2)
+        plt.axis('off')
+
+        fig = plt.gcf()
+        fig.set_size_inches(20, len(exons_list) * 2)
+
+        for i, (ex, di, co, tid) in enumerate(zip(exons_list, directions, colors, transcripts_ids)):
+            offset = -0.5 * i
+            self._draw_transcript(ex, di, co, tid, mapping_fn,
+                                  offset=offset, with_cds=draw_cds)
+        if _ax is None:
+            plt.show()
+        else:
+            return plt
+
+    def draw_transcripts_list(self, transcripts_ids, colors=None, draw_cds=False):
+        """
+        Public method to draw a list of transcripts with global intron scaling.
+        (Note: draw_cds requires GTF-based transcript_data to highlight CDS regions.)
+        """
+        if draw_cds and self.transcript_data is None:
+            raise Exception('A GTF file is necessary in order to display the CDS region')
+        self._draw_transcripts_list(transcripts_ids, None, colors, draw_cds=draw_cds)
+
+    def draw_transcripts_list_unscaled(self, transcripts_ids, colors=None):
+        """
+        For comparison: draw transcripts using exact genomic coordinates (no intron compression).
+        """
+        exons_list = []
+        directions = []
+        for tr in transcripts_ids:
+            t, d = self._get_coord_from_tscrpt_id(tr)
+            exons_list.append(t)
+            directions.append(d)
+        if colors is None:
+            colors = [self.colors[i % len(self.colors)] for i in range(len(exons_list))]
+
+        intervals = []
+        for exon_list in exons_list:
+            for e in exon_list:
+                intervals.append([min(e[0], e[1]), max(e[0], e[1])])
+        union_exons = merge_intervals(intervals)
+        global_start = min(i[0] for i in union_exons)
+        global_end   = max(i[1] for i in union_exons)
+
+        def linear_mapping(x):
+            return (x - global_start) / (global_end - global_start)
+
+        plt.close('all')
+        plt.figure()
+        plt.axes()
+        plt.xlim(-0.05, 1.05)
+        plt.ylim((0.1 - 0.5 * len(exons_list), 0.3))
+        plt.margins(0.2)
+        plt.axis('off')
+        fig = plt.gcf()
+        fig.set_size_inches(20, len(exons_list) * 2)
+
+        for i, (ex, di, co, name) in enumerate(zip(exons_list, directions, colors, transcripts_ids)):
+            offset = -0.5 * i
+            self._draw_transcript(ex, di, co, name, linear_mapping, offset=offset, with_cds=False)
+        plt.show()
+
+    ########################################################################
+    # New methods from your AnnotatedTranscriptPlots snippet
+    ########################################################################
+
+    def _draw_transcript_with_top_psi(self, exons, direction, color, transcript_name, mapping_fn, offset=0):
+        """
+        Draw exons/introns and a direction arrow, aligned with the top annotation.
+        Used internally by draw_transcripts_with_global_top_psi().
+        """
+        height = 0.2
+        ax = plt.gca()
+        j, k = (0, 1) if direction == 1 else (1, 0)
+
+        # Draw introns
+        for i in range(len(exons) - 1):
+            intron_start = mapping_fn(exons[i][j])
+            intron_end = mapping_fn(exons[i + 1][k])
+            ax.plot([intron_start, intron_end],
+                    [offset + 0.1, offset + 0.1],
+                    color='black', linestyle='-', linewidth=1, zorder=0)
+
+        # Draw exons
+        for exon in exons:
+            exon_start_gen = exon[j]
+            exon_end_gen = exon[k]
+            scaled_exon_start = mapping_fn(exon_start_gen)
+            scaled_exon_end = mapping_fn(exon_end_gen)
+            width = scaled_exon_end - scaled_exon_start
+            ax.add_patch(plt.Rectangle((scaled_exon_start, offset),
+                                       width, height,
+                                       facecolor=color, edgecolor='black',
+                                       zorder=1))
+
+        # Direction arrow
+        arrow_y = offset - (height / 4)
+        if direction > 0:
+            ax.arrow(0, arrow_y, 1, 0,
+                     width=0.0015, head_length=0.01, head_width=0.1,
+                     length_includes_head=True, overhang=1,
+                     color='black')
+        else:
+            ax.arrow(1, arrow_y, -1, 0,
+                     width=0.0015, head_length=0.01, head_width=0.1,
+                     length_includes_head=True, overhang=1,
+                     color='black')
+
+        # Transcript name at far right
+        ax.text(1, offset - height, transcript_name, ha='right', va='top', fontsize=12)
+
+    def draw_transcripts_with_global_top_psi(
+        self,
+        transcripts_ids,
+        colors=None,
+        psi_df=None,
+        top_annotation_height=0.12,
+        first_psi_label='Cell Type 1',
+        second_psi_df=None,
+        second_psi_label='Cell Type 2',
+        second_bar_color='lightgrey'
+    ):
+        """
+        Draws multiple transcripts compressed with global intron scaling,
+        plus one or two top annotation bars colored by exon PSI.
+        """
+        # 1) Gather exons/directions
+        exons_list, directions = [], []
+        for tr in transcripts_ids:
+            t, d = self._get_coord_from_tscrpt_id(tr)
+            exons_list.append(t)
+            directions.append(d)
+
+        # 2) Colors
+        if colors is None:
+            colors = [self.colors[i % len(self.colors)] for i in range(len(exons_list))]
+
+        # 3) Create a 0..1 global mapping
+        mapping_fn_raw = self._make_global_mapping(exons_list)
+
+        # 4) Make the figure wide
+        plt.close('all')
+        fig, ax = plt.subplots(figsize=(28, len(exons_list)*1.6))
+
+        # 5) "Left margin" for text box, etc.
+        annotation_left_edge = 0.18
+        annotation_bar_width = 1.05
+        right_margin = 0.15
+
+        ax.set_xlim(0.0, annotation_left_edge + annotation_bar_width + right_margin)
+
+        # Y-limits for transcripts
+        y_min = -(len(exons_list)+1)*0.6
+        y_max = 1.0
+        ax.set_ylim(y_min, y_max)
+        ax.axis('off')
+
+        # Helper to shift x-coords to the right
+        def shifted_mapping(g_coord):
+            return annotation_left_edge + mapping_fn_raw(g_coord)
+
+        # 6) FIRST ANNOTATION BAR
+        annotation_bar_y = 0.45
+
+        # White rectangle for the label
+        ax.add_patch(
+            plt.Rectangle(
+                (0, annotation_bar_y),
+                annotation_left_edge,
+                top_annotation_height,
+                facecolor='white',
+                edgecolor='black',
+                zorder=10
+            )
+        )
+        # Label text
+        ax.text(
+            0.01,
+            annotation_bar_y + top_annotation_height/2,
+            first_psi_label,
+            ha='left',
+            va='center',
+            fontsize=11,
+            color='black',
+            zorder=11
+        )
+
+        # Grey bar to the right
+        ax.add_patch(
+            plt.Rectangle(
+                (annotation_left_edge, annotation_bar_y),
+                annotation_bar_width,
+                top_annotation_height,
+                facecolor='lightgrey',
+                edgecolor='black',
+                zorder=0
+            )
+        )
+
+        # PSI coloring if needed
+        if psi_df is not None:
+            cmap = plt.get_cmap('coolwarm')
+            norm = mcolors.Normalize(vmin=0, vmax=1)
+            for _, row in psi_df.iterrows():
+                psi_start, psi_end, psi_val = row['Start'], row['End'], row['psi']
+                mapped_start = shifted_mapping(psi_start)
+                mapped_end   = shifted_mapping(psi_end)
+                psi_color = cmap(norm(psi_val))
+                ax.add_patch(
+                    plt.Rectangle(
+                        (max(mapped_start, annotation_left_edge), annotation_bar_y),
+                        max(mapped_end - mapped_start, 0.01),
+                        top_annotation_height,
+                        facecolor=psi_color,
+                        edgecolor='black',
+                        zorder=2,
+                        alpha=0.8
+                    )
+                )
+
+        # 7) SECOND ANNOTATION BAR
+        if second_psi_df is not None:
+            second_bar_y = annotation_bar_y + top_annotation_height
+            # White box for second label
+            ax.add_patch(
+                plt.Rectangle(
+                    (0, second_bar_y),
+                    annotation_left_edge,
+                    top_annotation_height,
+                    facecolor='white',
+                    edgecolor='black',
+                    zorder=10
+                )
+            )
+            ax.text(
+                0.01,
+                second_bar_y + top_annotation_height/2,
+                second_psi_label,
+                ha='left',
+                va='center',
+                fontsize=11,
+                color='black',
+                zorder=11
+            )
+            # Grey bar
+            ax.add_patch(
+                plt.Rectangle(
+                    (annotation_left_edge, second_bar_y),
+                    annotation_bar_width,
+                    top_annotation_height,
+                    facecolor=second_bar_color,
+                    edgecolor='black',
+                    zorder=0
+                )
+            )
+
+            # Color second bar according to PSI
+            cmap2 = plt.get_cmap('coolwarm')
+            norm2 = mcolors.Normalize(vmin=0, vmax=1)
+            for _, row in second_psi_df.iterrows():
+                psi_start, psi_end, psi_val = row['Start'], row['End'], row['psi']
+                mapped_start = shifted_mapping(psi_start)
+                mapped_end   = shifted_mapping(psi_end)
+                psi_color = cmap2(norm2(psi_val))
+                ax.add_patch(
+                    plt.Rectangle(
+                        (max(mapped_start, annotation_left_edge), second_bar_y),
+                        max(mapped_end - mapped_start, 0.01),
+                        top_annotation_height,
+                        facecolor=psi_color,
+                        edgecolor='black',
+                        zorder=2,
+                        alpha=0.8
+                    )
+                )
+
+        # 8) DRAW TRANSCRIPTS
+        for i, (ex, di, co, tid) in enumerate(zip(exons_list, directions, colors, transcripts_ids)):
+            offset = -0.6 * i
+            height = 0.2
+            j, k = (0, 1) if di == 1 else (1, 0)
+
+            # Introns
+            for idx in range(len(ex)-1):
+                intron_start = shifted_mapping(ex[idx][j])
+                intron_end   = shifted_mapping(ex[idx+1][k])
+                ax.plot([intron_start, intron_end],
+                        [offset+0.1, offset+0.1],
+                        color='black', linestyle='-', linewidth=1, zorder=0)
+
+            # Exons
+            for exon in ex:
+                exon_start_gen = exon[j]
+                exon_end_gen   = exon[k]
+                scaled_start = shifted_mapping(exon_start_gen)
+                scaled_end   = shifted_mapping(exon_end_gen)
+                width = scaled_end - scaled_start
+                ax.add_patch(
+                    plt.Rectangle(
+                        (scaled_start, offset),
+                        width,
+                        height,
+                        facecolor=co,
+                        edgecolor='black',
+                        zorder=1
+                    )
+                )
+
+            # Direction arrow
+            arrow_y = offset - height/4
+            if di > 0:
+                ax.arrow(annotation_left_edge, arrow_y, 1, 0,
+                         width=0.0015, head_length=0.01, head_width=0.1,
+                         length_includes_head=True, overhang=1, color='black')
+            else:
+                ax.arrow(annotation_left_edge + 1, arrow_y, -1, 0,
+                         width=0.0015, head_length=0.01, head_width=0.1,
+                         length_includes_head=True, overhang=1, color='black')
+
+            # Transcript name on right
+            ax.text(annotation_left_edge+1.15, offset - height,
+                    tid, ha='right', va='top', fontsize=12)
+
+        # 9) Single colorbar
+        sm = plt.cm.ScalarMappable(cmap='coolwarm', norm=plt.Normalize(vmin=0, vmax=1))
+        sm.set_array([])
+        cbar = plt.colorbar(sm, ax=ax, orientation='horizontal', fraction=0.03, pad=0.04)
+        cbar.set_label('Exon PSI', fontsize=12)
+
+    def compare_two_celltypes_psi(
+        self,
+        adata,              # single AnnData containing all cells
+        gene_name,          # e.g. 'Clta'
+        label_column,       # e.g. 'cell_labels'
+        group1,             # e.g. 'Immature Glutamatergic'
+        group2,             # e.g. 'Radial_Glia'
+        celltype1_label=None,  # optional label for legend/text
+        celltype2_label=None,  # optional label for legend/text
+        top_annotation_height=0.15
+    ):
+        """
+        Given a single AnnData and a categorical column, split into two cell groups,
+        compute transcript counts (and hypothetical PSI), then visualize with
+        draw_transcripts_with_global_top_psi.
+
+        Requirements:
+        - adata.var['geneId'] must contain the gene IDs (matching 'gene_name').
+        - A function td.get_exon_psi_matrix(...) that returns a DataFrame:
+            columns = [Start, End, psi]
+        - The adata.X must contain expression data, shape (n_cells, n_features),
+            so that summing across rows (cells) yields total transcript count.
+
+        Example usage:
+            atp = TranscriptPlots()
+            atp.compare_two_celltypes_psi(
+                adata=my_adata,
+                gene_name='Clta',
+                label_column='cell_labels',
+                group1='Immature Glutamatergic',
+                group2='Radial Glia',
+                celltype1_label='Immature Glutamatergic',
+                celltype2_label='Radial Glia'
+            )
+        """
+   
+        if celltype1_label is None:
+            celltype1_label = str(group1)
+        if celltype2_label is None:
+            celltype2_label = str(group2)
+
+        # 1) Split the single AnnData into two subsets of cells
+        adata_group1 = adata[adata.obs[label_column] == group1]
+        adata_group2 = adata[adata.obs[label_column] == group2]
+
+        # 2) Subset columns (features) to keep only transcripts from `gene_name`
+        #    (assuming var['geneId'] == gene_name holds the relevant transcripts)
+        group1_adata_gene = adata_group1[:, adata_group1.var['geneId'] == gene_name]
+        group2_adata_gene = adata_group2[:, adata_group2.var['geneId'] == gene_name]
+
+        # 3) Extract transcript IDs
+        transcripts_list_full_g1 = list(group1_adata_gene.var.index)  # e.g. ['ENST001.1', 'ENST002.1', ...]
+        transcripts_list_full_g2 = list(group2_adata_gene.var.index)
+
+        # (Optional) remove version from transcript IDs
+        transcripts_list_g1 = [tid.split('.')[0] for tid in transcripts_list_full_g1]
+        transcripts_list_g2 = [tid.split('.')[0] for tid in transcripts_list_full_g2]
+
+        # 4) Summarize transcript counts for each group
+        #    X is shape (n_cells, n_features) => sum across axis=0 to get total counts
+        group1_counts = group1_adata_gene.X.sum(axis=0)
+        group2_counts = group2_adata_gene.X.sum(axis=0)
+
+        # 5) Map transcript_id_no_version -> counts
+        count_dict_g1 = dict(zip(transcripts_list_g1, group1_counts))
+        count_dict_g2 = dict(zip(transcripts_list_g2, group2_counts))
+
+
+        psi_df_g1 = self.transcript_data.get_exon_psi_matrix(gene_name=gene_name, transcript_counts=count_dict_g1)
+        psi_df_g2 = self.transcript_data.get_exon_psi_matrix(gene_name=gene_name, transcript_counts=count_dict_g2)
+
+
+        # 7) Merge transcript lists
+        merged_transcript_list = sorted(set(transcripts_list_g1 + transcripts_list_g2))
+
+        # 8) Call the method that draws transcripts + annotation bars
+        self.draw_transcripts_with_global_top_psi(
+            transcripts_ids=merged_transcript_list,
+            psi_df=psi_df_g1,
+            top_annotation_height=top_annotation_height,
+            first_psi_label=celltype1_label,
+            second_psi_df=psi_df_g2,
+            second_psi_label=celltype2_label,
+            second_bar_color='lightgrey'
+        )
+
+        # 9) Final figure title and display
+        plt.title(f"Comparison of Exon PSI for {gene_name}\n{celltype1_label} vs {celltype2_label}")
+        plt.show()
+
 

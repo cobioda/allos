@@ -356,13 +356,17 @@ vs.plot_transcript_expression_violin(sicelore_mouse_data_copy, gene_id='Clta')
 
 ![](index_files/figure-commonmark/cell-17-output-1.png)
 
-``` python
-vs.plot_transcript_exspression_dotplot(sicelore_mouse_data_copy, gene_id='Akap9')
-```
+Let’s explore these transcripts of interest by visualizing them using
+the method described below. We will instantiate our transcript plot
+objects with the appropriate GTF file. For demonstration purposes, we
+provide the code to download the GTF file used in this dataset. This
+process will help us better understand the structure of the transcripts
+involved in this Isoform switch. Please ensure that you have a stable
+internet connection to download the GTF file if it’s not already
+available locally.
 
-![](index_files/figure-commonmark/cell-18-output-1.png)
-
 ``` python
+from allos.transcript_plots import TranscriptPlots
 import os
 import urllib.request
 from pathlib import Path
@@ -380,17 +384,72 @@ gtf_file_local = data_dir / "Mus_musculus.GRCm39.109.gtf.gz"
 if not gtf_file_local.is_file():
     print(f"Downloading {gtf_url}...")
     urllib.request.urlretrieve(gtf_url, gtf_file_local)
-```
 
-``` python
-from allos.transcript_plots import TranscriptPlots
+
+
+
 
 tp = TranscriptPlots(gtf_file= gtf_file_local)
 ```
 
 ``` python
 from allos.switch_search import get_top_n_isoforms
+top_n = get_top_n_isoforms(sicelore_mouse_data_copy, gene_id='Clta', strip=True)
+tp.draw_transcripts_list(top_n, draw_cds=True)
 ```
+
+![](index_files/figure-commonmark/cell-19-output-1.png)
+
+To focus on the top three most expressed isoforms in the dataset, we can
+filter and visualize them using the following approach. This allows us
+to concentrate on the most significant isoforms for further analysis or
+presentation, useful as some genes have a lot of isoforms and many are
+very lowly exspressed.
+
+``` python
+from allos.switch_search import get_top_n_isoforms
+top_n = get_top_n_isoforms(sicelore_mouse_data_copy, gene_id='Clta', strip=True, top_n=3)
+tp.draw_transcripts_list(top_n, draw_cds=True)
+```
+
+![](index_files/figure-commonmark/cell-20-output-1.png)
+
+Now, let’s visualize the top isoforms using a dimensionality reduction
+technique. In this case, we will utilize UMAP for the plot.
+
+``` python
+top_n = get_top_n_isoforms(sicelore_mouse_data_copy, gene_id='Clta', strip=False, top_n=3)
+
+vs.plot_transcripts(sicelore_mouse_data_copy, transcripts=top_n)
+```
+
+![](index_files/figure-commonmark/cell-21-output-1.png)
+
+To gain a deeper understanding of how isoforms structurally differ
+across various cell types, we can analyze the inclusion of different
+exons in the final transcript structure. A useful metric for this
+analysis is the Percent Spliced In (PSI) value, which quantifies the
+proportion of transcripts that include a particular exon. By calculating
+the PSI for each exon, we can identify and compare the structural
+variations of isoforms between cell types, providing insights into their
+functional implications and regulatory mechanisms. This approach allows
+us to pinpoint specific exons that contribute to the diversity of
+isoform expression and understand their role in cellular differentiation
+and function.
+
+``` python
+tp.compare_two_celltypes_psi(adata=sicelore_mouse_data, gene_name='Clta', label_column='cell_type', group1='imature Glutamatergic', group2= 'radial glia', celltype1_label='imature Glutamatergic', celltype2_label='Radial Glia')
+```
+
+![](index_files/figure-commonmark/cell-22-output-1.png)
+
+Let’s explore another potential isoform switch event.
+
+``` python
+vs.plot_transcript_exspression_dotplot(sicelore_mouse_data_copy, gene_id='Akap9')
+```
+
+![](index_files/figure-commonmark/cell-23-output-1.png)
 
 ``` python
 top_n = get_top_n_isoforms(sicelore_mouse_data_copy, gene_id='Akap9', strip=True)
@@ -401,14 +460,14 @@ tp.draw_transcripts_list(top_n, draw_cds=True)
     WARNING:root:No CDS features found for transcript ENSMUST00000177448.
     WARNING:root:No CDS features found for transcript ENSMUST00000132058.
 
-![](index_files/figure-commonmark/cell-22-output-2.png)
+![](index_files/figure-commonmark/cell-24-output-2.png)
 
 ``` python
 top_n = get_top_n_isoforms(sicelore_mouse_data_copy, gene_id='Akap9', strip=True, top_n=2)
 tp.draw_transcripts_list(top_n, draw_cds=True)
 ```
 
-![](index_files/figure-commonmark/cell-23-output-1.png)
+![](index_files/figure-commonmark/cell-25-output-1.png)
 
 ``` python
 top_n = get_top_n_isoforms(sicelore_mouse_data_copy, gene_id='Akap9', strip=False, top_n=2)
@@ -416,17 +475,30 @@ top_n = get_top_n_isoforms(sicelore_mouse_data_copy, gene_id='Akap9', strip=Fals
 vs.plot_transcripts(sicelore_mouse_data_copy, transcripts=top_n)
 ```
 
-![](index_files/figure-commonmark/cell-24-output-1.png)
+![](index_files/figure-commonmark/cell-26-output-1.png)
+
+The visualization of cell features, such as genes and peaks, is often
+challenged by sparsity and technical dropout. These factors can obscure
+the clarity of visualizations, particularly when combined with
+clustering techniques used to annotate cell types. To enhance the
+visibility of patterns within the data, kernel density estimation (KDE)
+can be employed. KDE helps to highlight underlying trends by smoothing
+the data, making patterns more pronounced. However, it is crucial to use
+KDE alongside the actual count data to avoid potential
+misinterpretations. Relying solely on KDE without considering the raw
+counts can lead to misleading conclusions, as it may exaggerate or
+obscure the true distribution of features. Therefore, a balanced
+approach that integrates both KDE and raw data visualization is
+recommended for accurate interpretation.
 
 ``` python
 vs.plot_density_multi(sicelore_mouse_data_copy, features=top_n)
 ```
 
-![](index_files/figure-commonmark/cell-25-output-1.png)
+![](index_files/figure-commonmark/cell-27-output-1.png)
 
 ``` python
-top_n = get_top_n_isoforms(sicelore_mouse_data_copy, gene_id='Cd63', strip=True, top_n=4)
-tp.draw_transcripts_list(top_n, draw_cds=True)
+tp.compare_two_celltypes_psi(adata=sicelore_mouse_data, gene_name='Akap9', label_column='cell_type', group1='imature Glutamatergic', group2= 'radial glia', celltype1_label='imature Glutamatergic', celltype2_label='Radial Glia')
 ```
 
-![](index_files/figure-commonmark/cell-26-output-1.png)
+![](index_files/figure-commonmark/cell-28-output-1.png)

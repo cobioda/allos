@@ -263,7 +263,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>*A class for managing transcript and gene information from a GTF file using PyRanges.</p>
 <p>Existing Features: - Lookup by transcript ID or gene ID/name - Support for exons, CDS, UTR queries - Intron coordinate calculation - Batch queries - Transcript length calculation - Caching/memoization for repeated queries - Basic logging/error handling</p>
 <p>NEW Features: (1) Nucleotide/protein sequence retrieval for CDS (with optional FASTA) (2) Alternative splicing analysis with splice junctions, isoform comparisons, and junction-chain interpretation.*</p>
-<div id="ae39e82c" class="cell">
+<div id="ae39e82c" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib.request</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
@@ -299,9 +299,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>exons <span class="op">=</span> td.get_exons(example_transcript_id)</span>
 <span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Exons:"</span>, exons)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Downloading ftp://ftp.ensembl.org/pub/release-109/gtf/mus_musculus/Mus_musculus.GRCm39.109.gtf.gz...
-Downloading ftp://ftp.ensembl.org/pub/release-109/fasta/mus_musculus/dna/Mus_musculus.GRCm39.dna.primary_assembly.fa.gz...
-Exons: +--------------+----------------+------------+-----------+-----------+------------+--------------+------------+--------------------+----------------+-------------+----------------+----------------+--------------------+----------------------+-------------------+---------------------+----------------------+-------------------+------------------------------------+---------------+--------------------+----------------+------------+-------+
+<pre><code>Exons: +--------------+----------------+------------+-----------+-----------+------------+--------------+------------+--------------------+----------------+-------------+----------------+----------------+--------------------+----------------------+-------------------+---------------------+----------------------+-------------------+------------------------------------+---------------+--------------------+----------------+------------+-------+
 |   Chromosome | Source         | Feature    |     Start |       End | Score      | Strand       | Frame      | gene_id            |   gene_version | gene_name   | gene_source    | gene_biotype   | transcript_id      |   transcript_version | transcript_name   | transcript_source   | transcript_biotype   | tag               | transcript_support_level           |   exon_number | exon_id            |   exon_version | ccds_id    | +2    |
 |   (category) | (object)       | (object)   |   (int64) |   (int64) | (object)   | (category)   | (object)   | (object)           |       (object) | (object)    | (object)       | (object)       | (object)           |             (object) | (object)          | (object)            | (object)             | (object)          | (object)                           |      (object) | (object)           |       (object) | (object)   | ...   |
 |--------------+----------------+------------+-----------+-----------+------------+--------------+------------+--------------------+----------------+-------------+----------------+----------------+--------------------+----------------------+-------------------+---------------------+----------------------+-------------------+------------------------------------+---------------+--------------------+----------------+------------+-------|
@@ -314,12 +312,12 @@ For printing, the PyRanges was sorted on Chromosome and Strand.
 2 hidden columns: protein_id, protein_version</code></pre>
 </div>
 </div>
-<div id="6e3323cc" class="cell">
+<div id="6e3323cc" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ranges <span class="op">=</span> pr.read_gtf(gtf_file_local)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="6055c4ef" class="cell">
+<div id="6055c4ef" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ranges.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>Index(['Chromosome', 'Source', 'Feature', 'Start', 'End', 'Score', 'Strand',
        'Frame', 'gene_id', 'gene_version', 'gene_name', 'gene_source',
        'gene_biotype', 'transcript_id', 'transcript_version',
@@ -329,9 +327,9 @@ For printing, the PyRanges was sorted on Chromosome and Strand.
       dtype='object')</code></pre>
 </div>
 </div>
-<div id="77404e66" class="cell">
+<div id="77404e66" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ranges.as_df()[<span class="st">'transcript_id'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div class="cell-output cell-output-display" data-execution_count="6">
 <pre><code>0                         NaN
 1          ENSMUST00000194081
 2          ENSMUST00000194081
@@ -346,7 +344,7 @@ For printing, the PyRanges was sorted on Chromosome and Strand.
 Name: transcript_id, Length: 1901238, dtype: object</code></pre>
 </div>
 </div>
-<div id="e105ad36" class="cell">
+<div id="e105ad36" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> allos.readers_tests <span class="im">import</span> <span class="op">*</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>mouse_data <span class="op">=</span> process_mouse_data()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -369,12 +367,12 @@ Test data (mouse_2) downloaded successfully</code></pre>
   utils.warn_names_duplicates("obs")</code></pre>
 </div>
 </div>
-<div id="a61876f7" class="cell">
+<div id="a61876f7" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>transcriptIds <span class="op">=</span> mouse_data.var.index.to_list()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="a73ca1f9" class="cell">
+<div id="a73ca1f9" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>transcriptIds[:<span class="dv">10</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div class="cell-output cell-output-display" data-execution_count="9">
 <pre><code>['ENSMUST00000156717.1',
  'ENSMUST00000212520.1',
  'ENSMUST00000025798.12',
@@ -387,12 +385,12 @@ Test data (mouse_2) downloaded successfully</code></pre>
  'ENSMUST00000028207.12']</code></pre>
 </div>
 </div>
-<div id="0e1c71e9" class="cell">
+<div id="0e1c71e9" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>gene_names <span class="op">=</span> td.get_gene_names_for_transcripts(transcript_ids<span class="op">=</span>transcriptIds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="172e5e8c" class="cell">
+<div id="172e5e8c" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>gene_names[:<span class="dv">10</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div class="cell-output cell-output-display" data-execution_count="11">
 <pre><code>['Klc2',
  'Capn15',
  'Klc2',
