@@ -379,7 +379,7 @@ ENSMUST00000028207.12    Crat</code></pre>
 <span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>sc.pp.log1p(gene_anndata)</span>
 <span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Select the top 5000 highly variable genes for gene_anndata</span></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>sc.pp.highly_variable_genes(gene_anndata, n_top_genes<span class="op">=</span><span class="dv">5000</span>)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>sc.pp.highly_variable_genes(gene_anndata, n_top_genes<span class="op">=</span><span class="dv">2000</span>)</span>
 <span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>gene_anndata <span class="op">=</span> gene_anndata[:, gene_anndata.var.highly_variable]</span>
 <span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>sc.pp.neighbors(gene_anndata)</span>
@@ -389,7 +389,7 @@ ENSMUST00000028207.12    Crat</code></pre>
 <span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Restore the original gene matrix data</span></span>
 <span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>gene_anndata <span class="op">=</span> original_gene_anndata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/scanpy/tools/_utils.py:41: UserWarning: You’re trying to run this on 5002 dimensions of `.X`, if you really want this, set `use_rep='X'`.
+<pre><code>/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/scanpy/tools/_utils.py:41: UserWarning: You’re trying to run this on 2014 dimensions of `.X`, if you really want this, set `use_rep='X'`.
          Falling back to preprocessing with `sc.pp.pca` and default params.
   warnings.warn(</code></pre>
 </div>
@@ -403,48 +403,68 @@ ENSMUST00000028207.12    Crat</code></pre>
 </div>
 <p>Let’s examine the most differentially expressed genes across the pre-annotated cell types.</p>
 <div id="cell-18" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform differential expression analysis to rank genes on the gene matrix</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>sc.tl.rank_genes_groups(gene_anndata, <span class="st">'cell_type'</span>, method<span class="op">=</span><span class="st">'t-test'</span>)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the ranked gene groups with adjusted figure size</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>sc.pl.rank_genes_groups(gene_anndata, n_genes<span class="op">=</span><span class="dv">20</span>, sharey<span class="op">=</span><span class="va">False</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>sc.pp.normalize_total(gene_anndata, target_sum<span class="op">=</span><span class="fl">1e6</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>sc.pp.log1p(gene_anndata)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform differential expression analysis to rank genes on the gene matrix</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>sc.tl.rank_genes_groups(gene_anndata, <span class="st">'cell_type'</span>, method<span class="op">=</span><span class="st">'t-test'</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the ranked gene groups with adjusted figure size</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>sc.pl.rank_genes_groups(gene_anndata, n_genes<span class="op">=</span><span class="dv">20</span>, sharey<span class="op">=</span><span class="va">False</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">10</span>))</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>sc.pl.rank_genes_groups_heatmap(gene_anndata, show_gene_labels<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 <div class="cell-output cell-output-stdout">
-<pre><code>WARNING: It seems you use rank_genes_groups on the raw count data. Please logarithmize your data before calling rank_genes_groups.</code></pre>
+<pre><code>WARNING: dendrogram data not found (using key=dendrogram_cell_type). Running `sc.tl.dendrogram` with default parameters. For fine tuning it is recommended to run `sc.tl.dendrogram` independently.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/scanpy/tools/_utils.py:41: UserWarning: You’re trying to run this on 12561 dimensions of `.X`, if you really want this, set `use_rep='X'`.
+         Falling back to preprocessing with `sc.pp.pca` and default params.
+  warnings.warn(</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-7-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/cell-7-output-4.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Now, let’s examine the differentially expressed transcripts. Unlike our previous focus on genes, we will shift our attention to the transcript level. The finest resoloution transcriptional layer. We should still see considerable gene wise overlap in the two rankings as we would expect in many cases the higher gene count to be driven by a single isoform.</p>
-<div id="cell-20" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Concatenate the gene name before the transcript ID in the transcript matrix</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>transcript_matrix <span class="op">=</span> sicelore_mouse_data.copy()</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert 'geneId' to string to avoid TypeError when concatenating with index</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>transcript_matrix.var[<span class="st">'geneId'</span>] <span class="op">=</span> transcript_matrix.var[<span class="st">'geneId'</span>].astype(<span class="bu">str</span>)</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming 'gene_name' and 'transcript_id' are columns in the var DataFrame of the AnnData object</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>transcript_matrix.var[<span class="st">'gene_transcript_id'</span>] <span class="op">=</span> transcript_matrix.var[<span class="st">'geneId'</span>] <span class="op">+</span> <span class="st">'_'</span> <span class="op">+</span> transcript_matrix.var.index.astype(<span class="bu">str</span>)</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Truncate the gene_transcript_id to fit better in plots</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>transcript_matrix.var[<span class="st">'gene_transcript_id'</span>] <span class="op">=</span> transcript_matrix.var[<span class="st">'gene_transcript_id'</span>].<span class="bu">str</span>.<span class="bu">slice</span>(<span class="dv">0</span>, <span class="dv">20</span>)</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Update the var index to use the new truncated gene_transcript_id</span></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>transcript_matrix.var.index <span class="op">=</span> transcript_matrix.var[<span class="st">'gene_transcript_id'</span>]</span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Log transform and CPM normalize the transcript matrix</span></span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>sc.pp.normalize_total(transcript_matrix, target_sum<span class="op">=</span><span class="fl">1e6</span>)</span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>sc.pp.log1p(transcript_matrix)</span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform differential expression analysis to rank genes on the transcript matrix</span></span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>sc.tl.rank_genes_groups(transcript_matrix, <span class="st">'cell_type'</span>, method<span class="op">=</span><span class="st">'t-test'</span>)</span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the ranked gene groups with adjusted figure size</span></span>
-<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>sc.pl.rank_genes_groups(transcript_matrix, n_genes<span class="op">=</span><span class="dv">20</span>, sharey<span class="op">=</span><span class="va">False</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-20" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Concatenate the gene name before the transcript ID in the transcript matrix</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>transcript_matrix <span class="op">=</span> sicelore_mouse_data.copy()</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert 'geneId' to string to avoid TypeError when concatenating with index</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>transcript_matrix.var[<span class="st">'geneId'</span>] <span class="op">=</span> transcript_matrix.var[<span class="st">'geneId'</span>].astype(<span class="bu">str</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming 'gene_name' and 'transcript_id' are columns in the var DataFrame of the AnnData object</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>transcript_matrix.var[<span class="st">'gene_transcript_id'</span>] <span class="op">=</span> transcript_matrix.var[<span class="st">'geneId'</span>] <span class="op">+</span> <span class="st">'_'</span> <span class="op">+</span> transcript_matrix.var.index.astype(<span class="bu">str</span>)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Truncate the gene_transcript_id to fit better in plots</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>transcript_matrix.var[<span class="st">'gene_transcript_id'</span>] <span class="op">=</span> transcript_matrix.var[<span class="st">'gene_transcript_id'</span>].<span class="bu">str</span>.<span class="bu">slice</span>(<span class="dv">0</span>, <span class="dv">20</span>)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Update the var index to use the new truncated gene_transcript_id</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>transcript_matrix.var.index <span class="op">=</span> transcript_matrix.var[<span class="st">'gene_transcript_id'</span>]</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>transcript_matrix.var_names_make_unique()</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Log transform and CPM normalize the transcript matrix</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>sc.pp.normalize_total(transcript_matrix, target_sum<span class="op">=</span><span class="fl">1e6</span>)</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>sc.pp.log1p(transcript_matrix)</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform differential expression analysis to rank genes on the transcript matrix</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>sc.tl.rank_genes_groups(transcript_matrix, <span class="st">'cell_type'</span>, method<span class="op">=</span><span class="st">'t-test'</span>)</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the ranked gene groups with adjusted figure size</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>sc.pl.rank_genes_groups(transcript_matrix, n_genes<span class="op">=</span><span class="dv">20</span>, sharey<span class="op">=</span><span class="va">False</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">10</span>))</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>sc.pl.rank_genes_groups_heatmap(transcript_matrix, show_gene_labels<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -452,26 +472,41 @@ ENSMUST00000028207.12    Crat</code></pre>
 </figure>
 </div>
 </div>
+<div class="cell-output cell-output-stdout">
+<pre><code>WARNING: dendrogram data not found (using key=dendrogram_cell_type). Running `sc.tl.dendrogram` with default parameters. For fine tuning it is recommended to run `sc.tl.dendrogram` independently.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/scanpy/tools/_utils.py:41: UserWarning: You’re trying to run this on 31986 dimensions of `.X`, if you really want this, set `use_rep='X'`.
+         Falling back to preprocessing with `sc.pp.pca` and default params.
+  warnings.warn(</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-8-output-4.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>Lets visualise the isoforms of a specific gene Nnat based on multiple transcripts from this gene in the top rankings of imature GABAergic vs rest.</p>
-<div id="cell-22" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform the operations on a copy of the sicelore_mouse_data</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>sicelore_mouse_data_copy <span class="op">=</span> sicelore_mouse_data.copy()</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>sc.pp.normalize_total(sicelore_mouse_data_copy, target_sum<span class="op">=</span><span class="fl">1e6</span>)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>sc.pp.log1p(sicelore_mouse_data_copy)</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>sc.pp.neighbors(sicelore_mouse_data_copy)</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>sc.tl.umap(sicelore_mouse_data_copy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-22" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform the operations on a copy of the sicelore_mouse_data</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>sicelore_mouse_data_copy <span class="op">=</span> sicelore_mouse_data.copy()</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>sc.pp.normalize_total(sicelore_mouse_data_copy, target_sum<span class="op">=</span><span class="fl">1e6</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>sc.pp.log1p(sicelore_mouse_data_copy)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>sc.pp.neighbors(sicelore_mouse_data_copy)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>sc.tl.umap(sicelore_mouse_data_copy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/scanpy/tools/_utils.py:41: UserWarning: You’re trying to run this on 31986 dimensions of `.X`, if you really want this, set `use_rep='X'`.
          Falling back to preprocessing with `sc.pp.pca` and default params.
   warnings.warn(</code></pre>
 </div>
 </div>
-<div id="cell-23" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> allos.visuals <span class="im">as</span> vs</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>vs.plot_transcripts(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Nnat'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-23" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> allos.visuals <span class="im">as</span> vs</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>vs.plot_transcripts(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Nnat'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -480,9 +515,9 @@ ENSMUST00000028207.12    Crat</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-24" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> allos.visuals <span class="im">as</span> vs</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>vs.plot_transcripts(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Pkm'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-24" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> allos.visuals <span class="im">as</span> vs</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>vs.plot_transcripts(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Pkm'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -491,18 +526,18 @@ ENSMUST00000028207.12    Crat</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-25" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> allos.switch_search <span class="im">import</span> SwitchSearch</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-25" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> allos.switch_search <span class="im">import</span> SwitchSearch</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-26" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>ss <span class="op">=</span> SwitchSearch(sicelore_mouse_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-26" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>ss <span class="op">=</span> SwitchSearch(sicelore_mouse_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-27" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>switch_list <span class="op">=</span> ss.find_switching_isoforms_wilcoxon(n_jobs<span class="op">=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-27" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>switch_list <span class="op">=</span> ss.find_switching_isoforms_wilcoxon(n_jobs<span class="op">=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-28" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>switch_list.head(<span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="14">
+<div id="cell-28" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>switch_list.head(<span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
 <div>
 
 
@@ -915,8 +950,8 @@ ENSMUST00000028207.12    Crat</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-29" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>vs.plot_transcript_exspression_dotplot(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Clta'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-29" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>vs.plot_transcript_exspression_dotplot(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Clta'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -925,8 +960,8 @@ ENSMUST00000028207.12    Crat</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-30" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>vs.plot_transcript_expression_violin(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Clta'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-30" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>vs.plot_transcript_expression_violin(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Clta'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -935,112 +970,76 @@ ENSMUST00000028207.12    Crat</code></pre>
 </div>
 </div>
 </div>
-<p>Let’s explore these transcripts of interest by visualizing them using the method described below. We will instantiate our transcript plot objects with the appropriate GTF file. For demonstration purposes, we provide the code to download the GTF file used in this dataset. This process will help us better understand the structure of the transcripts involved in this Isoform switch. Please ensure that you have a stable internet connection to download the GTF file if it’s not already available locally.</p>
-<div id="cell-32" class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> allos.transcript_plots <span class="im">import</span> TranscriptPlots</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib.request</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Example Ensembl URLs for mouse GRCm39 (release 109)</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>gtf_url <span class="op">=</span> <span class="st">"ftp://ftp.ensembl.org/pub/release-109/gtf/mus_musculus/Mus_musculus.GRCm39.109.gtf.gz"</span></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Store data one directory back</span></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>data_dir <span class="op">=</span> Path(<span class="st">".."</span>) <span class="op">/</span> <span class="st">"data"</span></span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>data_dir.mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>gtf_file_local <span class="op">=</span> data_dir <span class="op">/</span> <span class="st">"Mus_musculus.GRCm39.109.gtf.gz"</span></span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Download if not already present</span></span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> gtf_file_local.is_file():</span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Downloading </span><span class="sc">{</span>gtf_url<span class="sc">}</span><span class="ss">..."</span>)</span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>    urllib.request.urlretrieve(gtf_url, gtf_file_local)</span>
-<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>tp <span class="op">=</span> TranscriptPlots(gtf_file<span class="op">=</span> gtf_file_local)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-33" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> allos.switch_search <span class="im">import</span> get_top_n_isoforms</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>top_n <span class="op">=</span> get_top_n_isoforms(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Clta'</span>, strip<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>tp.draw_transcripts_list(top_n, draw_cds<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-31" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>vs.plot_transcript_exspression_dotplot(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Akap9'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-19-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/cell-18-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>To focus on the top three most expressed isoforms in the dataset, we can filter and visualize them using the following approach. This allows us to concentrate on the most significant isoforms for further analysis or presentation, useful as some genes have a lot of isoforms and many are very lowly exspressed.</p>
-<div id="cell-35" class="cell" data-execution_count="28">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> allos.switch_search <span class="im">import</span> get_top_n_isoforms</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>top_n <span class="op">=</span> get_top_n_isoforms(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Clta'</span>, strip<span class="op">=</span><span class="va">True</span>, top_n<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>tp.draw_transcripts_list(top_n, draw_cds<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/cell-20-output-1.png" class="img-fluid figure-img"></p>
-</figure>
+<div id="cell-32" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib.request</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Example Ensembl URLs for mouse GRCm39 (release 109)</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>gtf_url <span class="op">=</span> <span class="st">"ftp://ftp.ensembl.org/pub/release-109/gtf/mus_musculus/Mus_musculus.GRCm39.109.gtf.gz"</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Store data one directory back</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>data_dir <span class="op">=</span> Path(<span class="st">".."</span>) <span class="op">/</span> <span class="st">"data"</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>data_dir.mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>gtf_file_local <span class="op">=</span> data_dir <span class="op">/</span> <span class="st">"Mus_musculus.GRCm39.109.gtf.gz"</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Download if not already present</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> gtf_file_local.is_file():</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Downloading </span><span class="sc">{</span>gtf_url<span class="sc">}</span><span class="ss">..."</span>)</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>    urllib.request.urlretrieve(gtf_url, gtf_file_local)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<div id="cell-33" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> allos.transcript_plots <span class="im">import</span> TranscriptPlots</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>tp <span class="op">=</span> TranscriptPlots(gtf_file<span class="op">=</span> gtf_file_local)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<div id="cell-34" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> allos.switch_search <span class="im">import</span> get_top_n_isoforms</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Now, let’s visualize the top isoforms using a dimensionality reduction technique. In this case, we will utilize UMAP for the plot.</p>
-<div id="cell-37" class="cell" data-execution_count="30">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>top_n <span class="op">=</span> get_top_n_isoforms(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Clta'</span>, strip<span class="op">=</span><span class="va">False</span>, top_n<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>vs.plot_transcripts(sicelore_mouse_data_copy, transcripts<span class="op">=</span>top_n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/cell-21-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>To gain a deeper understanding of how isoforms structurally differ across various cell types, we can analyze the inclusion of different exons in the final transcript structure. A useful metric for this analysis is the Percent Spliced In (PSI) value, which quantifies the proportion of transcripts that include a particular exon. By calculating the PSI for each exon, we can identify and compare the structural variations of isoforms between cell types, providing insights into their functional implications and regulatory mechanisms. This approach allows us to pinpoint specific exons that contribute to the diversity of isoform expression and understand their role in cellular differentiation and function.</p>
-<div id="cell-39" class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>tp.compare_two_celltypes_psi(adata<span class="op">=</span>sicelore_mouse_data, gene_name<span class="op">=</span><span class="st">'Clta'</span>, label_column<span class="op">=</span><span class="st">'cell_type'</span>, group1<span class="op">=</span><span class="st">'imature Glutamatergic'</span>, group2<span class="op">=</span> <span class="st">'radial glia'</span>, celltype1_label<span class="op">=</span><span class="st">'imature Glutamatergic'</span>, celltype2_label<span class="op">=</span><span class="st">'Radial Glia'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/cell-22-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Let’s explore another potential isoform switch event.</p>
-<div id="cell-41" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>vs.plot_transcript_exspression_dotplot(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Akap9'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/cell-23-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<div id="cell-42" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>top_n <span class="op">=</span> get_top_n_isoforms(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Akap9'</span>, strip<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>tp.draw_transcripts_list(top_n, draw_cds<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-35" class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>top_n <span class="op">=</span> get_top_n_isoforms(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Akap9'</span>, strip<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>tp.draw_transcripts_list(top_n, draw_cds<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>WARNING:root:No CDS features found for transcript ENSMUST00000141817.
-WARNING:root:No CDS features found for transcript ENSMUST00000177448.
-WARNING:root:No CDS features found for transcript ENSMUST00000132058.</code></pre>
+WARNING:root:No CDS features found for transcript ENSMUST00000177448.</code></pre>
 </div>
+</div>
+<div id="cell-36" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>top_n</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<pre><code>['ENSMUST00000044492',
+ 'ENSMUST00000143365',
+ 'ENSMUST00000141817',
+ 'ENSMUST00000177448',
+ 'ENSMUST00000132058']</code></pre>
+</div>
+</div>
+<div id="cell-37" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>top_n <span class="op">=</span> get_top_n_isoforms(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Akap9'</span>, strip<span class="op">=</span><span class="va">True</span>, top_n<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>tp.draw_transcripts_list(top_n, draw_cds<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-24-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/cell-24-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<div id="cell-43" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>top_n <span class="op">=</span> get_top_n_isoforms(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Akap9'</span>, strip<span class="op">=</span><span class="va">True</span>, top_n<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>tp.draw_transcripts_list(top_n, draw_cds<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-38" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>top_n <span class="op">=</span> get_top_n_isoforms(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Akap9'</span>, strip<span class="op">=</span><span class="va">False</span>, top_n<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>vs.plot_transcripts(sicelore_mouse_data_copy, transcripts<span class="op">=</span>top_n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1049,10 +1048,8 @@ WARNING:root:No CDS features found for transcript ENSMUST00000132058.</code></pr
 </div>
 </div>
 </div>
-<div id="cell-44" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>top_n <span class="op">=</span> get_top_n_isoforms(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Akap9'</span>, strip<span class="op">=</span><span class="va">False</span>, top_n<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>vs.plot_transcripts(sicelore_mouse_data_copy, transcripts<span class="op">=</span>top_n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-39" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>vs.plot_density_multi(sicelore_mouse_data_copy, features<span class="op">=</span>top_n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1061,9 +1058,9 @@ WARNING:root:No CDS features found for transcript ENSMUST00000132058.</code></pr
 </div>
 </div>
 </div>
-<p>The visualization of cell features, such as genes and peaks, is often challenged by sparsity and technical dropout. These factors can obscure the clarity of visualizations, particularly when combined with clustering techniques used to annotate cell types. To enhance the visibility of patterns within the data, kernel density estimation (KDE) can be employed. KDE helps to highlight underlying trends by smoothing the data, making patterns more pronounced. However, it is crucial to use KDE alongside the actual count data to avoid potential misinterpretations. Relying solely on KDE without considering the raw counts can lead to misleading conclusions, as it may exaggerate or obscure the true distribution of features. Therefore, a balanced approach that integrates both KDE and raw data visualization is recommended for accurate interpretation.</p>
-<div id="cell-46" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>vs.plot_density_multi(sicelore_mouse_data_copy, features<span class="op">=</span>top_n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-40" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>top_n <span class="op">=</span> get_top_n_isoforms(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Cd63'</span>, strip<span class="op">=</span><span class="va">True</span>, top_n<span class="op">=</span><span class="dv">4</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>tp.draw_transcripts_list(top_n, draw_cds<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1072,14 +1069,13 @@ WARNING:root:No CDS features found for transcript ENSMUST00000132058.</code></pr
 </div>
 </div>
 </div>
-<div id="cell-47" class="cell" data-execution_count="34">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>tp.compare_two_celltypes_psi(adata<span class="op">=</span>sicelore_mouse_data, gene_name<span class="op">=</span><span class="st">'Akap9'</span>, label_column<span class="op">=</span><span class="st">'cell_type'</span>, group1<span class="op">=</span><span class="st">'imature Glutamatergic'</span>, group2<span class="op">=</span> <span class="st">'radial glia'</span>, celltype1_label<span class="op">=</span><span class="st">'imature Glutamatergic'</span>, celltype2_label<span class="op">=</span><span class="st">'Radial Glia'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/cell-28-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
+<div id="cell-41" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>top_n</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="28">
+<pre><code>['ENSMUST00000026407',
+ 'ENSMUST00000219317',
+ 'ENSMUST00000105229',
+ 'ENSMUST00000220308']</code></pre>
 </div>
 </div>
 
