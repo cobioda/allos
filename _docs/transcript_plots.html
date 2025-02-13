@@ -230,10 +230,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#transcriptplots" id="toc-transcriptplots" class="nav-link active" data-scroll-target="#transcriptplots">TranscriptPlots</a></li>
+  <li><a href="#plot_transcripts_abundance_simple" id="toc-plot_transcripts_abundance_simple" class="nav-link active" data-scroll-target="#plot_transcripts_abundance_simple">plot_transcripts_abundance_simple</a></li>
+  <li><a href="#plot_transcripts_abundance_global" id="toc-plot_transcripts_abundance_global" class="nav-link" data-scroll-target="#plot_transcripts_abundance_global">plot_transcripts_abundance_global</a></li>
+  <li><a href="#transcriptplots" id="toc-transcriptplots" class="nav-link" data-scroll-target="#transcriptplots">TranscriptPlots</a></li>
   <li><a href="#merge_intervals" id="toc-merge_intervals" class="nav-link" data-scroll-target="#merge_intervals">merge_intervals</a></li>
-  <li><a href="#transcriptplots-1" id="toc-transcriptplots-1" class="nav-link" data-scroll-target="#transcriptplots-1">TranscriptPlots</a></li>
-  <li><a href="#merge_intervals-1" id="toc-merge_intervals-1" class="nav-link" data-scroll-target="#merge_intervals-1">merge_intervals</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/cobioda/allos/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -277,7 +277,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> allos.transcript_data <span class="im">import</span> TranscriptData</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <hr>
-<p><a href="https://github.com/cobioda/allos/blob/main/allos/transcript_plots.py#L631" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/transcript_plots.py#L757" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="plot_transcripts_abundance_simple" class="level3">
+<h3 class="anchored" data-anchor-id="plot_transcripts_abundance_simple">plot_transcripts_abundance_simple</h3>
+<blockquote class="blockquote">
+<pre><code> plot_transcripts_abundance_simple (adata, gene_name, unit='exon')</code></pre>
+</blockquote>
+<p>*Global method to plot transcript abundance for a given gene (using the entire AnnData) in a “simple” style—each transcript is drawn on its own row with PSI overlays applied directly to the exons. (No top annotation bar is used.)</p>
+<p>PSI is computed per exon by default; if unit==‘transcript’, then a single PSI is computed per transcript (over its full span) so that each transcript is uniformly colored.</p>
+<p>Assumes that adata.var contains a column ‘geneId’ for filtering.*</p>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/transcript_plots.py#L699" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="plot_transcripts_abundance_global" class="level3">
+<h3 class="anchored" data-anchor-id="plot_transcripts_abundance_global">plot_transcripts_abundance_global</h3>
+<blockquote class="blockquote">
+<pre><code> plot_transcripts_abundance_global (adata, gene_name, unit='exon')</code></pre>
+</blockquote>
+<p>*Global method to plot transcript abundance for a given gene using the entire AnnData, drawing transcripts with a top annotation bar (via draw_transcripts_with_global_top_psi).</p>
+<p>PSI values are computed either per exon (unit=‘exon’, default) or per transcript (unit=‘transcript’—a single value over the full transcript span).</p>
+<p>Assumes that adata.var contains a column ‘geneId’ for filtering.*</p>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/transcript_plots.py#L36" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
 <section id="transcriptplots" class="level3">
 <h3 class="anchored" data-anchor-id="transcriptplots">TranscriptPlots</h3>
 <blockquote class="blockquote">
@@ -285,7 +307,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </blockquote>
 <p><em>intron_scale: factor (between 0 and 1) by which intronic regions are compressed.</em></p>
 <hr>
-<p><a href="https://github.com/cobioda/allos/blob/main/allos/transcript_plots.py#L617" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/transcript_plots.py#L22" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="merge_intervals" class="level3">
 <h3 class="anchored" data-anchor-id="merge_intervals">merge_intervals</h3>
@@ -293,25 +315,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code> merge_intervals (intervals)</code></pre>
 </blockquote>
 <p><em>Merge a list of [start, end] intervals.</em></p>
-<hr>
-<p><a href="https://github.com/cobioda/allos/blob/main/allos/transcript_plots.py#L631" target="_blank" style="float:right; font-size:smaller">source</a></p>
-</section>
-<section id="transcriptplots-1" class="level3">
-<h3 class="anchored" data-anchor-id="transcriptplots-1">TranscriptPlots</h3>
-<blockquote class="blockquote">
-<pre><code> TranscriptPlots (gtf_file=None, reference_fasta=None, intron_scale=0.1)</code></pre>
-</blockquote>
-<p><em>intron_scale: factor (between 0 and 1) by which intronic regions are compressed.</em></p>
-<hr>
-<p><a href="https://github.com/cobioda/allos/blob/main/allos/transcript_plots.py#L617" target="_blank" style="float:right; font-size:smaller">source</a></p>
-</section>
-<section id="merge_intervals-1" class="level3">
-<h3 class="anchored" data-anchor-id="merge_intervals-1">merge_intervals</h3>
-<blockquote class="blockquote">
-<pre><code> merge_intervals (intervals)</code></pre>
-</blockquote>
-<p><em>Merge a list of [start, end] intervals.</em></p>
-<div id="bf5f5647" class="cell" data-execution_count="8">
+<div id="bf5f5647" class="cell" data-execution_count="52">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib.request</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
@@ -337,10 +341,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    urllib.request.urlretrieve(fasta_url, fasta_file_local)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To initialise class:</p>
-<div id="55cfbcb0a0f402fd" class="cell" data-execution_count="9">
+<div id="55cfbcb0a0f402fd" class="cell" data-execution_count="45">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>tp <span class="op">=</span> TranscriptPlots(gtf_file<span class="op">=</span>gtf_file_local)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="fcba346c" class="cell" data-execution_count="11">
+<div id="fcba346c" class="cell" data-execution_count="47">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> allos.preprocessing <span class="im">as</span> pp</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>mouse_data <span class="op">=</span> pp.process_mouse_data()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -364,9 +368,9 @@ Test data (mouse_2) downloaded successfully</code></pre>
   utils.warn_names_duplicates("obs")</code></pre>
 </div>
 </div>
-<div id="bea1bf8a" class="cell" data-execution_count="12">
+<div id="bea1bf8a" class="cell" data-execution_count="48">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mouse_data.obs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="12">
+<div class="cell-output cell-output-display" data-execution_count="48">
 <div>
 
 
@@ -441,7 +445,7 @@ Test data (mouse_2) downloaded successfully</code></pre>
 </div>
 </div>
 </div>
-<div id="48079d71" class="cell" data-execution_count="13">
+<div id="48079d71" class="cell" data-execution_count="49">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>tp.compare_two_celltypes_psi(adata<span class="op">=</span>mouse_data, gene_name<span class="op">=</span><span class="st">'Clta'</span>, label_column<span class="op">=</span><span class="st">'cell_type'</span>, group1<span class="op">=</span><span class="st">'imature Glutamatergic'</span>, group2<span class="op">=</span> <span class="st">'radial glia'</span>, celltype1_label<span class="op">=</span><span class="st">'imature Glutamatergic'</span>, celltype2_label<span class="op">=</span><span class="st">'Radial Glia'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -451,9 +455,45 @@ Test data (mouse_2) downloaded successfully</code></pre>
 </div>
 </div>
 </div>
-<div id="f8c555f2" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>tp.get_transcript_info(<span class="st">'ENSMUST00000044492'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="14">
+<div id="832d1720" class="cell" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Global style using the top annotation bar:</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>tp.plot_transcripts_abundance_global(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    adata<span class="op">=</span>mouse_data,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    gene_name<span class="op">=</span><span class="st">'Clta'</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    unit<span class="op">=</span><span class="st">'exon'</span>  <span class="co"># or unit='transcript'</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Simple style with direct PSI overlays on exons:</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>tp.plot_transcripts_abundance_simple(</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    adata<span class="op">=</span>mouse_data,</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    gene_name<span class="op">=</span><span class="st">'Clta'</span>,</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    unit<span class="op">=</span><span class="st">'exon'</span>  <span class="co"># or unit='transcript'</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">AttributeError</span>                            Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[50], line 2</span>
+<span class="ansi-green-fg ansi-bold">      1</span> <span style="font-style:italic;color:rgb(95,135,135)"># Global style using the top annotation bar:</span>
+<span class="ansi-green-fg">----&gt; 2</span> <span class="ansi-yellow-bg">tp</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">plot_transcripts_abundance_global</span>(
+<span class="ansi-green-fg ansi-bold">      3</span>     adata<span style="color:rgb(98,98,98)">=</span>mouse_data,
+<span class="ansi-green-fg ansi-bold">      4</span>     gene_name<span style="color:rgb(98,98,98)">=</span><span style="color:rgb(175,0,0)">'</span><span style="color:rgb(175,0,0)">Clta</span><span style="color:rgb(175,0,0)">'</span>,
+<span class="ansi-green-fg ansi-bold">      5</span>     unit<span style="color:rgb(98,98,98)">=</span><span style="color:rgb(175,0,0)">'</span><span style="color:rgb(175,0,0)">exon</span><span style="color:rgb(175,0,0)">'</span>  <span style="font-style:italic;color:rgb(95,135,135)"># or unit='transcript'</span>
+<span class="ansi-green-fg ansi-bold">      6</span> )
+<span class="ansi-green-fg ansi-bold">      8</span> <span style="font-style:italic;color:rgb(95,135,135)"># Simple style with direct PSI overlays on exons:</span>
+<span class="ansi-green-fg ansi-bold">      9</span> tp<span style="color:rgb(98,98,98)">.</span>plot_transcripts_abundance_simple(
+<span class="ansi-green-fg ansi-bold">     10</span>     adata<span style="color:rgb(98,98,98)">=</span>mouse_data,
+<span class="ansi-green-fg ansi-bold">     11</span>     gene_name<span style="color:rgb(98,98,98)">=</span><span style="color:rgb(175,0,0)">'</span><span style="color:rgb(175,0,0)">Clta</span><span style="color:rgb(175,0,0)">'</span>,
+<span class="ansi-green-fg ansi-bold">     12</span>     unit<span style="color:rgb(98,98,98)">=</span><span style="color:rgb(175,0,0)">'</span><span style="color:rgb(175,0,0)">exon</span><span style="color:rgb(175,0,0)">'</span>  <span style="font-style:italic;color:rgb(95,135,135)"># or unit='transcript'</span>
+<span class="ansi-green-fg ansi-bold">     13</span> )
+
+<span class="ansi-red-fg">AttributeError</span>: 'TranscriptPlots' object has no attribute 'plot_transcripts_abundance_global'</pre>
+</div>
+</div>
+</div>
+<div id="f8c555f2" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>tp.get_transcript_info(<span class="st">'ENSMUST00000044492'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="24">
 <pre><code>{'transcript_id': 'ENSMUST00000044492',
  'transcript_name': 'Akap9-201',
  'transcript_type': 'unknown',
@@ -464,138 +504,31 @@ Test data (mouse_2) downloaded successfully</code></pre>
 </div>
 </div>
 <p>To plot a panel for one or several transcripts:</p>
-<div id="92bde4864f78003b" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>tp.draw_transcripts_list([<span class="st">'ENSMUST00000044492'</span>, <span class="st">'ENSMUST00000143365'</span>], colors<span class="op">=</span>ghibli, draw_cds<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<div class="ansi-escaped-output">
-<pre><span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">KeyboardInterrupt</span>                         Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[15], line 1</span>
-<span class="ansi-green-fg">----&gt; 1</span> <span class="ansi-yellow-bg">tp</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">draw_transcripts_list</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">[</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">'</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">ENSMUST00000044492</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">'</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">'</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">ENSMUST00000143365</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">'</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">colors</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">ghibli</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">draw_cds</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span style="font-weight:bold;color:rgb(0,135,0)" class="ansi-yellow-bg">True</span><span class="ansi-yellow-bg">)</span>
-
-Cell <span class="ansi-green-fg">In[7], line 881</span>, in <span class="ansi-cyan-fg">TranscriptPlots.draw_transcripts_list</span><span class="ansi-blue-fg">(self, transcripts_ids, colors, draw_cds)</span>
-<span class="ansi-green-fg ansi-bold">    879</span> <span style="font-weight:bold;color:rgb(0,135,0)">if</span> draw_cds <span style="font-weight:bold;color:rgb(175,0,255)">and</span> <span style="color:rgb(0,135,0)">self</span><span style="color:rgb(98,98,98)">.</span>transcript_data <span style="font-weight:bold;color:rgb(175,0,255)">is</span> <span style="font-weight:bold;color:rgb(0,135,0)">None</span>:
-<span class="ansi-green-fg ansi-bold">    880</span>     <span style="font-weight:bold;color:rgb(0,135,0)">raise</span> <span style="font-weight:bold;color:rgb(215,95,95)">Exception</span>(<span style="color:rgb(175,0,0)">'</span><span style="color:rgb(175,0,0)">A GTF file is necessary in order to display the CDS region</span><span style="color:rgb(175,0,0)">'</span>)
-<span class="ansi-green-fg">--&gt; 881</span> <span style="color:rgb(0,135,0)" class="ansi-yellow-bg">self</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_draw_transcripts_list</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">transcripts_ids</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span style="font-weight:bold;color:rgb(0,135,0)" class="ansi-yellow-bg">None</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">colors</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">draw_cds</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">draw_cds</span><span class="ansi-yellow-bg">)</span>
-
-Cell <span class="ansi-green-fg">In[7], line 867</span>, in <span class="ansi-cyan-fg">TranscriptPlots._draw_transcripts_list</span><span class="ansi-blue-fg">(self, transcripts_ids, _ax, colors, draw_cds)</span>
-<span class="ansi-green-fg ansi-bold">    865</span> <span style="font-weight:bold;color:rgb(0,135,0)">for</span> i, (ex, di, co, tid) <span style="font-weight:bold;color:rgb(175,0,255)">in</span> <span style="color:rgb(0,135,0)">enumerate</span>(<span style="color:rgb(0,135,0)">zip</span>(exons_list, directions, colors, transcripts_ids)):
-<span class="ansi-green-fg ansi-bold">    866</span>     offset <span style="color:rgb(98,98,98)">=</span> <span style="color:rgb(98,98,98)">-</span><span style="color:rgb(98,98,98)">0.5</span> <span style="color:rgb(98,98,98)">*</span> i
-<span class="ansi-green-fg">--&gt; 867</span>     <span style="color:rgb(0,135,0)" class="ansi-yellow-bg">self</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_draw_transcript</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">ex</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">di</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">co</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">tid</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">mapping_fn</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-fg ansi-bold">    868</span> <span class="ansi-yellow-bg">                          </span><span class="ansi-yellow-bg">offset</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">offset</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">with_cds</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">draw_cds</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg ansi-bold">    869</span> <span style="font-weight:bold;color:rgb(0,135,0)">if</span> _ax <span style="font-weight:bold;color:rgb(175,0,255)">is</span> <span style="font-weight:bold;color:rgb(0,135,0)">None</span>:
-<span class="ansi-green-fg ansi-bold">    870</span>     plt<span style="color:rgb(98,98,98)">.</span>show()
-
-Cell <span class="ansi-green-fg">In[7], line 716</span>, in <span class="ansi-cyan-fg">TranscriptPlots._draw_transcript</span><span class="ansi-blue-fg">(self, exons, direction, color, transcript_name, mapping_fn, offset, with_cds)</span>
-<span class="ansi-green-fg ansi-bold">    713</span> j, k <span style="color:rgb(98,98,98)">=</span> (<span style="color:rgb(98,98,98)">0</span>, <span style="color:rgb(98,98,98)">1</span>) <span style="font-weight:bold;color:rgb(0,135,0)">if</span> direction <span style="color:rgb(98,98,98)">==</span> <span style="color:rgb(98,98,98)">1</span> <span style="font-weight:bold;color:rgb(0,135,0)">else</span> (<span style="color:rgb(98,98,98)">1</span>, <span style="color:rgb(98,98,98)">0</span>)
-<span class="ansi-green-fg ansi-bold">    715</span> <span style="font-weight:bold;color:rgb(0,135,0)">if</span> with_cds:
-<span class="ansi-green-fg">--&gt; 716</span>     t_info <span style="color:rgb(98,98,98)">=</span> <span style="color:rgb(0,135,0)" class="ansi-yellow-bg">self</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">get_transcript_info</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">transcript_name</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg ansi-bold">    717</span>     cds_start, cds_end <span style="color:rgb(98,98,98)">=</span> t_info[<span style="color:rgb(175,0,0)">'</span><span style="color:rgb(175,0,0)">cds_start</span><span style="color:rgb(175,0,0)">'</span>], t_info[<span style="color:rgb(175,0,0)">'</span><span style="color:rgb(175,0,0)">cds_end</span><span style="color:rgb(175,0,0)">'</span>]
-<span class="ansi-green-fg ansi-bold">    718</span> <span style="font-weight:bold;color:rgb(0,135,0)">else</span>:
-
-Cell <span class="ansi-green-fg">In[7], line 633</span>, in <span class="ansi-cyan-fg">TranscriptPlots.get_transcript_info</span><span class="ansi-blue-fg">(self, transcript_id)</span>
-<span class="ansi-green-fg ansi-bold">    631</span>     <span style="font-weight:bold;color:rgb(0,135,0)">raise</span> <span style="font-weight:bold;color:rgb(215,95,95)">NotImplementedError</span>(<span style="color:rgb(175,0,0)">"</span><span style="color:rgb(175,0,0)">Transcript info not available; please supply a GTF file.</span><span style="color:rgb(175,0,0)">"</span>)
-<span class="ansi-green-fg ansi-bold">    632</span> <span style="font-weight:bold;color:rgb(0,135,0)">else</span>:
-<span class="ansi-green-fg">--&gt; 633</span>     <span style="font-weight:bold;color:rgb(0,135,0)">return</span> <span style="color:rgb(0,135,0)" class="ansi-yellow-bg">self</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">transcript_data</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">get_transcript_info</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">transcript_id</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/transcript_data.py:614</span>, in <span class="ansi-cyan-fg">TranscriptData.get_transcript_info</span><span class="ansi-blue-fg">(self, transcript_id)</span>
-<span class="ansi-green-fg ansi-bold">    604</span> <span style="font-weight:bold;color:rgb(0,135,0)">def</span><span style="color:rgb(188,188,188)"> </span><span style="color:rgb(0,0,255)">get_transcript_info</span>(<span style="color:rgb(0,135,0)">self</span>, transcript_id: <span style="color:rgb(0,135,0)">str</span>) <span style="color:rgb(98,98,98)">-</span><span style="color:rgb(98,98,98)">&gt;</span> Dict[<span style="color:rgb(0,135,0)">str</span>, Any]:
-<span class="ansi-green-fg ansi-bold">    605</span> <span style="color:rgb(188,188,188)">    </span><span style="font-style:italic;color:rgb(175,0,0)">"""</span>
-<span class="ansi-green-fg ansi-bold">    606</span> <span style="font-style:italic;color:rgb(175,0,0)">    Return a dictionary with basic info about the given transcript, including:</span>
-<span class="ansi-green-fg ansi-bold">    607</span> <span style="font-style:italic;color:rgb(175,0,0)">    - transcript_id</span>
-<span class="ansi-green-fg">   (...)</span>
-<span class="ansi-green-fg ansi-bold">    612</span> <span style="font-style:italic;color:rgb(175,0,0)">    - strand (either '+' or '-')</span>
-<span class="ansi-green-fg ansi-bold">    613</span> <span style="font-style:italic;color:rgb(175,0,0)">    """</span>
-<span class="ansi-green-fg">--&gt; 614</span>     df <span style="color:rgb(98,98,98)">=</span> <span style="color:rgb(0,135,0)" class="ansi-yellow-bg">self</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">gr</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">df</span>
-<span class="ansi-green-fg ansi-bold">    615</span>     sub <span style="color:rgb(98,98,98)">=</span> df[df<span style="color:rgb(98,98,98)">.</span>transcript_id <span style="color:rgb(98,98,98)">==</span> transcript_id]
-<span class="ansi-green-fg ansi-bold">    617</span>     <span style="font-style:italic;color:rgb(95,135,135)"># If we didn't find this transcript at all, return an empty dict or raise an error.</span>
-
-File <span class="ansi-green-fg">/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/pyranges/pyranges_main.py:1511</span>, in <span class="ansi-cyan-fg">PyRanges.df</span><span class="ansi-blue-fg">(self)</span>
-<span class="ansi-green-fg ansi-bold">   1502</span> <span style="color:rgb(175,0,255)">@property</span>
-<span class="ansi-green-fg ansi-bold">   1503</span> <span style="font-weight:bold;color:rgb(0,135,0)">def</span><span style="color:rgb(188,188,188)"> </span><span style="color:rgb(0,0,255)">df</span>(<span style="color:rgb(0,135,0)">self</span>):
-<span class="ansi-green-fg ansi-bold">   1504</span> <span style="color:rgb(188,188,188)">    </span><span style="font-style:italic;color:rgb(175,0,0)">"""Return PyRanges as DataFrame.</span>
-<span class="ansi-green-fg ansi-bold">   1505</span> 
-<span class="ansi-green-fg ansi-bold">   1506</span> <span style="font-style:italic;color:rgb(175,0,0)">    See also</span>
-<span class="ansi-green-fg ansi-bold">   1507</span> <span style="font-style:italic;color:rgb(175,0,0)">    --------</span>
-<span class="ansi-green-fg ansi-bold">   1508</span> 
-<span class="ansi-green-fg ansi-bold">   1509</span> <span style="font-style:italic;color:rgb(175,0,0)">    PyRanges.as_df : return PyRanges as DataFrame."""</span>
-<span class="ansi-green-fg">-&gt; 1511</span>     <span style="font-weight:bold;color:rgb(0,135,0)">return</span> <span style="color:rgb(0,135,0)" class="ansi-yellow-bg">self</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">as_df</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/pyranges/pyranges_main.py:800</span>, in <span class="ansi-cyan-fg">PyRanges.as_df</span><span class="ansi-blue-fg">(self)</span>
-<span class="ansi-green-fg ansi-bold">    798</span>     <span style="font-weight:bold;color:rgb(0,135,0)">return</span> <span style="color:rgb(0,135,0)">self</span><span style="color:rgb(98,98,98)">.</span>values()[<span style="color:rgb(98,98,98)">0</span>]
-<span class="ansi-green-fg ansi-bold">    799</span> <span style="font-weight:bold;color:rgb(0,135,0)">else</span>:
-<span class="ansi-green-fg">--&gt; 800</span>     <span style="font-weight:bold;color:rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">pd</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">concat</span><span class="ansi-yellow-bg">(</span><span style="color:rgb(0,135,0)" class="ansi-yellow-bg">self</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">values</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">)</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">reset_index</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">drop</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span style="font-weight:bold;color:rgb(0,135,0)" class="ansi-yellow-bg">True</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/pandas/core/frame.py:6417</span>, in <span class="ansi-cyan-fg">DataFrame.reset_index</span><span class="ansi-blue-fg">(self, level, drop, inplace, col_level, col_fill, allow_duplicates, names)</span>
-<span class="ansi-green-fg ansi-bold">   6415</span>     new_obj <span style="color:rgb(98,98,98)">=</span> <span style="color:rgb(0,135,0)">self</span>
-<span class="ansi-green-fg ansi-bold">   6416</span> <span style="font-weight:bold;color:rgb(0,135,0)">else</span>:
-<span class="ansi-green-fg">-&gt; 6417</span>     new_obj <span style="color:rgb(98,98,98)">=</span> <span style="color:rgb(0,135,0)" class="ansi-yellow-bg">self</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">copy</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">deep</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span style="font-weight:bold;color:rgb(0,135,0)" class="ansi-yellow-bg">None</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg ansi-bold">   6418</span> <span style="font-weight:bold;color:rgb(0,135,0)">if</span> allow_duplicates <span style="font-weight:bold;color:rgb(175,0,255)">is</span> <span style="font-weight:bold;color:rgb(175,0,255)">not</span> lib<span style="color:rgb(98,98,98)">.</span>no_default:
-<span class="ansi-green-fg ansi-bold">   6419</span>     allow_duplicates <span style="color:rgb(98,98,98)">=</span> validate_bool_kwarg(allow_duplicates, <span style="color:rgb(175,0,0)">"</span><span style="color:rgb(175,0,0)">allow_duplicates</span><span style="color:rgb(175,0,0)">"</span>)
-
-File <span class="ansi-green-fg">/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/pandas/core/generic.py:6811</span>, in <span class="ansi-cyan-fg">NDFrame.copy</span><span class="ansi-blue-fg">(self, deep)</span>
-<span class="ansi-green-fg ansi-bold">   6662</span> <span style="color:rgb(175,0,255)">@final</span>
-<span class="ansi-green-fg ansi-bold">   6663</span> <span style="font-weight:bold;color:rgb(0,135,0)">def</span><span style="color:rgb(188,188,188)"> </span><span style="color:rgb(0,0,255)">copy</span>(<span style="color:rgb(0,135,0)">self</span>, deep: bool_t <span style="color:rgb(98,98,98)">|</span> <span style="font-weight:bold;color:rgb(0,135,0)">None</span> <span style="color:rgb(98,98,98)">=</span> <span style="font-weight:bold;color:rgb(0,135,0)">True</span>) <span style="color:rgb(98,98,98)">-</span><span style="color:rgb(98,98,98)">&gt;</span> Self:
-<span class="ansi-green-fg ansi-bold">   6664</span> <span style="color:rgb(188,188,188)">    </span><span style="font-style:italic;color:rgb(175,0,0)">"""</span>
-<span class="ansi-green-fg ansi-bold">   6665</span> <span style="font-style:italic;color:rgb(175,0,0)">    Make a copy of this object's indices and data.</span>
-<span class="ansi-green-fg ansi-bold">   6666</span> 
-<span class="ansi-green-fg">   (...)</span>
-<span class="ansi-green-fg ansi-bold">   6809</span> <span style="font-style:italic;color:rgb(175,0,0)">    dtype: int64</span>
-<span class="ansi-green-fg ansi-bold">   6810</span> <span style="font-style:italic;color:rgb(175,0,0)">    """</span>
-<span class="ansi-green-fg">-&gt; 6811</span>     data <span style="color:rgb(98,98,98)">=</span> <span style="color:rgb(0,135,0)" class="ansi-yellow-bg">self</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_mgr</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">copy</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">deep</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">deep</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg ansi-bold">   6812</span>     <span style="color:rgb(0,135,0)">self</span><span style="color:rgb(98,98,98)">.</span>_clear_item_cache()
-<span class="ansi-green-fg ansi-bold">   6813</span>     <span style="font-weight:bold;color:rgb(0,135,0)">return</span> <span style="color:rgb(0,135,0)">self</span><span style="color:rgb(98,98,98)">.</span>_constructor_from_mgr(data, axes<span style="color:rgb(98,98,98)">=</span>data<span style="color:rgb(98,98,98)">.</span>axes)<span style="color:rgb(98,98,98)">.</span>__finalize__(
-<span class="ansi-green-fg ansi-bold">   6814</span>         <span style="color:rgb(0,135,0)">self</span>, method<span style="color:rgb(98,98,98)">=</span><span style="color:rgb(175,0,0)">"</span><span style="color:rgb(175,0,0)">copy</span><span style="color:rgb(175,0,0)">"</span>
-<span class="ansi-green-fg ansi-bold">   6815</span>     )
-
-File <span class="ansi-green-fg">/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/pandas/core/internals/managers.py:593</span>, in <span class="ansi-cyan-fg">BaseBlockManager.copy</span><span class="ansi-blue-fg">(self, deep)</span>
-<span class="ansi-green-fg ansi-bold">    590</span>     <span style="font-weight:bold;color:rgb(0,135,0)">else</span>:
-<span class="ansi-green-fg ansi-bold">    591</span>         new_axes <span style="color:rgb(98,98,98)">=</span> <span style="color:rgb(0,135,0)">list</span>(<span style="color:rgb(0,135,0)">self</span><span style="color:rgb(98,98,98)">.</span>axes)
-<span class="ansi-green-fg">--&gt; 593</span> res <span style="color:rgb(98,98,98)">=</span> <span style="color:rgb(0,135,0)" class="ansi-yellow-bg">self</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">apply</span><span class="ansi-yellow-bg">(</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">"</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">copy</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">"</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">deep</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">deep</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg ansi-bold">    594</span> res<span style="color:rgb(98,98,98)">.</span>axes <span style="color:rgb(98,98,98)">=</span> new_axes
-<span class="ansi-green-fg ansi-bold">    596</span> <span style="font-weight:bold;color:rgb(0,135,0)">if</span> <span style="color:rgb(0,135,0)">self</span><span style="color:rgb(98,98,98)">.</span>ndim <span style="color:rgb(98,98,98)">&gt;</span> <span style="color:rgb(98,98,98)">1</span>:
-<span class="ansi-green-fg ansi-bold">    597</span>     <span style="font-style:italic;color:rgb(95,135,135)"># Avoid needing to re-compute these</span>
-
-File <span class="ansi-green-fg">/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/pandas/core/internals/managers.py:363</span>, in <span class="ansi-cyan-fg">BaseBlockManager.apply</span><span class="ansi-blue-fg">(self, f, align_keys, **kwargs)</span>
-<span class="ansi-green-fg ansi-bold">    361</span>         applied <span style="color:rgb(98,98,98)">=</span> b<span style="color:rgb(98,98,98)">.</span>apply(f, <span style="color:rgb(98,98,98)">*</span><span style="color:rgb(98,98,98)">*</span>kwargs)
-<span class="ansi-green-fg ansi-bold">    362</span>     <span style="font-weight:bold;color:rgb(0,135,0)">else</span>:
-<span class="ansi-green-fg">--&gt; 363</span>         applied <span style="color:rgb(98,98,98)">=</span> <span style="color:rgb(0,135,0)" class="ansi-yellow-bg">getattr</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">b</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">f</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">(</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">*</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg ansi-bold">    364</span>     result_blocks <span style="color:rgb(98,98,98)">=</span> extend_blocks(applied, result_blocks)
-<span class="ansi-green-fg ansi-bold">    366</span> out <span style="color:rgb(98,98,98)">=</span> <span style="color:rgb(0,135,0)">type</span>(<span style="color:rgb(0,135,0)">self</span>)<span style="color:rgb(98,98,98)">.</span>from_blocks(result_blocks, <span style="color:rgb(0,135,0)">self</span><span style="color:rgb(98,98,98)">.</span>axes)
-
-File <span class="ansi-green-fg">/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/pandas/core/internals/blocks.py:796</span>, in <span class="ansi-cyan-fg">Block.copy</span><span class="ansi-blue-fg">(self, deep)</span>
-<span class="ansi-green-fg ansi-bold">    794</span> refs: BlockValuesRefs <span style="color:rgb(98,98,98)">|</span> <span style="font-weight:bold;color:rgb(0,135,0)">None</span>
-<span class="ansi-green-fg ansi-bold">    795</span> <span style="font-weight:bold;color:rgb(0,135,0)">if</span> deep:
-<span class="ansi-green-fg">--&gt; 796</span>     values <span style="color:rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">values</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">copy</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg ansi-bold">    797</span>     refs <span style="color:rgb(98,98,98)">=</span> <span style="font-weight:bold;color:rgb(0,135,0)">None</span>
-<span class="ansi-green-fg ansi-bold">    798</span> <span style="font-weight:bold;color:rgb(0,135,0)">else</span>:
-
-<span class="ansi-red-fg">KeyboardInterrupt</span>: </pre>
-</div>
-</div>
+<div id="92bde4864f78003b" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>tp.draw_transcripts_list([<span class="st">'ENSMUST00000044492'</span>, <span class="st">'ENSMUST00000143365'</span>], colors<span class="op">=</span>ghibli, draw_cds<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="001_transcript_plots_files/figure-html/cell-15-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="001_transcript_plots_files/figure-html/cell-16-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<div id="d3e0210a" class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d3e0210a" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>get_transcript_info helps to retrieve information about the transcripts of interest:</p>
 <div id="207dc620" class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import pandas as pd  </span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># transcripts = ["ENSMUST00000107851", "ENSMUST00000107846", "ENSMUST00000107847"]</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># transcripts_info = []</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co"># for i in transcripts:</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     transcripts_info.append(tp.get_transcript_info(i))  # Append transcript info to list</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co"># df = pd.DataFrame(transcripts_info)  # Convert list of dictionaries to DataFrame</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co"># print(df)  # Display the DataFrame</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import pandas as pd  </span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># transcripts = ["ENSMUST00000107851", "ENSMUST00000107846", "ENSMUST00000107847"]</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># transcripts_info = []</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co"># for i in transcripts:</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     transcripts_info.append(tp.get_transcript_info(i))  # Append transcript info to list</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co"># df = pd.DataFrame(transcripts_info)  # Convert list of dictionaries to DataFrame</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co"># print(df)  # Display the DataFrame</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        transcript_id transcript_name transcript_type  cds_start   cds_end  \
 0  ENSMUST00000107851        Clta-205         unknown   44012791  44032569   
@@ -610,74 +543,74 @@ File <span class="ansi-green-fg">/data/analysis/data_mcandrew/Allos_new/allos_en
 </div>
 <p>“draw_transcript_list_unscaled” keeps the structure of transcripts but shortens the introns. It is useful to compare the structure of transcipts with extremely long introns:</p>
 <div id="3324519c8dd46eaf" class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tp.draw_transcripts_list_unscaled(["ENSMUST00000107851", "ENSMUST00000107846", "ENSMUST00000107847"], colors=ghibli)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tp.draw_transcripts_list_unscaled(["ENSMUST00000107851", "ENSMUST00000107846", "ENSMUST00000107847"], colors=ghibli)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="001_transcript_plots_files/figure-html/cell-18-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="001_transcript_plots_files/figure-html/cell-19-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>If neither gtf nor fasta is provided, the transcripts can be provided as ensembl id and the coordinates will be fetched from ensembl api.</p>
 <div id="ad46c572" class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># #cage_peaks = "https://fantom.gsc.riken.jp/5/datafiles/reprocessed/mm10_latest/extra/CAGE_peaks/mm10_fair+new_CAGE_peaks_phase1and2.bed.gz"</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># cage_peaks = "https://reftss.riken.jp/datafiles/current/mouse/refTSS_v4.1_mouse_coordinate.mm39.bed.gz"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># #cage_peaks = "https://fantom.gsc.riken.jp/5/datafiles/reprocessed/mm10_latest/extra/CAGE_peaks/mm10_fair+new_CAGE_peaks_phase1and2.bed.gz"</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># cage_peaks = "https://reftss.riken.jp/datafiles/current/mouse/refTSS_v4.1_mouse_coordinate.mm39.bed.gz"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="b8a78264" class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># def download_and_extract_bed(url, local_folder):</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co">#     """</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     Downloads and extracts a BED file from a given URL if it doesn't already exist.</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co">#     Parameters:</span></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     - url (str): The URL of the `.bed.gz` file to download.</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     - local_folder (str): The folder where the file should be saved.</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="co">#     Returns:</span></span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="co">#     - str: Path to the extracted BED file.</span></span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="co">#     """</span></span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Ensure local folder exists</span></span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="co">#     os.makedirs(local_folder, exist_ok=True)</span></span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Extract filename from URL</span></span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a><span class="co">#     filename = os.path.basename(url)</span></span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="co">#     compressed_file = os.path.join(local_folder, filename)</span></span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a><span class="co">#     extracted_file = compressed_file.replace(".gz", "")</span></span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Check if extracted file already exists</span></span>
-<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a><span class="co">#     if os.path.exists(extracted_file):</span></span>
-<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a><span class="co">#         print(f"Extracted BED file already exists: {extracted_file}")</span></span>
-<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a><span class="co">#         return extracted_file</span></span>
-<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Download if necessary</span></span>
-<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a><span class="co">#     if not os.path.exists(compressed_file):</span></span>
-<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a><span class="co">#         print(f"Downloading {compressed_file}...")</span></span>
-<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a><span class="co">#         response = requests.get(url, stream=True)</span></span>
-<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a><span class="co">#         with open(compressed_file, "wb") as f:</span></span>
-<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a><span class="co">#             shutil.copyfileobj(response.raw, f)</span></span>
-<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a><span class="co">#         print("Download complete.")</span></span>
-<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Extract the file</span></span>
-<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a><span class="co">#     print(f"Extracting {compressed_file}...")</span></span>
-<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a><span class="co">#     with gzip.open(compressed_file, "rb") as f_in, open(extracted_file, "wb") as f_out:</span></span>
-<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a><span class="co">#         shutil.copyfileobj(f_in, f_out)</span></span>
-<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a><span class="co">#     print(f"Extraction complete: {extracted_file}")</span></span>
-<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a><span class="co">#     return extracted_file</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># def download_and_extract_bed(url, local_folder):</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co">#     """</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     Downloads and extracts a BED file from a given URL if it doesn't already exist.</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co">#     Parameters:</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     - url (str): The URL of the `.bed.gz` file to download.</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     - local_folder (str): The folder where the file should be saved.</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co">#     Returns:</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="co">#     - str: Path to the extracted BED file.</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="co">#     """</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Ensure local folder exists</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="co">#     os.makedirs(local_folder, exist_ok=True)</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Extract filename from URL</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="co">#     filename = os.path.basename(url)</span></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="co">#     compressed_file = os.path.join(local_folder, filename)</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="co">#     extracted_file = compressed_file.replace(".gz", "")</span></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Check if extracted file already exists</span></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a><span class="co">#     if os.path.exists(extracted_file):</span></span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a><span class="co">#         print(f"Extracted BED file already exists: {extracted_file}")</span></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="co">#         return extracted_file</span></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Download if necessary</span></span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a><span class="co">#     if not os.path.exists(compressed_file):</span></span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a><span class="co">#         print(f"Downloading {compressed_file}...")</span></span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a><span class="co">#         response = requests.get(url, stream=True)</span></span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a><span class="co">#         with open(compressed_file, "wb") as f:</span></span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a><span class="co">#             shutil.copyfileobj(response.raw, f)</span></span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a><span class="co">#         print("Download complete.")</span></span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Extract the file</span></span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a><span class="co">#     print(f"Extracting {compressed_file}...")</span></span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a><span class="co">#     with gzip.open(compressed_file, "rb") as f_in, open(extracted_file, "wb") as f_out:</span></span>
+<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a><span class="co">#         shutil.copyfileobj(f_in, f_out)</span></span>
+<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a><span class="co">#     print(f"Extraction complete: {extracted_file}")</span></span>
+<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a><span class="co">#     return extracted_file</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="f3ca0fc4" class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cage_peaks = download_and_extract_bed(cage_peaks, "../data/")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cage_peaks = download_and_extract_bed(cage_peaks, "../data/")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Extracted BED file already exists: ../data/refTSS_v4.1_mouse_coordinate.mm39.bed</code></pre>
 </div>
 </div>
 <div id="6fd83fc1" class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import pandas as pd</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># #col_names = ["chrom", "start", "end", "name", "score", "strand"]</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># cage_df = pd.read_csv(cage_peaks, sep="\t", comment='#')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import pandas as pd</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># #col_names = ["chrom", "start", "end", "name", "score", "strand"]</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co"># cage_df = pd.read_csv(cage_peaks, sep="\t", comment='#')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="11e7393f" class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cage_df</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cage_df</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 
@@ -802,64 +735,64 @@ File <span class="ansi-green-fg">/data/analysis/data_mcandrew/Allos_new/allos_en
 </div>
 </div>
 <div id="382ea949" class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># find the tss that overlap with the gene coordinates:</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># get the coordinates of plot transcript panel, find the tss coordinates </span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co"># that are inside these limits (pos_end, pos_start in _draw_transcript):</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># find the tss that overlap with the gene coordinates:</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co"># get the coordinates of plot transcript panel, find the tss coordinates </span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co"># that are inside these limits (pos_end, pos_start in _draw_transcript):</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="a1855a4d" class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># def extract_genes_from_gtf(gtf_gz_path, output_gtf, gene_ids):</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co">#     """</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     Extracts specified genes from a GTF file inside a .gz archive and writes a new GTF file.</span></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co">#     Parameters:</span></span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     - gtf_gz_path (str): Path to the original GTF .gz file.</span></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     - output_gtf (str): Path for the new GTF file.</span></span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="co">#     - gene_ids (list): List of gene IDs to extract (e.g., ["ENSMUSG00000025902", "ENSMUSG00000025903"]).</span></span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="co">#     """</span></span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="co">#     extracted_gtf_path = gtf_gz_path.rstrip(".gz")  # Remove .gz extension for the extracted file</span></span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Check if extracted file already exists</span></span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="co">#     from pathlib import Path</span></span>
-<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="co">#     if not Path(extracted_gtf_path).exists():</span></span>
-<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a><span class="co">#         print(f"🔄 Extracting {gtf_gz_path}...")</span></span>
-<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a><span class="co">#         with gzip.open(gtf_gz_path, "rt") as gz_file, open(extracted_gtf_path, "w") as out_file:</span></span>
-<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a><span class="co">#             shutil.copyfileobj(gz_file, out_file)</span></span>
-<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a><span class="co">#         print(f"✅ Extracted: {extracted_gtf_path}")</span></span>
-<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a><span class="co">#     else:</span></span>
-<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a><span class="co">#         print(f"📂 Using existing extracted file: {extracted_gtf_path}")</span></span>
-<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Read the extracted GTF file, skipping comment lines</span></span>
-<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a><span class="co">#     gtf = pd.read_csv(extracted_gtf_path, sep="\t", comment='#', header=None, dtype=str)</span></span>
-<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a><span class="co">#     # GTF column names based on Ensembl/Gencode format</span></span>
-<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a><span class="co">#     gtf.columns = [</span></span>
-<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a><span class="co">#         "seqname", "source", "feature", "start", "end", "score",</span></span>
-<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a><span class="co">#         "strand", "frame", "attribute"</span></span>
-<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a><span class="co">#     ]</span></span>
-<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Extract gene IDs from the 'attribute' column</span></span>
-<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a><span class="co">#     def get_gene_id(attribute):</span></span>
-<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a><span class="co">#         for entry in attribute.split(";"):</span></span>
-<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a><span class="co">#             entry = entry.strip()</span></span>
-<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a><span class="co">#             if entry.startswith("gene_id"):</span></span>
-<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a><span class="co">#                 return entry.split(" ")[1].strip('"')</span></span>
-<span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a><span class="co">#         return None</span></span>
-<span id="cb29-38"><a href="#cb29-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-39"><a href="#cb29-39" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Filter GTF for the selected genes</span></span>
-<span id="cb29-40"><a href="#cb29-40" aria-hidden="true" tabindex="-1"></a><span class="co">#     gtf["gene_id"] = gtf["attribute"].apply(get_gene_id)</span></span>
-<span id="cb29-41"><a href="#cb29-41" aria-hidden="true" tabindex="-1"></a><span class="co">#     filtered_gtf = gtf[gtf["gene_id"].isin(gene_ids)].drop(columns=["gene_id"])</span></span>
-<span id="cb29-42"><a href="#cb29-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-43"><a href="#cb29-43" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Save to new GTF file</span></span>
-<span id="cb29-44"><a href="#cb29-44" aria-hidden="true" tabindex="-1"></a><span class="co">#     filtered_gtf.to_csv(output_gtf, sep="\t", index=False, header=False, quoting=3)</span></span>
-<span id="cb29-45"><a href="#cb29-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-46"><a href="#cb29-46" aria-hidden="true" tabindex="-1"></a><span class="co">#     print(f"✅ Extracted {len(filtered_gtf)} entries for {len(gene_ids)} genes into {output_gtf}")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># def extract_genes_from_gtf(gtf_gz_path, output_gtf, gene_ids):</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co">#     """</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     Extracts specified genes from a GTF file inside a .gz archive and writes a new GTF file.</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co">#     Parameters:</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     - gtf_gz_path (str): Path to the original GTF .gz file.</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     - output_gtf (str): Path for the new GTF file.</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="co">#     - gene_ids (list): List of gene IDs to extract (e.g., ["ENSMUSG00000025902", "ENSMUSG00000025903"]).</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="co">#     """</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="co">#     extracted_gtf_path = gtf_gz_path.rstrip(".gz")  # Remove .gz extension for the extracted file</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Check if extracted file already exists</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="co">#     from pathlib import Path</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="co">#     if not Path(extracted_gtf_path).exists():</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a><span class="co">#         print(f"🔄 Extracting {gtf_gz_path}...")</span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="co">#         with gzip.open(gtf_gz_path, "rt") as gz_file, open(extracted_gtf_path, "w") as out_file:</span></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="co">#             shutil.copyfileobj(gz_file, out_file)</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a><span class="co">#         print(f"✅ Extracted: {extracted_gtf_path}")</span></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a><span class="co">#     else:</span></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a><span class="co">#         print(f"📂 Using existing extracted file: {extracted_gtf_path}")</span></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Read the extracted GTF file, skipping comment lines</span></span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a><span class="co">#     gtf = pd.read_csv(extracted_gtf_path, sep="\t", comment='#', header=None, dtype=str)</span></span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a><span class="co">#     # GTF column names based on Ensembl/Gencode format</span></span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a><span class="co">#     gtf.columns = [</span></span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a><span class="co">#         "seqname", "source", "feature", "start", "end", "score",</span></span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a><span class="co">#         "strand", "frame", "attribute"</span></span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a><span class="co">#     ]</span></span>
+<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Extract gene IDs from the 'attribute' column</span></span>
+<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a><span class="co">#     def get_gene_id(attribute):</span></span>
+<span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a><span class="co">#         for entry in attribute.split(";"):</span></span>
+<span id="cb30-34"><a href="#cb30-34" aria-hidden="true" tabindex="-1"></a><span class="co">#             entry = entry.strip()</span></span>
+<span id="cb30-35"><a href="#cb30-35" aria-hidden="true" tabindex="-1"></a><span class="co">#             if entry.startswith("gene_id"):</span></span>
+<span id="cb30-36"><a href="#cb30-36" aria-hidden="true" tabindex="-1"></a><span class="co">#                 return entry.split(" ")[1].strip('"')</span></span>
+<span id="cb30-37"><a href="#cb30-37" aria-hidden="true" tabindex="-1"></a><span class="co">#         return None</span></span>
+<span id="cb30-38"><a href="#cb30-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-39"><a href="#cb30-39" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Filter GTF for the selected genes</span></span>
+<span id="cb30-40"><a href="#cb30-40" aria-hidden="true" tabindex="-1"></a><span class="co">#     gtf["gene_id"] = gtf["attribute"].apply(get_gene_id)</span></span>
+<span id="cb30-41"><a href="#cb30-41" aria-hidden="true" tabindex="-1"></a><span class="co">#     filtered_gtf = gtf[gtf["gene_id"].isin(gene_ids)].drop(columns=["gene_id"])</span></span>
+<span id="cb30-42"><a href="#cb30-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-43"><a href="#cb30-43" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Save to new GTF file</span></span>
+<span id="cb30-44"><a href="#cb30-44" aria-hidden="true" tabindex="-1"></a><span class="co">#     filtered_gtf.to_csv(output_gtf, sep="\t", index=False, header=False, quoting=3)</span></span>
+<span id="cb30-45"><a href="#cb30-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-46"><a href="#cb30-46" aria-hidden="true" tabindex="-1"></a><span class="co">#     print(f"✅ Extracted {len(filtered_gtf)} entries for {len(gene_ids)} genes into {output_gtf}")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="e5d53b09" class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># big_gtf = "/data/analysis/data_diamant/allos/allos/data/Mus_musculus.GRCm39.109.gtf"</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co"># custom_gtf = "/data/analysis/data_diamant/allos/allos/data/custom_subset.gtf"</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co"># selected_genes = ["ENSMUSG00000028478", "ENSMUSG00000025903"]  # Replace with your genes of interest</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co"># extract_genes_from_gtf(big_gtf, custom_gtf, selected_genes)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># big_gtf = "/data/analysis/data_diamant/allos/allos/data/Mus_musculus.GRCm39.109.gtf"</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co"># custom_gtf = "/data/analysis/data_diamant/allos/allos/data/custom_subset.gtf"</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co"># selected_genes = ["ENSMUSG00000028478", "ENSMUSG00000025903"]  # Replace with your genes of interest</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="co"># extract_genes_from_gtf(big_gtf, custom_gtf, selected_genes)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>📂 Using existing extracted file: /data/analysis/data_diamant/allos/allos/data/Mus_musculus.GRCm39.109.gtf</code></pre>
 </div>
@@ -970,17 +903,17 @@ File <span class="ansi-green-fg">/data/analysis/data_mcandrew/Allos_new/allos_en
 </div>
 </div>
 <div id="e37725c2" class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># from allos.transcript_data import TranscriptData</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co"># td = TranscriptData(gtf_file="/data/analysis/data_diamant/allos/allos/data/custom_subset.gtf")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># from allos.transcript_data import TranscriptData</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="co"># td = TranscriptData(gtf_file="/data/analysis/data_diamant/allos/allos/data/custom_subset.gtf")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="f1177cc1" class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># td</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># td</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <pre><code>&lt;allos.transcript_data.TranscriptData&gt;</code></pre>
 </div>
 </div>
 <div id="44ebde85" class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># td.get_exon_coords_and_strand("ENSMUSG00000028478")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># td.get_exon_coords_and_strand("ENSMUSG00000028478")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>WARNING:root:No exons found for transcript ENSMUSG00000028478.</code></pre>
 </div>
@@ -989,79 +922,79 @@ File <span class="ansi-green-fg">/data/analysis/data_mcandrew/Allos_new/allos_en
 </div>
 </div>
 <div id="6cb2aaa7" class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import pyranges as pr</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co"># def get_gene_coordinates_from_gtf(gtf_path, transcript_id):</span></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     """Extracts chromosome, start, and end coordinates of a gene from a GTF file using transcript ID."""</span></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Load GTF file as pyranges object</span></span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     gtf = pr.read_gtf(gtf_path)</span></span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Check available columns</span></span>
-<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="co">#     print("Available columns in GTF:", gtf.columns)</span></span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Ensure the transcript ID column exists</span></span>
-<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="co">#     if "transcript_id" not in gtf.columns:</span></span>
-<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a><span class="co">#         raise ValueError("Column 'transcript_id' not found in GTF. Check column names.")</span></span>
-<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Find the gene associated with the given transcript ID</span></span>
-<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a><span class="co">#     transcript_info = gtf[gtf.transcript_id == transcript_id]  # Use the correct column name</span></span>
-<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a><span class="co">#     if transcript_info.empty:</span></span>
-<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a><span class="co">#         raise ValueError(f"Transcript '{transcript_id}' not found in GTF file.")</span></span>
-<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Get gene ID associated with the transcript</span></span>
-<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a><span class="co">#     gene_id = transcript_info.gene_id.iloc[0]  # Ensure correct column name</span></span>
-<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Extract gene coordinates</span></span>
-<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a><span class="co">#     gene_info = gtf[gtf.gene_id == gene_id]  # Ensure correct column name</span></span>
-<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a><span class="co">#     chromosome = gene_info.Chromosome.iloc[0]</span></span>
-<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a><span class="co">#     start = gene_info.Start.min()</span></span>
-<span id="cb38-30"><a href="#cb38-30" aria-hidden="true" tabindex="-1"></a><span class="co">#     end = gene_info.End.max()</span></span>
-<span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a><span class="co">#     return {"gene_id": gene_id, "chromosome": chromosome, "start": start, "end": end}</span></span>
-<span id="cb38-33"><a href="#cb38-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-34"><a href="#cb38-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-35"><a href="#cb38-35" aria-hidden="true" tabindex="-1"></a><span class="co"># def find_tss_in_gene_range(cage_peaks_df, gene_coordinates):</span></span>
-<span id="cb38-36"><a href="#cb38-36" aria-hidden="true" tabindex="-1"></a><span class="co">#     """Finds CAGE TSS peaks that overlap with the gene coordinates."""</span></span>
-<span id="cb38-37"><a href="#cb38-37" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Ensure chromosome formats match between gene_coordinates and cage_peaks_df</span></span>
-<span id="cb38-38"><a href="#cb38-38" aria-hidden="true" tabindex="-1"></a><span class="co">#     gene_chr = gene_coordinates["chromosome"]</span></span>
-<span id="cb38-39"><a href="#cb38-39" aria-hidden="true" tabindex="-1"></a><span class="co">#     cage_chr = cage_peaks_df["chromosome"].unique()</span></span>
-<span id="cb38-40"><a href="#cb38-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-41"><a href="#cb38-41" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Check if gene_chr starts with "chr"</span></span>
-<span id="cb38-42"><a href="#cb38-42" aria-hidden="true" tabindex="-1"></a><span class="co">#     if not gene_chr.startswith("chr"):</span></span>
-<span id="cb38-43"><a href="#cb38-43" aria-hidden="true" tabindex="-1"></a><span class="co">#         gene_coordinates["chromosome"] = f"chr{gene_chr}"</span></span>
-<span id="cb38-44"><a href="#cb38-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-45"><a href="#cb38-45" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Check if cage_peaks_df chromosomes start with "chr"</span></span>
-<span id="cb38-46"><a href="#cb38-46" aria-hidden="true" tabindex="-1"></a><span class="co">#     if any(not c.startswith("chr") for c in cage_chr):</span></span>
-<span id="cb38-47"><a href="#cb38-47" aria-hidden="true" tabindex="-1"></a><span class="co">#         cage_peaks_df["chromosome"] = cage_peaks_df["chromosome"].apply(lambda x: f"chr{x}" if not x.startswith("chr") else x)</span></span>
-<span id="cb38-48"><a href="#cb38-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-49"><a href="#cb38-49" aria-hidden="true" tabindex="-1"></a><span class="co">#     print("✅ Chromosome formats are now consistent!")</span></span>
-<span id="cb38-50"><a href="#cb38-50" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Filter peaks that are in the same chromosome</span></span>
-<span id="cb38-51"><a href="#cb38-51" aria-hidden="true" tabindex="-1"></a><span class="co">#     peaks_in_chromosome = cage_peaks_df[cage_peaks_df["chromosome"] == gene_coordinates["chromosome"]]</span></span>
-<span id="cb38-52"><a href="#cb38-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-53"><a href="#cb38-53" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Ensure coordinates are integers</span></span>
-<span id="cb38-54"><a href="#cb38-54" aria-hidden="true" tabindex="-1"></a><span class="co">#     gene_start = int(gene_coordinates["start"])</span></span>
-<span id="cb38-55"><a href="#cb38-55" aria-hidden="true" tabindex="-1"></a><span class="co">#     gene_end = int(gene_coordinates["end"])</span></span>
-<span id="cb38-56"><a href="#cb38-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-57"><a href="#cb38-57" aria-hidden="true" tabindex="-1"></a><span class="co">#     peaks_in_chromosome["start"] = peaks_in_chromosome["start"].astype(int)</span></span>
-<span id="cb38-58"><a href="#cb38-58" aria-hidden="true" tabindex="-1"></a><span class="co">#     peaks_in_chromosome["end"] = peaks_in_chromosome["end"].astype(int)</span></span>
-<span id="cb38-59"><a href="#cb38-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-60"><a href="#cb38-60" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Filter peaks that overlap the gene range</span></span>
-<span id="cb38-61"><a href="#cb38-61" aria-hidden="true" tabindex="-1"></a><span class="co">#     overlapping_peaks = peaks_in_chromosome[</span></span>
-<span id="cb38-62"><a href="#cb38-62" aria-hidden="true" tabindex="-1"></a><span class="co">#         (peaks_in_chromosome["start"] &gt;= gene_coordinates["start"]) &amp;</span></span>
-<span id="cb38-63"><a href="#cb38-63" aria-hidden="true" tabindex="-1"></a><span class="co">#         (peaks_in_chromosome["end"] &lt;= gene_coordinates["end"])</span></span>
-<span id="cb38-64"><a href="#cb38-64" aria-hidden="true" tabindex="-1"></a><span class="co">#     ]</span></span>
-<span id="cb38-65"><a href="#cb38-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-66"><a href="#cb38-66" aria-hidden="true" tabindex="-1"></a><span class="co">#     return overlapping_peaks</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import pyranges as pr</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="co"># def get_gene_coordinates_from_gtf(gtf_path, transcript_id):</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     """Extracts chromosome, start, and end coordinates of a gene from a GTF file using transcript ID."""</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Load GTF file as pyranges object</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     gtf = pr.read_gtf(gtf_path)</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Check available columns</span></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a><span class="co">#     print("Available columns in GTF:", gtf.columns)</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Ensure the transcript ID column exists</span></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a><span class="co">#     if "transcript_id" not in gtf.columns:</span></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a><span class="co">#         raise ValueError("Column 'transcript_id' not found in GTF. Check column names.")</span></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Find the gene associated with the given transcript ID</span></span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a><span class="co">#     transcript_info = gtf[gtf.transcript_id == transcript_id]  # Use the correct column name</span></span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a><span class="co">#     if transcript_info.empty:</span></span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a><span class="co">#         raise ValueError(f"Transcript '{transcript_id}' not found in GTF file.")</span></span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Get gene ID associated with the transcript</span></span>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a><span class="co">#     gene_id = transcript_info.gene_id.iloc[0]  # Ensure correct column name</span></span>
+<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Extract gene coordinates</span></span>
+<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a><span class="co">#     gene_info = gtf[gtf.gene_id == gene_id]  # Ensure correct column name</span></span>
+<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a><span class="co">#     chromosome = gene_info.Chromosome.iloc[0]</span></span>
+<span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a><span class="co">#     start = gene_info.Start.min()</span></span>
+<span id="cb39-30"><a href="#cb39-30" aria-hidden="true" tabindex="-1"></a><span class="co">#     end = gene_info.End.max()</span></span>
+<span id="cb39-31"><a href="#cb39-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-32"><a href="#cb39-32" aria-hidden="true" tabindex="-1"></a><span class="co">#     return {"gene_id": gene_id, "chromosome": chromosome, "start": start, "end": end}</span></span>
+<span id="cb39-33"><a href="#cb39-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-34"><a href="#cb39-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-35"><a href="#cb39-35" aria-hidden="true" tabindex="-1"></a><span class="co"># def find_tss_in_gene_range(cage_peaks_df, gene_coordinates):</span></span>
+<span id="cb39-36"><a href="#cb39-36" aria-hidden="true" tabindex="-1"></a><span class="co">#     """Finds CAGE TSS peaks that overlap with the gene coordinates."""</span></span>
+<span id="cb39-37"><a href="#cb39-37" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Ensure chromosome formats match between gene_coordinates and cage_peaks_df</span></span>
+<span id="cb39-38"><a href="#cb39-38" aria-hidden="true" tabindex="-1"></a><span class="co">#     gene_chr = gene_coordinates["chromosome"]</span></span>
+<span id="cb39-39"><a href="#cb39-39" aria-hidden="true" tabindex="-1"></a><span class="co">#     cage_chr = cage_peaks_df["chromosome"].unique()</span></span>
+<span id="cb39-40"><a href="#cb39-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-41"><a href="#cb39-41" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Check if gene_chr starts with "chr"</span></span>
+<span id="cb39-42"><a href="#cb39-42" aria-hidden="true" tabindex="-1"></a><span class="co">#     if not gene_chr.startswith("chr"):</span></span>
+<span id="cb39-43"><a href="#cb39-43" aria-hidden="true" tabindex="-1"></a><span class="co">#         gene_coordinates["chromosome"] = f"chr{gene_chr}"</span></span>
+<span id="cb39-44"><a href="#cb39-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-45"><a href="#cb39-45" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Check if cage_peaks_df chromosomes start with "chr"</span></span>
+<span id="cb39-46"><a href="#cb39-46" aria-hidden="true" tabindex="-1"></a><span class="co">#     if any(not c.startswith("chr") for c in cage_chr):</span></span>
+<span id="cb39-47"><a href="#cb39-47" aria-hidden="true" tabindex="-1"></a><span class="co">#         cage_peaks_df["chromosome"] = cage_peaks_df["chromosome"].apply(lambda x: f"chr{x}" if not x.startswith("chr") else x)</span></span>
+<span id="cb39-48"><a href="#cb39-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-49"><a href="#cb39-49" aria-hidden="true" tabindex="-1"></a><span class="co">#     print("✅ Chromosome formats are now consistent!")</span></span>
+<span id="cb39-50"><a href="#cb39-50" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Filter peaks that are in the same chromosome</span></span>
+<span id="cb39-51"><a href="#cb39-51" aria-hidden="true" tabindex="-1"></a><span class="co">#     peaks_in_chromosome = cage_peaks_df[cage_peaks_df["chromosome"] == gene_coordinates["chromosome"]]</span></span>
+<span id="cb39-52"><a href="#cb39-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-53"><a href="#cb39-53" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Ensure coordinates are integers</span></span>
+<span id="cb39-54"><a href="#cb39-54" aria-hidden="true" tabindex="-1"></a><span class="co">#     gene_start = int(gene_coordinates["start"])</span></span>
+<span id="cb39-55"><a href="#cb39-55" aria-hidden="true" tabindex="-1"></a><span class="co">#     gene_end = int(gene_coordinates["end"])</span></span>
+<span id="cb39-56"><a href="#cb39-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-57"><a href="#cb39-57" aria-hidden="true" tabindex="-1"></a><span class="co">#     peaks_in_chromosome["start"] = peaks_in_chromosome["start"].astype(int)</span></span>
+<span id="cb39-58"><a href="#cb39-58" aria-hidden="true" tabindex="-1"></a><span class="co">#     peaks_in_chromosome["end"] = peaks_in_chromosome["end"].astype(int)</span></span>
+<span id="cb39-59"><a href="#cb39-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-60"><a href="#cb39-60" aria-hidden="true" tabindex="-1"></a><span class="co">#     # Filter peaks that overlap the gene range</span></span>
+<span id="cb39-61"><a href="#cb39-61" aria-hidden="true" tabindex="-1"></a><span class="co">#     overlapping_peaks = peaks_in_chromosome[</span></span>
+<span id="cb39-62"><a href="#cb39-62" aria-hidden="true" tabindex="-1"></a><span class="co">#         (peaks_in_chromosome["start"] &gt;= gene_coordinates["start"]) &amp;</span></span>
+<span id="cb39-63"><a href="#cb39-63" aria-hidden="true" tabindex="-1"></a><span class="co">#         (peaks_in_chromosome["end"] &lt;= gene_coordinates["end"])</span></span>
+<span id="cb39-64"><a href="#cb39-64" aria-hidden="true" tabindex="-1"></a><span class="co">#     ]</span></span>
+<span id="cb39-65"><a href="#cb39-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-66"><a href="#cb39-66" aria-hidden="true" tabindex="-1"></a><span class="co">#     return overlapping_peaks</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="6b272986" class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># # Example Usage</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="co"># gtf_path = "/data/analysis/data_diamant/allos/allos/data/custom_subset.gtf"</span></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="co"># transcript_id = "ENSMUST00000134384"</span></span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co"># gene_coordinates = get_gene_coordinates_from_gtf(gtf_path, "ENSMUST00000134384")</span></span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="co"># print("Extracted Gene Coordinates:", gene_coordinates)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># # Example Usage</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co"># gtf_path = "/data/analysis/data_diamant/allos/allos/data/custom_subset.gtf"</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="co"># transcript_id = "ENSMUST00000134384"</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="co"># gene_coordinates = get_gene_coordinates_from_gtf(gtf_path, "ENSMUST00000134384")</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="co"># print("Extracted Gene Coordinates:", gene_coordinates)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Available columns in GTF: Index(['Chromosome', 'Source', 'Feature', 'Start', 'End', 'Score', 'Strand',
        'Frame', 'gene_id', 'gene_version', 'gene_name', 'gene_source',
@@ -1074,12 +1007,12 @@ Extracted Gene Coordinates: {'gene_id': 'ENSMUSG00000025903', 'chromosome': '1',
 </div>
 </div>
 <div id="4eec4e3b" class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cage_peaks_path = "/data/analysis/data_diamant/allos/allos/data/refTSS_v4.1_mouse_coordinate.mm39.bed"</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="co"># # Load CAGE peaks as a dataframe</span></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="co"># cage_peaks_df = pd.read_csv(cage_peaks_path, sep="\t", names=["chromosome", "start", "end", "refTSS_ID", "score", "strand"])</span></span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="co"># # Get gene coordinates from GTF</span></span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="co"># gene_coordinates = get_gene_coordinates_from_gtf(gtf_path, transcript_id)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cage_peaks_path = "/data/analysis/data_diamant/allos/allos/data/refTSS_v4.1_mouse_coordinate.mm39.bed"</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="co"># # Load CAGE peaks as a dataframe</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="co"># cage_peaks_df = pd.read_csv(cage_peaks_path, sep="\t", names=["chromosome", "start", "end", "refTSS_ID", "score", "strand"])</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="co"># # Get gene coordinates from GTF</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="co"># gene_coordinates = get_gene_coordinates_from_gtf(gtf_path, transcript_id)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Available columns in GTF: Index(['Chromosome', 'Source', 'Feature', 'Start', 'End', 'Score', 'Strand',
        'Frame', 'gene_id', 'gene_version', 'gene_name', 'gene_source',
@@ -1095,7 +1028,7 @@ Extracted Gene Coordinates: {'gene_id': 'ENSMUSG00000025903', 'chromosome': '1',
 </div>
 </div>
 <div id="bc5a6110" class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># gene_coordinates</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># gene_coordinates</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <pre><code>{'gene_id': 'ENSMUSG00000025903',
  'chromosome': '1',
@@ -1104,7 +1037,7 @@ Extracted Gene Coordinates: {'gene_id': 'ENSMUSG00000025903', 'chromosome': '1',
 </div>
 </div>
 <div id="6bd30ad6" class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># find_tss_in_gene_range(cage_peaks_df, gene_coordinates)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># find_tss_in_gene_range(cage_peaks_df, gene_coordinates)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>✅ Chromosome formats are now consistent!</code></pre>
 </div>
