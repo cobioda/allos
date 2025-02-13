@@ -436,7 +436,7 @@ ENSMUST00000028207.12    Crat</code></pre>
 </div>
 </div>
 <p>Now, let’s examine the differentially expressed transcripts. Unlike our previous focus on genes, we will shift our attention to the transcript level. The finest resoloution transcriptional layer. We should still see considerable gene wise overlap in the two rankings as we would expect in many cases the higher gene count to be driven by a single isoform.</p>
-<div id="cell-20" class="cell" data-execution_count="8">
+<div id="cell-20" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Concatenate the gene name before the transcript ID in the transcript matrix</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>transcript_matrix <span class="op">=</span> sicelore_mouse_data.copy()</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -489,7 +489,7 @@ ENSMUST00000028207.12    Crat</code></pre>
 </div>
 </div>
 <p>Lets visualise the isoforms of a specific gene Nnat based on multiple transcripts from this gene in the top rankings of imature GABAergic vs rest.</p>
-<div id="cell-22" class="cell" data-execution_count="9">
+<div id="cell-22" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform the operations on a copy of the sicelore_mouse_data</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>sicelore_mouse_data_copy <span class="op">=</span> sicelore_mouse_data.copy()</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -504,7 +504,7 @@ ENSMUST00000028207.12    Crat</code></pre>
   warnings.warn(</code></pre>
 </div>
 </div>
-<div id="cell-23" class="cell" data-execution_count="10">
+<div id="cell-23" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> allos.visuals <span class="im">as</span> vs</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>vs.plot_transcripts(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Nnat'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -515,7 +515,7 @@ ENSMUST00000028207.12    Crat</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-24" class="cell" data-execution_count="11">
+<div id="cell-24" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> allos.visuals <span class="im">as</span> vs</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>vs.plot_transcripts(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Pkm'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -526,18 +526,18 @@ ENSMUST00000028207.12    Crat</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-25" class="cell" data-execution_count="12">
+<div id="cell-25" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> allos.switch_search <span class="im">import</span> SwitchSearch</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-26" class="cell" data-execution_count="13">
+<div id="cell-26" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>ss <span class="op">=</span> SwitchSearch(sicelore_mouse_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-27" class="cell" data-execution_count="14">
+<div id="cell-27" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>switch_list <span class="op">=</span> ss.find_switching_isoforms_wilcoxon(n_jobs<span class="op">=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-28" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>switch_list.head(<span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="15">
+<div id="cell-28" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>switch_list.head(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
 <div>
 
 
@@ -659,298 +659,13 @@ ENSMUST00000028207.12    Crat</code></pre>
 <td>95.588235</td>
 <td>42.181818</td>
 </tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">5965</td>
-<td>ENSMUST00000163694.3</td>
-<td>11.155944</td>
-<td>8.147258</td>
-<td>6.697808e-29</td>
-<td>6.121031e-26</td>
-<td>mature Glutamatergic</td>
-<td>radial glia</td>
-<td>mature Glutamatergic__radial glia</td>
-<td>Pkm</td>
-<td>275</td>
-<td>68</td>
-<td>343</td>
-<td>1.333826e-23</td>
-<td>8.147258</td>
-<td>89.818182</td>
-<td>16.176471</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">1506</td>
-<td>ENSMUST00000107849.9</td>
-<td>10.725714</td>
-<td>8.949328</td>
-<td>7.708972e-27</td>
-<td>5.360417e-24</td>
-<td>mature Glutamatergic</td>
-<td>radial glia</td>
-<td>mature Glutamatergic__radial glia</td>
-<td>Clta</td>
-<td>275</td>
-<td>68</td>
-<td>343</td>
-<td>9.377558e-22</td>
-<td>8.949328</td>
-<td>87.636364</td>
-<td>7.352941</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">2235</td>
-<td>ENSMUST00000154584.8</td>
-<td>10.596644</td>
-<td>6.462344</td>
-<td>3.088641e-26</td>
-<td>1.975866e-23</td>
-<td>radial glia</td>
-<td>mature Glutamatergic</td>
-<td>mature Glutamatergic__radial glia</td>
-<td>Eef1d</td>
-<td>68</td>
-<td>275</td>
-<td>343</td>
-<td>3.237709e-21</td>
-<td>-6.462344</td>
-<td>89.705882</td>
-<td>24.727273</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">5940</td>
-<td>ENSMUST00000163694.3</td>
-<td>10.560711</td>
-<td>4.567454</td>
-<td>4.532153e-26</td>
-<td>3.221454e-23</td>
-<td>imature Glutamatergic</td>
-<td>cycling radial glia</td>
-<td>cycling radial glia__imature Glutamatergic</td>
-<td>Pkm</td>
-<td>234</td>
-<td>117</td>
-<td>351</td>
-<td>5.183036e-21</td>
-<td>-4.567454</td>
-<td>84.615385</td>
-<td>43.589744</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1130</td>
-<td>ENSMUST00000030417.9</td>
-<td>10.449820</td>
-<td>7.487224</td>
-<td>1.468039e-25</td>
-<td>8.695686e-23</td>
-<td>mature Glutamatergic</td>
-<td>radial glia</td>
-<td>mature Glutamatergic__radial glia</td>
-<td>Cdc42</td>
-<td>275</td>
-<td>68</td>
-<td>343</td>
-<td>1.304437e-20</td>
-<td>7.487224</td>
-<td>85.090909</td>
-<td>14.705882</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">1118</td>
-<td>ENSMUST00000030417.9</td>
-<td>10.378815</td>
-<td>4.576591</td>
-<td>3.095947e-25</td>
-<td>1.112662e-22</td>
-<td>mature Glutamatergic</td>
-<td>cycling radial glia</td>
-<td>cycling radial glia__mature Glutamatergic</td>
-<td>Cdc42</td>
-<td>275</td>
-<td>117</td>
-<td>392</td>
-<td>1.657093e-20</td>
-<td>-4.576591</td>
-<td>85.090909</td>
-<td>39.316239</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">5955</td>
-<td>ENSMUST00000163694.3</td>
-<td>10.207308</td>
-<td>7.687160</td>
-<td>1.838968e-24</td>
-<td>1.307138e-21</td>
-<td>imature Glutamatergic</td>
-<td>radial glia</td>
-<td>imature Glutamatergic__radial glia</td>
-<td>Pkm</td>
-<td>234</td>
-<td>68</td>
-<td>302</td>
-<td>1.694750e-19</td>
-<td>7.687160</td>
-<td>84.615385</td>
-<td>16.176471</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">1484</td>
-<td>ENSMUST00000107849.9</td>
-<td>10.054152</td>
-<td>4.796204</td>
-<td>8.807723e-24</td>
-<td>6.871313e-21</td>
-<td>mature GABAergic</td>
-<td>cycling radial glia</td>
-<td>cycling radial glia__mature GABAergic</td>
-<td>Clta</td>
-<td>172</td>
-<td>117</td>
-<td>289</td>
-<td>8.006304e-19</td>
-<td>-4.796204</td>
-<td>83.139535</td>
-<td>39.316239</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1482</td>
-<td>ENSMUST00000107849.9</td>
-<td>9.975988</td>
-<td>4.470673</td>
-<td>1.941579e-23</td>
-<td>9.857674e-21</td>
-<td>imature Glutamatergic</td>
-<td>cycling radial glia</td>
-<td>cycling radial glia__imature Glutamatergic</td>
-<td>Clta</td>
-<td>234</td>
-<td>117</td>
-<td>351</td>
-<td>1.127442e-18</td>
-<td>-4.470673</td>
-<td>83.760684</td>
-<td>39.316239</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">1497</td>
-<td>ENSMUST00000107849.9</td>
-<td>9.958041</td>
-<td>8.391595</td>
-<td>2.326005e-23</td>
-<td>1.458816e-20</td>
-<td>imature Glutamatergic</td>
-<td>radial glia</td>
-<td>imature Glutamatergic__radial glia</td>
-<td>Clta</td>
-<td>234</td>
-<td>68</td>
-<td>302</td>
-<td>1.632402e-18</td>
-<td>8.391595</td>
-<td>83.760684</td>
-<td>7.352941</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">182</td>
-<td>ENSMUST00000044492.9</td>
-<td>9.737172</td>
-<td>6.676501</td>
-<td>2.092979e-22</td>
-<td>1.239741e-19</td>
-<td>imature Glutamatergic</td>
-<td>radial glia</td>
-<td>imature Glutamatergic__radial glia</td>
-<td>Akap9</td>
-<td>234</td>
-<td>68</td>
-<td>302</td>
-<td>1.251917e-17</td>
-<td>6.676501</td>
-<td>83.760684</td>
-<td>22.058824</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">1504</td>
-<td>ENSMUST00000107849.9</td>
-<td>9.634603</td>
-<td>8.717126</td>
-<td>5.711261e-22</td>
-<td>3.653608e-19</td>
-<td>mature GABAergic</td>
-<td>radial glia</td>
-<td>mature GABAergic__radial glia</td>
-<td>Clta</td>
-<td>172</td>
-<td>68</td>
-<td>240</td>
-<td>3.464178e-17</td>
-<td>8.717126</td>
-<td>83.139535</td>
-<td>7.352941</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">5964</td>
-<td>ENSMUST00000034834.15</td>
-<td>9.557229</td>
-<td>5.815203</td>
-<td>1.209522e-21</td>
-<td>7.439957e-19</td>
-<td>radial glia</td>
-<td>mature GABAergic</td>
-<td>mature GABAergic__radial glia</td>
-<td>Pkm</td>
-<td>68</td>
-<td>172</td>
-<td>240</td>
-<td>6.804876e-17</td>
-<td>-5.815203</td>
-<td>95.588235</td>
-<td>43.023256</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">1485</td>
-<td>ENSMUST00000170241.7</td>
-<td>9.399286</td>
-<td>3.665712</td>
-<td>5.493450e-21</td>
-<td>1.417044e-18</td>
-<td>cycling radial glia</td>
-<td>mature Glutamatergic</td>
-<td>cycling radial glia__mature Glutamatergic</td>
-<td>Clta</td>
-<td>117</td>
-<td>275</td>
-<td>392</td>
-<td>1.266246e-16</td>
-<td>3.665712</td>
-<td>83.760684</td>
-<td>47.636364</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1507</td>
-<td>ENSMUST00000170241.7</td>
-<td>9.359902</td>
-<td>4.369593</td>
-<td>7.981022e-21</td>
-<td>3.191012e-18</td>
-<td>radial glia</td>
-<td>mature Glutamatergic</td>
-<td>mature Glutamatergic__radial glia</td>
-<td>Clta</td>
-<td>68</td>
-<td>275</td>
-<td>343</td>
-<td>2.733443e-16</td>
-<td>-4.369593</td>
-<td>89.705882</td>
-<td>47.636364</td>
-</tr>
 </tbody>
 </table>
 
 </div>
 </div>
 </div>
-<div id="cell-29" class="cell" data-execution_count="16">
+<div id="cell-29" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>vs.plot_transcript_exspression_dotplot(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Clta'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -960,7 +675,7 @@ ENSMUST00000028207.12    Crat</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-30" class="cell" data-execution_count="17">
+<div id="cell-30" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>vs.plot_transcript_expression_violin(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Clta'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -970,7 +685,7 @@ ENSMUST00000028207.12    Crat</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-31" class="cell" data-execution_count="18">
+<div id="cell-31" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>vs.plot_transcript_exspression_dotplot(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Akap9'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -980,7 +695,7 @@ ENSMUST00000028207.12    Crat</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-32" class="cell" data-execution_count="19">
+<div id="cell-32" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib.request</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
@@ -999,25 +714,33 @@ ENSMUST00000028207.12    Crat</code></pre>
 <span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Downloading </span><span class="sc">{</span>gtf_url<span class="sc">}</span><span class="ss">..."</span>)</span>
 <span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>    urllib.request.urlretrieve(gtf_url, gtf_file_local)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-33" class="cell" data-execution_count="20">
+<div id="cell-33" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> allos.transcript_plots <span class="im">import</span> TranscriptPlots</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>tp <span class="op">=</span> TranscriptPlots(gtf_file<span class="op">=</span> gtf_file_local)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-34" class="cell" data-execution_count="21">
+<div id="cell-34" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> allos.switch_search <span class="im">import</span> get_top_n_isoforms</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-35" class="cell">
+<div id="cell-35" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>top_n <span class="op">=</span> get_top_n_isoforms(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Akap9'</span>, strip<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>tp.draw_transcripts_list(top_n, draw_cds<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>WARNING:root:No CDS features found for transcript ENSMUST00000141817.
-WARNING:root:No CDS features found for transcript ENSMUST00000177448.</code></pre>
+WARNING:root:No CDS features found for transcript ENSMUST00000177448.
+WARNING:root:No CDS features found for transcript ENSMUST00000132058.</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-22-output-2.png" class="img-fluid figure-img"></p>
+</figure>
 </div>
 </div>
-<div id="cell-36" class="cell" data-execution_count="23">
+</div>
+<div id="cell-36" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>top_n</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="23">
+<div class="cell-output cell-output-display" data-execution_count="22">
 <pre><code>['ENSMUST00000044492',
  'ENSMUST00000143365',
  'ENSMUST00000141817',
@@ -1025,7 +748,7 @@ WARNING:root:No CDS features found for transcript ENSMUST00000177448.</code></pr
  'ENSMUST00000132058']</code></pre>
 </div>
 </div>
-<div id="cell-37" class="cell" data-execution_count="24">
+<div id="cell-37" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>top_n <span class="op">=</span> get_top_n_isoforms(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Akap9'</span>, strip<span class="op">=</span><span class="va">True</span>, top_n<span class="op">=</span><span class="dv">2</span>)</span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>tp.draw_transcripts_list(top_n, draw_cds<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -1036,7 +759,7 @@ WARNING:root:No CDS features found for transcript ENSMUST00000177448.</code></pr
 </div>
 </div>
 </div>
-<div id="cell-38" class="cell" data-execution_count="25">
+<div id="cell-38" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>top_n <span class="op">=</span> get_top_n_isoforms(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Akap9'</span>, strip<span class="op">=</span><span class="va">False</span>, top_n<span class="op">=</span><span class="dv">2</span>)</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>vs.plot_transcripts(sicelore_mouse_data_copy, transcripts<span class="op">=</span>top_n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1048,7 +771,7 @@ WARNING:root:No CDS features found for transcript ENSMUST00000177448.</code></pr
 </div>
 </div>
 </div>
-<div id="cell-39" class="cell" data-execution_count="26">
+<div id="cell-39" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>vs.plot_density_multi(sicelore_mouse_data_copy, features<span class="op">=</span>top_n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -1058,7 +781,7 @@ WARNING:root:No CDS features found for transcript ENSMUST00000177448.</code></pr
 </div>
 </div>
 </div>
-<div id="cell-40" class="cell" data-execution_count="27">
+<div id="cell-40" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>top_n <span class="op">=</span> get_top_n_isoforms(sicelore_mouse_data_copy, gene_id<span class="op">=</span><span class="st">'Cd63'</span>, strip<span class="op">=</span><span class="va">True</span>, top_n<span class="op">=</span><span class="dv">4</span>)</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>tp.draw_transcripts_list(top_n, draw_cds<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -1069,9 +792,9 @@ WARNING:root:No CDS features found for transcript ENSMUST00000177448.</code></pr
 </div>
 </div>
 </div>
-<div id="cell-41" class="cell" data-execution_count="28">
+<div id="cell-41" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>top_n</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="28">
+<div class="cell-output cell-output-display" data-execution_count="27">
 <pre><code>['ENSMUST00000026407',
  'ENSMUST00000219317',
  'ENSMUST00000105229',

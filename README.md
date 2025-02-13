@@ -325,7 +325,7 @@ switch_list = ss.find_switching_isoforms_wilcoxon(n_jobs=10)
 ```
 
 ``` python
-switch_list.head(20)
+switch_list.head(5)
 ```
 
 <div>
@@ -348,21 +348,6 @@ switch_list.head(20)
 | 5959 | ENSMUST00000034834.15 | 11.984186 | 5.965338 | 4.300464e-33 | 2.751093e-29 | intermediate progenitor | mature Glutamatergic | intermediate progenitor\_\_mature Glutamatergic | Pkm | 86 | 275 | 361 | 1.154418e-26 | 5.965338 | 94.186047 | 42.181818 |
 | 1486 | ENSMUST00000107849.9 | 11.684690 | 5.028407 | 1.526343e-31 | 1.038757e-28 | mature Glutamatergic | cycling radial glia | cycling radial glia\_\_mature Glutamatergic | Clta | 275 | 117 | 392 | 3.982160e-26 | -5.028407 | 87.636364 | 39.316239 |
 | 5966 | ENSMUST00000034834.15 | 11.383351 | 6.386945 | 5.061634e-30 | 5.996349e-27 | radial glia | mature Glutamatergic | mature Glutamatergic\_\_radial glia | Pkm | 68 | 275 | 343 | 1.591441e-24 | -6.386945 | 95.588235 | 42.181818 |
-| 5965 | ENSMUST00000163694.3 | 11.155944 | 8.147258 | 6.697808e-29 | 6.121031e-26 | mature Glutamatergic | radial glia | mature Glutamatergic\_\_radial glia | Pkm | 275 | 68 | 343 | 1.333826e-23 | 8.147258 | 89.818182 | 16.176471 |
-| 1506 | ENSMUST00000107849.9 | 10.725714 | 8.949328 | 7.708972e-27 | 5.360417e-24 | mature Glutamatergic | radial glia | mature Glutamatergic\_\_radial glia | Clta | 275 | 68 | 343 | 9.377558e-22 | 8.949328 | 87.636364 | 7.352941 |
-| 2235 | ENSMUST00000154584.8 | 10.596644 | 6.462344 | 3.088641e-26 | 1.975866e-23 | radial glia | mature Glutamatergic | mature Glutamatergic\_\_radial glia | Eef1d | 68 | 275 | 343 | 3.237709e-21 | -6.462344 | 89.705882 | 24.727273 |
-| 5940 | ENSMUST00000163694.3 | 10.560711 | 4.567454 | 4.532153e-26 | 3.221454e-23 | imature Glutamatergic | cycling radial glia | cycling radial glia\_\_imature Glutamatergic | Pkm | 234 | 117 | 351 | 5.183036e-21 | -4.567454 | 84.615385 | 43.589744 |
-| 1130 | ENSMUST00000030417.9 | 10.449820 | 7.487224 | 1.468039e-25 | 8.695686e-23 | mature Glutamatergic | radial glia | mature Glutamatergic\_\_radial glia | Cdc42 | 275 | 68 | 343 | 1.304437e-20 | 7.487224 | 85.090909 | 14.705882 |
-| 1118 | ENSMUST00000030417.9 | 10.378815 | 4.576591 | 3.095947e-25 | 1.112662e-22 | mature Glutamatergic | cycling radial glia | cycling radial glia\_\_mature Glutamatergic | Cdc42 | 275 | 117 | 392 | 1.657093e-20 | -4.576591 | 85.090909 | 39.316239 |
-| 5955 | ENSMUST00000163694.3 | 10.207308 | 7.687160 | 1.838968e-24 | 1.307138e-21 | imature Glutamatergic | radial glia | imature Glutamatergic\_\_radial glia | Pkm | 234 | 68 | 302 | 1.694750e-19 | 7.687160 | 84.615385 | 16.176471 |
-| 1484 | ENSMUST00000107849.9 | 10.054152 | 4.796204 | 8.807723e-24 | 6.871313e-21 | mature GABAergic | cycling radial glia | cycling radial glia\_\_mature GABAergic | Clta | 172 | 117 | 289 | 8.006304e-19 | -4.796204 | 83.139535 | 39.316239 |
-| 1482 | ENSMUST00000107849.9 | 9.975988 | 4.470673 | 1.941579e-23 | 9.857674e-21 | imature Glutamatergic | cycling radial glia | cycling radial glia\_\_imature Glutamatergic | Clta | 234 | 117 | 351 | 1.127442e-18 | -4.470673 | 83.760684 | 39.316239 |
-| 1497 | ENSMUST00000107849.9 | 9.958041 | 8.391595 | 2.326005e-23 | 1.458816e-20 | imature Glutamatergic | radial glia | imature Glutamatergic\_\_radial glia | Clta | 234 | 68 | 302 | 1.632402e-18 | 8.391595 | 83.760684 | 7.352941 |
-| 182 | ENSMUST00000044492.9 | 9.737172 | 6.676501 | 2.092979e-22 | 1.239741e-19 | imature Glutamatergic | radial glia | imature Glutamatergic\_\_radial glia | Akap9 | 234 | 68 | 302 | 1.251917e-17 | 6.676501 | 83.760684 | 22.058824 |
-| 1504 | ENSMUST00000107849.9 | 9.634603 | 8.717126 | 5.711261e-22 | 3.653608e-19 | mature GABAergic | radial glia | mature GABAergic\_\_radial glia | Clta | 172 | 68 | 240 | 3.464178e-17 | 8.717126 | 83.139535 | 7.352941 |
-| 5964 | ENSMUST00000034834.15 | 9.557229 | 5.815203 | 1.209522e-21 | 7.439957e-19 | radial glia | mature GABAergic | mature GABAergic\_\_radial glia | Pkm | 68 | 172 | 240 | 6.804876e-17 | -5.815203 | 95.588235 | 43.023256 |
-| 1485 | ENSMUST00000170241.7 | 9.399286 | 3.665712 | 5.493450e-21 | 1.417044e-18 | cycling radial glia | mature Glutamatergic | cycling radial glia\_\_mature Glutamatergic | Clta | 117 | 275 | 392 | 1.266246e-16 | 3.665712 | 83.760684 | 47.636364 |
-| 1507 | ENSMUST00000170241.7 | 9.359902 | 4.369593 | 7.981022e-21 | 3.191012e-18 | radial glia | mature Glutamatergic | mature Glutamatergic\_\_radial glia | Clta | 68 | 275 | 343 | 2.733443e-16 | -4.369593 | 89.705882 | 47.636364 |
 
 </div>
 
@@ -421,6 +406,9 @@ tp.draw_transcripts_list(top_n, draw_cds=True)
 
     WARNING:root:No CDS features found for transcript ENSMUST00000141817.
     WARNING:root:No CDS features found for transcript ENSMUST00000177448.
+    WARNING:root:No CDS features found for transcript ENSMUST00000132058.
+
+![](index_files/figure-commonmark/cell-22-output-2.png)
 
 ``` python
 top_n
