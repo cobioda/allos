@@ -33,6 +33,7 @@ Requires-Dist: pyranges
 Requires-Dist: pyfaidx
 Requires-Dist: numpy
 Requires-Dist: jinja2
+Requires-Dist: plotly
 Provides-Extra: dev
 Dynamic: author
 Dynamic: author-email
