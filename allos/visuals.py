@@ -4,7 +4,8 @@
 
 # %% auto 0
 __all__ = ['plot_transcripts', 'normal_reference_bandwidth', 'wkde2d', 'get_dens', 'calculate_density', 'plot_density',
-           'plot_density_multi', 'plot_transcript_exspression_dotplot', 'plot_transcript_expression_violin']
+           'plot_density_multi', 'plot_transcript_exspression_dotplot', 'plot_transcript_expression_dotplot_plotly',
+           'plot_transcript_expression_violin']
 
 # %% ../nbs/008_visuals.ipynb 3
 import numpy as np
@@ -296,199 +297,385 @@ def plot_density_multi(adata, features, basis="umap", adjust=1.0, cmap="viridis"
     plt.show()
 
 # %% ../nbs/008_visuals.ipynb 17
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import numpy as np
+import warnings
+import plotly.express as px
+import plotly.graph_objects as go
 
-def plot_transcript_exspression_dotplot(adata, gene_id, cell_labels_column='cell_type', top_n=5):
-    """
-    Plot isoform expression for a selected gene across cell types,
-    with dot color = average expression, and dot size = percent
-    of cells expressing. Two legends: a colorbar for average
-    expression, and a bubble-size legend for pct_expressing.
-
-    DIFFERENT LAYOUT APPROACH:
-    - We use a single figure+axes with plt.tight_layout(rect=[...])
-      to reserve space on the right. 
-    - We place the bubble-size legend as an "in-figure" legend
-      using bbox_to_anchor, so it won't be cut off.
-    """
-
+def plot_transcript_exspression_dotplot(adata, gene_id, cell_labels_column='cell_type',
+                                        top_n=5, sr_adata=None):
     sns.set_theme(style='white', context='notebook')
 
-    # ----------------------------------------------------
-    # 1. Identify isoforms for the gene
-    # ----------------------------------------------------
+    # -----------------------------
+    # 1. Process primary (long-read) data
+    # -----------------------------
     isoforms = adata.var[adata.var['geneId'] == gene_id].index
     if len(isoforms) == 0:
-        print(f"No isoforms found for gene ID: {gene_id}")
+        print(f"No isoforms found for gene ID: {gene_id} in primary adata")
         return
-
-    # (Optional) keep only top_n isoforms by overall average
     if top_n and len(isoforms) > top_n:
         overall_expr = adata.to_df()[isoforms].mean()
         isoforms = overall_expr.sort_values(ascending=False).head(top_n).index
 
-    # ----------------------------------------------------
-    # 2. Average expression by cell type
-    # ----------------------------------------------------
-    avg_expr_list = []
+    primary_avg_list = []
+    primary_pct_list = []
     for iso in isoforms:
         means = adata.to_df()[iso].groupby(adata.obs[cell_labels_column], observed=False).mean()
         df_means = pd.DataFrame({
             cell_labels_column: means.index,
-            'average_expression': means.values
+            'average_expression': means.values,
+            'isoform': iso
         })
-        df_means['isoform'] = iso
-        avg_expr_list.append(df_means)
-    avg_expr_df = pd.concat(avg_expr_list, ignore_index=True)
-
-    # ----------------------------------------------------
-    # 3. Percent of cells expressing each isoform
-    # ----------------------------------------------------
-    pct_expr_list = []
-    for iso in isoforms:
-        pct_expressing = adata.to_df()[iso]\
-            .groupby(adata.obs[cell_labels_column], observed=False)\
-            .apply(lambda x: (x > 0).mean() * 100)
-
+        primary_avg_list.append(df_means)
+        
+        pct = adata.to_df()[iso].groupby(adata.obs[cell_labels_column], observed=False)\
+                                .apply(lambda x: (x > 0).mean() * 100)
         df_pct = pd.DataFrame({
-            cell_labels_column: pct_expressing.index,
-            'pct_expressing': pct_expressing.values
+            cell_labels_column: pct.index,
+            'pct_expressing': pct.values,
+            'isoform': iso
         })
-        df_pct['isoform'] = iso
-        pct_expr_list.append(df_pct)
-    pct_expr_df = pd.concat(pct_expr_list, ignore_index=True)
+        primary_pct_list.append(df_pct)
 
-    # ----------------------------------------------------
-    # 4. Merge the average and pct data
-    # ----------------------------------------------------
-    plot_df = pd.merge(avg_expr_df, pct_expr_df,
-                       on=['isoform', cell_labels_column],
-                       how='left')
+    primary_df = pd.merge(pd.concat(primary_avg_list, ignore_index=True),
+                          pd.concat(primary_pct_list, ignore_index=True),
+                          on=[cell_labels_column, 'isoform'], how='left')
+    primary_df['gene_isoform'] = gene_id + "–" + primary_df['isoform'].astype(str)
 
-    # Drop columns that are all NaN or all zero
-    plot_df.dropna(axis=1, how='all', inplace=True)
-    numeric_cols = plot_df.select_dtypes(include=[np.number]).columns
-    all_zero = (plot_df[numeric_cols] == 0).all(axis=0)
-    plot_df.drop(columns=all_zero[all_zero].index, inplace=True)
+    # -----------------------------
+    # 2. Process short-read data (if provided)
+    # -----------------------------
+    if sr_adata is not None and gene_id in sr_adata.var_names:
+        gene_counts = sr_adata.to_df()[gene_id]
+        sr_means = gene_counts.groupby(sr_adata.obs[cell_labels_column], observed=False).mean()
+        sr_df_means = pd.DataFrame({
+            cell_labels_column: sr_means.index,
+            'average_expression': sr_means.values,
+            'isoform': 'short_read'
+        })
+        sr_pct = gene_counts.groupby(sr_adata.obs[cell_labels_column], observed=False)\
+                            .apply(lambda x: (x > 0).mean() * 100)
+        sr_df_pct = pd.DataFrame({
+            cell_labels_column: sr_pct.index,
+            'pct_expressing': sr_pct.values,
+            'isoform': 'short_read'
+        })
+        sr_df = pd.merge(sr_df_means, sr_df_pct, on=[cell_labels_column, 'isoform'], how='left')
+        sr_df['gene_isoform'] = gene_id + "–SR"
+    else:
+        sr_df = pd.DataFrame()
 
-    # ----------------------------------------------------
-    # 5. Clean labels & drop blank cell types
-    # ----------------------------------------------------
-    plot_df['display_isoform'] = plot_df['isoform'].astype(str)
-    plot_df['gene_isoform'] = gene_id + "–" + plot_df['display_isoform']
+    # -----------------------------
+    # 3. Define y-axis ordering so that short-read is last
+    # -----------------------------
+    ordered = [gene_id + "–" + iso for iso in isoforms]
+    if not sr_df.empty:
+        ordered.append(gene_id + "–SR")
+    primary_df['gene_isoform'] = pd.Categorical(primary_df['gene_isoform'],
+                                                categories=ordered, ordered=True)
+    if not sr_df.empty:
+        sr_df['gene_isoform'] = pd.Categorical(sr_df['gene_isoform'],
+                                               categories=ordered, ordered=True)
 
-    plot_df = plot_df[plot_df[cell_labels_column].astype(str).str.strip() != '']
-
-    # ----------------------------------------------------
-    # 6. Filter out cell-types / isoforms with zero sums
-    # ----------------------------------------------------
-    plot_df = plot_df.groupby(cell_labels_column, observed=False).filter(
-        lambda grp: (grp['average_expression'].sum() > 0) or
-                    (grp['pct_expressing'].sum() > 0)
-    )
-    plot_df = plot_df.groupby('isoform', observed=False).filter(
-        lambda grp: (grp['average_expression'].sum() > 0) or
-                    (grp['pct_expressing'].sum() > 0)
-    )
-
-    # ----------------------------------------------------
-    # 7. Convert to categorical + remove unused
-    # ----------------------------------------------------
-    plot_df[cell_labels_column] = plot_df[cell_labels_column].astype('category')
-    plot_df['isoform'] = plot_df['isoform'].astype('category')
-    plot_df[cell_labels_column] = plot_df[cell_labels_column].cat.remove_unused_categories()
-    plot_df['isoform'] = plot_df['isoform'].cat.remove_unused_categories()
-
-    # Sort so the x-axis follows category order
-    cat_order = list(plot_df[cell_labels_column].cat.categories)
-    plot_df[cell_labels_column] = plot_df[cell_labels_column].cat\
-        .reorder_categories(cat_order, ordered=True)
-    plot_df.sort_values(by=cell_labels_column, inplace=True)
-
-    # ----------------------------------------------------
-    # 8. Create figure & axes (no constrained layout)
-    # ----------------------------------------------------
-    fig_width = 25
-    fig_height = max(5, plot_df['isoform'].nunique() * 0.8)
+    # -----------------------------
+    # 4. Plotting
+    # -----------------------------
+    fig_width = 20
+    fig_height = max(5, len(ordered)*0.8)
     fig, ax = plt.subplots(figsize=(fig_width, fig_height))
-    # We'll use tight_layout with rect=... to keep space on the right
-    plt.tight_layout(rect=[0, 0, 0.78, 1])  # leave 22% on right side
+    # Leave space on the right for colorbars and legend
+    fig.subplots_adjust(right=0.75)
 
-    # ----------------------------------------------------
-    # 9. Scatterplot: hue=average_expr, size=pct_expr
-    # ----------------------------------------------------
-    vmin = plot_df['average_expression'].min() if 'average_expression' in plot_df else 0
-    vmax = plot_df['average_expression'].max() if 'average_expression' in plot_df else 1
+    # Plot primary data
+    if not primary_df.empty:
+        vmin_p = primary_df['average_expression'].min()
+        vmax_p = primary_df['average_expression'].max()
+        norm_p = plt.Normalize(vmin_p, vmax_p)
+        sns.scatterplot(
+            data=primary_df,
+            x=cell_labels_column,
+            y='gene_isoform',
+            hue='average_expression',
+            size='pct_expressing',
+            palette='viridis',
+            sizes=(50, 300),
+            edgecolor='white',
+            alpha=0.9,
+            legend=False,
+            hue_norm=norm_p,
+            ax=ax
+        )
 
-    scatter = sns.scatterplot(
-        data=plot_df,
-        x=cell_labels_column,
-        y='gene_isoform',
-        hue='average_expression',     # color scale
-        size='pct_expressing',        # bubble size
-        palette='viridis',
-        sizes=(50, 300),
-        edgecolor='white',
-        alpha=0.9,
-        legend=False,  # We'll add custom legends
-        hue_norm=plt.Normalize(vmin, vmax),
-        ax=ax
-    )
+    # Plot short-read data
+    if not sr_df.empty:
+        vmin_sr = sr_df['average_expression'].min()
+        vmax_sr = sr_df['average_expression'].max()
+        norm_sr = plt.Normalize(vmin_sr, vmax_sr)
+        sns.scatterplot(
+            data=sr_df,
+            x=cell_labels_column,
+            y='gene_isoform',
+            hue='average_expression',
+            size='pct_expressing',
+            palette='Reds',
+            sizes=(50, 300),
+            edgecolor='white',
+            alpha=0.9,
+            legend=False,
+            hue_norm=norm_sr,
+            ax=ax
+        )
+
+    # Single bubble-size legend (shared by both primary & SR)
+    size_bins = [0, 25, 50, 75, 100]
+    handles = []
+    for val in size_bins:
+        s = np.interp(val, [0, 100], [50, 300])
+        handles.append(plt.scatter([], [], s=s, color='gray', alpha=0.9, edgecolor='white'))
+    labels = [f"{int(val)}%" for val in size_bins]
+    leg = ax.legend(handles, labels, title='Pct. Expressing',
+                    loc='upper left', bbox_to_anchor=(1.03, 1.0),
+                    frameon=False, fontsize=10, title_fontsize=12)
+    ax.add_artist(leg)
+
+    # Two separate colorbars (stacked) for primary vs. short-read
+    cbar_ax_p = fig.add_axes([0.9, 0.55, 0.02, 0.3])  # [left, bottom, width, height]
+    cbar_ax_sr = fig.add_axes([0.9, 0.15, 0.02, 0.3])
+    if not primary_df.empty:
+        sm_p = plt.cm.ScalarMappable(norm=norm_p, cmap='viridis')
+        sm_p.set_array([])
+        cbar_p = plt.colorbar(sm_p, cax=cbar_ax_p)
+        cbar_p.set_label('Primary Avg. Expression', fontsize=12)
+    if not sr_df.empty:
+        sm_sr = plt.cm.ScalarMappable(norm=norm_sr, cmap='Reds')
+        sm_sr.set_array([])
+        cbar_sr = plt.colorbar(sm_sr, cax=cbar_ax_sr)
+        cbar_sr.set_label('SR Avg. Expression', fontsize=12)
 
     ax.set_title(f'Differential Isoform Expression for {gene_id}', fontsize=16, pad=20)
     ax.set_xlabel('Cell Type', fontsize=13)
     ax.set_ylabel('Gene–Isoform', fontsize=13)
     sns.despine(ax=ax)
 
-    # ----------------------------------------------------
-    # 10. Color bar for average_expression
-    # ----------------------------------------------------
-    if 'average_expression' in plot_df:
-        norm = plt.Normalize(vmin=vmin, vmax=vmax)
-        sm = plt.cm.ScalarMappable(norm=norm, cmap='viridis')
-        sm.set_array([])
-        cbar = fig.colorbar(sm, ax=ax, fraction=0.05, pad=0.02)
-        cbar.set_label('Average Expression', fontsize=12)
+    # Update x-axis tick labels to include cell counts.
+    # Get counts from the primary AnnData object.
+    cell_counts = adata.obs[cell_labels_column].value_counts().to_dict()
+    new_labels = []
+    for tick in ax.get_xticklabels():
+        txt = tick.get_text()
+        # Only update labels that have a corresponding count.
+        if txt in cell_counts:
+            new_labels.append(f"{txt} (n={cell_counts[txt]})")
+        else:
+            new_labels.append(txt)
+    ax.set_xticklabels(new_labels, rotation=45, ha='right', fontsize=11)
 
-    # ----------------------------------------------------
-    # 11. Bubble-size legend for pct_expressing
-    #     We'll place it inside the figure to the right
-    # ----------------------------------------------------
-    if 'pct_expressing' in plot_df:
-        size_bins = [0, 25, 50, 75, 100]
-        size_handles = []
-        for val in size_bins:
-            # Map 0..100 to size range 50..300
-            marker_size = np.interp(val, [0, 100], [50, 300])
-            size_handles.append(
-                plt.scatter([], [], s=marker_size, color='gray',
-                            alpha=0.9, edgecolor='white')
-            )
-        size_labels = [f"{int(val)}%" for val in size_bins]
-
-        # Place bubble legend in the middle-right
-        legend_size = ax.legend(
-            size_handles,
-            size_labels,
-            title='Pct. Expressing',
-            loc='center left',         # place vertically centered
-            bbox_to_anchor=(1.08, 0.75),
-            frameon=False,
-            fontsize=10,
-            title_fontsize=12
-        )
-        ax.add_artist(legend_size)
-
-    # ----------------------------------------------------
-    # 12. Final touches: rotate x labels, show plot
-    # ----------------------------------------------------
-    plt.xticks(rotation=45, ha='right', fontsize=11)
     plt.show()
 
+def plot_transcript_expression_dotplot_plotly(
+    adata, 
+    gene_id, 
+    cell_labels_column='cell_type', 
+    top_n=5, 
+    min_cell_counts=30, 
+    min_expressed_isoform_count=2, 
+    expression_threshold=0.1
+):
+    """
+    Create an interactive dotplot for isoform expression of a given gene using Plotly.
+    
+    Only includes cell types with more than min_cell_counts cells.
+    Optionally filters to top_n isoforms by overall average expression.
+    
+    New filtering:
+      - Only cell types that express at least min_expressed_isoform_count isoforms
+        above an average expression of expression_threshold are included.
+      
+    The x-axis labels are annotated with the number of cells in each group,
+    and hover values are rounded.
+    """
+    # Helper: replicate Plotly's default area-based bubble scaling
+    def scale_bubble_size(percent_value, percent_max=100, size_max=30):
+        scaling_factor = (size_max ** 2) / float(percent_max)
+        return np.sqrt(percent_value * scaling_factor)
 
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+
+        # Filter cell types with enough cells
+        cell_counts = adata.obs[cell_labels_column].value_counts()
+        common_cell_types = cell_counts[cell_counts > min_cell_counts].index
+        if len(common_cell_types) == 0:
+            print(f"No cell types have more than {min_cell_counts} cells.")
+            return
+        
+        # Identify isoforms
+        isoforms = adata.var[adata.var['geneId'] == gene_id].index
+        if len(isoforms) == 0:
+            print(f"No isoforms found for gene ID: {gene_id}")
+            return
+
+        # Expression data
+        expr_df = adata.to_df()[isoforms]
+        
+        # Filter top_n isoforms by average expression
+        overall_expr = expr_df.mean()
+        if top_n and len(isoforms) > top_n:
+            isoforms = overall_expr.sort_values(ascending=False).head(top_n).index
+
+        # Create a mask
+        mask = adata.obs[cell_labels_column].isin(common_cell_types)
+        
+        avg_expr_list, pct_expr_list = [], []
+        for iso in isoforms:
+            expr_series = expr_df[iso][mask]
+            if expr_series.empty:
+                continue
+
+            avg_expr = expr_series.groupby(adata.obs[cell_labels_column][mask]).mean()
+            df_avg = pd.DataFrame({
+                cell_labels_column: avg_expr.index,
+                'average_expression': avg_expr.values,
+                'isoform': iso
+            })
+            avg_expr_list.append(df_avg)
+            
+            pct_expr = expr_series.groupby(adata.obs[cell_labels_column][mask]) \
+                                  .apply(lambda x: (x > 0).mean() * 100)
+            df_pct = pd.DataFrame({
+                cell_labels_column: pct_expr.index,
+                'pct_expressing': pct_expr.values,
+                'isoform': iso
+            })
+            pct_expr_list.append(df_pct)
+        
+        if not avg_expr_list or not pct_expr_list:
+            print("No data available after filtering.")
+            return
+
+        avg_expr_df = pd.concat(avg_expr_list, ignore_index=True)
+        pct_expr_df = pd.concat(pct_expr_list, ignore_index=True)
+
+        avg_expr_df['average_expression'] = avg_expr_df['average_expression'].fillna(0)
+        pct_expr_df['pct_expressing'] = pct_expr_df['pct_expressing'].fillna(0)
+        
+        plot_df = pd.merge(avg_expr_df, pct_expr_df, on=[cell_labels_column, 'isoform'])
+        plot_df['gene_isoform'] = gene_id + "–" + plot_df['isoform'].astype(str)
+        
+        # Drop cell types with 0% across all isoforms
+        plot_df = plot_df.groupby(cell_labels_column).filter(lambda g: g['pct_expressing'].sum() > 0)
+        
+        # Additional filtering
+        valid_types = plot_df.groupby(cell_labels_column).filter(
+            lambda g: (g['average_expression'] > expression_threshold).sum() >= min_expressed_isoform_count
+        )[cell_labels_column].unique()
+        plot_df = plot_df[plot_df[cell_labels_column].isin(valid_types)]
+        
+        if plot_df.empty:
+            print("No cell types met the filtering criteria.")
+            return
+
+        # Categorical ordering
+        plot_df[cell_labels_column] = plot_df[cell_labels_column].astype("category")
+        plot_df[cell_labels_column] = plot_df[cell_labels_column].cat.remove_unused_categories()
+        unique_cats = sorted(plot_df[cell_labels_column].cat.categories)
+        plot_df[cell_labels_column] = plot_df[cell_labels_column].cat.reorder_categories(unique_cats, ordered=True)
+        
+        # Annotate cell types with counts
+        group_counts = adata.obs.loc[mask, cell_labels_column].value_counts().to_dict()
+        plot_df[cell_labels_column] = plot_df[cell_labels_column].map(
+            lambda ct: f"{ct} (n={group_counts.get(ct, 0)})"
+        )
+        
+        # Round values
+        plot_df['pct_expressing'] = plot_df['pct_expressing'].round(1)
+        plot_df['average_expression'] = plot_df['average_expression'].round(1)
+        
+        # Main scatter
+        fig = px.scatter(
+            plot_df, 
+            x=cell_labels_column, 
+            y='gene_isoform',
+            size='pct_expressing',
+            color='average_expression',
+            hover_data={'pct_expressing': True, 'average_expression': ':.1f'},
+            title=f"Isoform Expression for {gene_id} Cell Types (> {min_cell_counts} cells)",
+            color_continuous_scale='Viridis',
+            size_max=30,
+            labels={
+                'pct_expressing': '% Expressing', 
+                'average_expression': 'Avg Expression'
+            }
+        )
+
+        # Bubble-size legend
+        bubble_sizes = [0, 25, 50, 75, 100]
+        for s in bubble_sizes:
+            fig.add_trace(
+                go.Scatter(
+                    x=[None],
+                    y=[None],
+                    mode='markers',
+                    marker=dict(
+                        size=scale_bubble_size(s, 100, 30),
+                        color='gray'
+                    ),
+                    legendgroup='PctExpressingSize',
+                    showlegend=True,
+                    name=f"{s}%"
+                )
+            )
+
+        # OPTIONAL: dynamic sizing with bigger minimum
+        num_cell_types = plot_df[cell_labels_column].nunique()
+        num_isoforms = plot_df['gene_isoform'].nunique()
+
+        fig_width = 300 + 60 * num_cell_types
+        fig_height = 300 + 60 * num_isoforms
+
+        # 50% bigger minimum than 600x400 → 900x600
+        fig_width = max(fig_width, 900)
+        fig_height = max(fig_height, 600)
+
+        # Layout: large right margin for colorbar & legend
+        fig.update_layout(
+            autosize=False,
+            width=fig_width,
+            height=fig_height,
+            margin=dict(l=60, r=300, t=80, b=80),
+            title={'x': 0.5, 'xanchor': 'center'},
+            xaxis_title="Cell Type",
+            yaxis_title="Gene–Isoform",
+            legend_title_text="% Expressing",
+            plot_bgcolor='white',
+            # Place the bubble legend horizontally below the colorbar
+            legend=dict(
+                orientation="h",
+                # We anchor everything to the right side
+                x=1,         # same X as colorbar
+                xanchor="left",
+                y=0.2,          # below the colorbar
+                yanchor="top",
+                itemsizing="constant"
+            )
+        )
+
+        # Colorbar at top-right; shorten it so there's space below for legend
+        fig.update_coloraxes(
+            colorbar_x=1,
+            colorbar_y=0.65,
+            colorbar_len=0.5,  # reduce length
+            colorbar_title="Avg Expression"
+        )
+
+        # Rotate x-axis if needed
+        fig.update_xaxes(tickangle=45, automargin=True)
+        fig.update_yaxes(showgrid=False)
+
+        fig.show()
 
 
 # %% ../nbs/008_visuals.ipynb 19

@@ -186,6 +186,61 @@ class TranscriptData:
         df = exons.df
         lengths = df["End"] - df["Start"]
         return lengths.sum()
+    
+    def get_all_transcript_lengths(self, protein_coding_only: bool = False) -> Dict[str, int]:
+        """
+        Return a dictionary mapping each transcript ID to its total exon length,
+        computed in a vectorized manner without an explicit Python loop.
+    
+        Optional:
+            protein_coding_only (bool): If True, restrict the calculation to transcripts
+                                        with a transcript_biotype of 'protein_coding'.
+    
+        Returns:
+            Dict[str, int]: A dictionary where keys are transcript IDs and values
+                            are the summed exon lengths.
+        """
+        # Access the annotation dataframe
+        df = self.gr.df
+        # Filter out rows with missing transcript_id values
+        df_valid = df[df['transcript_id'].notna()]
+        if protein_coding_only:
+            df_valid = df_valid[df_valid['transcript_type'] == 'protein_coding']
+        # Compute exon lengths (End - Start) for each row and group by transcript_id
+        # Note: Parenthesize the subtraction to avoid operator precedence issues.
+        transcript_lengths = (
+            (df_valid['End'] - df_valid['Start'])
+            .groupby(df_valid['transcript_id'])
+            .sum()
+            .astype(int)
+            .to_dict()
+        )
+        self.transcript_lengths = transcript_lengths
+        return transcript_lengths
+
+    def get_gene_lengths(self, protein_coding_only: bool = False) -> Dict[str, float]:
+        """
+        Return a dictionary mapping each gene_name to the mean exon length,
+        computed by averaging the lengths of all exons belonging to that gene.
+    
+        Optional:
+            protein_coding_only (bool): If True, restrict the calculation to genes
+                                        with a gene_biotype of 'protein_coding'.
+    
+        Returns:
+            Dict[str, float]: A dictionary where keys are gene names and values are the mean exon lengths.
+        """
+        transcript_lengths = self.get_all_transcript_lengths(protein_coding_only)
+        df = self.gr.df
+        df_valid = df[df['gene_name'].notna()]
+        gene_lengths = (
+            df_valid[df_valid['transcript_id'].isin(transcript_lengths.keys())]
+            .groupby('gene_name')['transcript_id']
+            .apply(lambda x: sum(transcript_lengths[tid] for tid in x) / len(x))
+            .to_dict()
+        )
+        return gene_lengths
+
 
     def get_chromosome(self, transcript_id: str) -> Optional[str]:
         """
