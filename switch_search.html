@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="This module provides tools to identify potential isoform switches within single-cell isoform-resolution datasets. It includes methods based on Dirichlet distributions and Wilcoxon tests for detecting differential isoform usage. These approaches are still under development and intended for exploratory use, with manual confirmation of detected isoform switches being essential.">
+
+<title>Detecting Switches – allos</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-ae44de7e3b26b230a7801128389852ee.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="Detecting Switches – allos">
+<meta property="og:description" content="This module provides tools to identify potential isoform switches within single-cell isoform-resolution datasets. It includes methods based on Dirichlet distributions and Wilcoxon tests for detecting differential isoform usage. These approaches are still under development and intended for exploratory use, with manual confirmation of detected isoform switches being essential.">
+<meta property="og:site_name" content="allos">
+<meta name="twitter:title" content="Detecting Switches – allos">
+<meta name="twitter:description" content="This module provides tools to identify potential isoform switches within single-cell isoform-resolution datasets. It includes methods based on Dirichlet distributions and Wilcoxon tests for detecting differential isoform usage. These approaches are still under development and intended for exploratory use, with manual confirmation of detected isoform switches being essential.">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">allos</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./switch_search.html">Detecting Switches</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Allos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./palettes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Palettes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./transcript_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Transcript plots</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./transcript_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Transcript Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./readers_tests.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Readers</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./anndata_iso.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">IsoAdata</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./switch_search.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Detecting Switches</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./gene_report.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Gene Report Module</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./preprocesing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preprocessing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./visuals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Visualizations</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./metacells.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Metacells</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#build_isoform_metrics_table" id="toc-build_isoform_metrics_table" class="nav-link active" data-scroll-target="#build_isoform_metrics_table">build_isoform_metrics_table</a></li>
+  <li><a href="#compute_cell_level_psi" id="toc-compute_cell_level_psi" class="nav-link" data-scroll-target="#compute_cell_level_psi">compute_cell_level_psi</a></li>
+  <li><a href="#pct_expressed" id="toc-pct_expressed" class="nav-link" data-scroll-target="#pct_expressed">pct_expressed</a></li>
+  <li><a href="#safe_sum" id="toc-safe_sum" class="nav-link" data-scroll-target="#safe_sum">safe_sum</a></li>
+  <li><a href="#build_gene_metrics_table" id="toc-build_gene_metrics_table" class="nav-link" data-scroll-target="#build_gene_metrics_table">build_gene_metrics_table</a></li>
+  <li><a href="#switchsearch" id="toc-switchsearch" class="nav-link" data-scroll-target="#switchsearch">SwitchSearch</a></li>
+  <li><a href="#filter_sample_replicated_transcripts" id="toc-filter_sample_replicated_transcripts" class="nav-link" data-scroll-target="#filter_sample_replicated_transcripts">filter_sample_replicated_transcripts</a></li>
+  <li><a href="#get_top_n_isoforms" id="toc-get_top_n_isoforms" class="nav-link" data-scroll-target="#get_top_n_isoforms">get_top_n_isoforms</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/cobioda/allos/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Detecting Switches</h1>
+</div>
+
+<div>
+  <div class="description">
+    This module provides tools to identify potential isoform switches within single-cell isoform-resolution datasets. It includes methods based on Dirichlet distributions and Wilcoxon tests for detecting differential isoform usage. These approaches are still under development and intended for exploratory use, with manual confirmation of detected isoform switches being essential.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/switch_search.py#L52" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="build_isoform_metrics_table" class="level3">
+<h3 class="anchored" data-anchor-id="build_isoform_metrics_table">build_isoform_metrics_table</h3>
+<blockquote class="blockquote">
+<pre><code> build_isoform_metrics_table (adata:anndata._core.anndata.AnnData,
+                              group_column:str, condition_column:str=None,
+                              comparisons:list=None, epsilon:float=1e-06,
+                              n_jobs:int=-1)</code></pre>
+</blockquote>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>adata</td>
+<td>AnnData</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>group_column</td>
+<td>str</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>condition_column</td>
+<td>str</td>
+<td>None</td>
+<td>optional nesting argument</td>
+</tr>
+<tr class="even">
+<td>comparisons</td>
+<td>list</td>
+<td>None</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>epsilon</td>
+<td>float</td>
+<td>1e-06</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>n_jobs</td>
+<td>int</td>
+<td>-1</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Returns</strong></td>
+<td><strong>DataFrame</strong></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/switch_search.py#L42" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="compute_cell_level_psi" class="level3">
+<h3 class="anchored" data-anchor-id="compute_cell_level_psi">compute_cell_level_psi</h3>
+<blockquote class="blockquote">
+<pre><code> compute_cell_level_psi (adata_sub, transcripts, epsilon=1e-06)</code></pre>
+</blockquote>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/switch_search.py#L37" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="pct_expressed" class="level3">
+<h3 class="anchored" data-anchor-id="pct_expressed">pct_expressed</h3>
+<blockquote class="blockquote">
+<pre><code> pct_expressed (adata_sub, features)</code></pre>
+</blockquote>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/switch_search.py#L33" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="safe_sum" class="level3">
+<h3 class="anchored" data-anchor-id="safe_sum">safe_sum</h3>
+<blockquote class="blockquote">
+<pre><code> safe_sum (X)</code></pre>
+</blockquote>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/switch_search.py#L147" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="build_gene_metrics_table" class="level3">
+<h3 class="anchored" data-anchor-id="build_gene_metrics_table">build_gene_metrics_table</h3>
+<blockquote class="blockquote">
+<pre><code> build_gene_metrics_table (adata:anndata._core.anndata.AnnData,
+                           group_column:str, condition_column:str=None,
+                           comparisons:list=None, epsilon:float=1e-06,
+                           n_jobs:int=-1)</code></pre>
+</blockquote>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>adata</td>
+<td>AnnData</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>group_column</td>
+<td>str</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>condition_column</td>
+<td>str</td>
+<td>None</td>
+<td>optional nesting argument</td>
+</tr>
+<tr class="even">
+<td>comparisons</td>
+<td>list</td>
+<td>None</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>epsilon</td>
+<td>float</td>
+<td>1e-06</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>n_jobs</td>
+<td>int</td>
+<td>-1</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Returns</strong></td>
+<td><strong>DataFrame</strong></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<pre><code>/opt/hostedtoolcache/Python/3.10.16/x64/lib/python3.10/site-packages/fastcore/docscrape.py:230: UserWarning: Unknown section See Also
+  else: warn(msg)</code></pre>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/switch_search.py#L277" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="switchsearch" class="level3">
+<h3 class="anchored" data-anchor-id="switchsearch">SwitchSearch</h3>
+<blockquote class="blockquote">
+<pre><code> SwitchSearch (anndata_obj:anndata._core.anndata.AnnData, n_jobs=-1,
+               compute_metrics=True, group_column='cell_type',
+               condition_column=None)</code></pre>
+</blockquote>
+<p>*An annotated data matrix.</p>
+<p>.. figure:: ../_static/img/anndata_schema.svg :width: 260px :align: right :class: dark-light</p>
+<p>:class:<code>~anndata.AnnData</code> stores a data matrix :attr:<code>X</code> together with annotations of observations :attr:<code>obs</code> (:attr:<code>obsm</code>, :attr:<code>obsp</code>), variables :attr:<code>var</code> (:attr:<code>varm</code>, :attr:<code>varp</code>), and unstructured annotations :attr:<code>uns</code>.</p>
+<p>An :class:<code>~anndata.AnnData</code> object <code>adata</code> can be sliced like a :class:<code>~pandas.DataFrame</code>, for instance <code>adata_subset = adata[:, list_of_variable_names]</code>. :class:<code>~anndata.AnnData</code>’s basic structure is similar to R’s ExpressionSet [Huber15]_. If setting an <code>.h5ad</code>-formatted HDF5 backing file <code>.filename</code>, data remains on the disk but is automatically loaded into memory if needed.*</p>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/switch_search.py#L541" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="filter_sample_replicated_transcripts" class="level3">
+<h3 class="anchored" data-anchor-id="filter_sample_replicated_transcripts">filter_sample_replicated_transcripts</h3>
+<blockquote class="blockquote">
+<pre><code> filter_sample_replicated_transcripts (adata, sample_col='sample',
+                                       min_samples=2, min_umi=1)</code></pre>
+</blockquote>
+<p>*Filters out transcripts that are not detected above a minimum UMI threshold in at least a specified number of samples (replicates).</p>
+<p>Parameters: adata: AnnData object containing transcript-level counts. sample_col: Column in adata.obs that identifies the replicate/sample. min_samples: Minimum number of samples in which the transcript must be expressed. min_umi: Minimum UMI count in a sample for the transcript to be considered “expressed”.</p>
+<p>Returns: A new AnnData object containing only transcripts that replicate across samples.*</p>
+<div id="3719063a" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> allos.readers_tests <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> allos.preprocessing <span class="im">as</span> pp</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>combined_mouse_data <span class="op">=</span> process_mouse_data()</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>combined_mouse_data <span class="op">=</span> pp.filter_transcripts_by_abundance(combined_mouse_data,  threshold_pct<span class="op">=</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+🔎 Looking for file at: /home/runner/work/allos/allos/allos/resources/e18.mouse.clusters.csv
+✅ File found at: /home/runner/work/allos/allos/allos/resources/e18.mouse.clusters.csv
+✅ File already exists at: /home/runner/work/allos/allos/allos/resources/data/mouse_1.txt.gz
+
+🔄 Decompressing /home/runner/work/allos/allos/allos/resources/data/mouse_1.txt.gz to /home/runner/work/allos/allos/allos/resources/data/mouse_1.txt...
+✅ Decompression complete.
+Test data (mouse_1) downloaded successfully
+✅ File already exists at: /home/runner/work/allos/allos/allos/resources/data/mouse_2.txt.gz
+
+🔄 Decompressing /home/runner/work/allos/allos/allos/resources/data/mouse_2.txt.gz to /home/runner/work/allos/allos/allos/resources/data/mouse_2.txt...
+✅ Decompression complete.
+Test data (mouse_2) downloaded successfully</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/opt/hostedtoolcache/Python/3.10.16/x64/lib/python3.10/site-packages/anndata/_core/anndata.py:1756: UserWarning: Observation names are not unique. To make them unique, call `.obs_names_make_unique`.
+  utils.warn_names_duplicates("obs")</code></pre>
+</div>
+</div>
+<div id="7b7c4e01" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>combined_mouse_data.obs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">batch</th>
+<th data-quarto-table-cell-role="th">cell_type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">CCACCTACAAAGTCAA</td>
+<td>0</td>
+<td>mature Glutamatergic</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">AACCATGAGACCACGA</td>
+<td>0</td>
+<td>Cajal-Retzius</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">GATGAGGTCGACCAGC</td>
+<td>0</td>
+<td>imature Glutamatergic</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">GCACTCTTCTATCGCC</td>
+<td>0</td>
+<td>imature Glutamatergic</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">TGCCCTAAGGCCCGTT</td>
+<td>0</td>
+<td>intermediate progenitor</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">TACTCATTCGCCATAA</td>
+<td>1</td>
+<td>mature GABAergic</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">CGTGAGCTCTCTAAGG</td>
+<td>1</td>
+<td>imature Glutamatergic</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">TTATGCTAGTAAGTAC</td>
+<td>1</td>
+<td>mature GABAergic</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">CGGACACTCTTGTCAT</td>
+<td>1</td>
+<td>radial glia</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">GGCTCGAGTACCGAGA</td>
+<td>1</td>
+<td>mature GABAergic</td>
+</tr>
+</tbody>
+</table>
+
+<p>1109 rows × 2 columns</p>
+</div>
+</div>
+</div>
+<div id="2864493e" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>ss <span class="op">=</span> SwitchSearch(combined_mouse_data, n_jobs <span class="op">=</span><span class="dv">20</span>, group_column <span class="op">=</span> <span class="st">'cell_type'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="30ac90ec" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>result_df_transcript <span class="op">=</span> ss.find_switching_isoforms_chi2(cell_group_column<span class="op">=</span><span class="st">'cell_type'</span>, return_transcript_metrics<span class="op">=</span><span class="va">True</span>, n_jobs <span class="op">=</span> <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="c35ecde9" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>result_df_transcript.sort_values(by<span class="op">=</span><span class="st">'adj_pval'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">gene_id</th>
+<th data-quarto-table-cell-role="th">group_1</th>
+<th data-quarto-table-cell-role="th">group_2</th>
+<th data-quarto-table-cell-role="th">chi2_stat</th>
+<th data-quarto-table-cell-role="th">p_value</th>
+<th data-quarto-table-cell-role="th">dof</th>
+<th data-quarto-table-cell-role="th">adj_pval</th>
+<th data-quarto-table-cell-role="th">comparison</th>
+<th data-quarto-table-cell-role="th">transcript_id</th>
+<th data-quarto-table-cell-role="th">count_group1</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">mean_expr_group2</th>
+<th data-quarto-table-cell-role="th">percent_expr_group1</th>
+<th data-quarto-table-cell-role="th">percent_expr_group2</th>
+<th data-quarto-table-cell-role="th">avg_psi_group1</th>
+<th data-quarto-table-cell-role="th">log_fc</th>
+<th data-quarto-table-cell-role="th">delta_psi</th>
+<th data-quarto-table-cell-role="th">n_cells_group1</th>
+<th data-quarto-table-cell-role="th">n_cells_group2</th>
+<th data-quarto-table-cell-role="th">total_cells</th>
+<th data-quarto-table-cell-role="th">total_count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">38</td>
+<td>Clta</td>
+<td>mature Glutamatergic</td>
+<td>cycling radial glia</td>
+<td>490.319910</td>
+<td>1.213957e-108</td>
+<td>1</td>
+<td>4.916526e-107</td>
+<td>imature GABAergic__mature Glutamatergic</td>
+<td>ENSMUST00000034834.15</td>
+<td>228.0</td>
+<td>...</td>
+<td>0.712727</td>
+<td>65.957447</td>
+<td>42.181818</td>
+<td>0.442660</td>
+<td>1.254394</td>
+<td>0.316393</td>
+<td>141.0</td>
+<td>275.0</td>
+<td>416.0</td>
+<td>424.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">115</td>
+<td>Pkm</td>
+<td>imature Glutamatergic</td>
+<td>intermediate progenitor</td>
+<td>345.024592</td>
+<td>5.136026e-77</td>
+<td>1</td>
+<td>1.386727e-75</td>
+<td>imature Glutamatergic__intermediate progenitor</td>
+<td>ENSMUST00000163694.3</td>
+<td>682.0</td>
+<td>...</td>
+<td>1.081395</td>
+<td>84.615385</td>
+<td>51.162791</td>
+<td>0.628912</td>
+<td>1.066032</td>
+<td>0.412333</td>
+<td>234.0</td>
+<td>86.0</td>
+<td>320.0</td>
+<td>775.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">116</td>
+<td>Pkm</td>
+<td>imature Glutamatergic</td>
+<td>intermediate progenitor</td>
+<td>345.024592</td>
+<td>5.136026e-77</td>
+<td>1</td>
+<td>1.386727e-75</td>
+<td>imature Glutamatergic__intermediate progenitor</td>
+<td>ENSMUST00000034834.15</td>
+<td>312.0</td>
+<td>...</td>
+<td>4.906977</td>
+<td>58.974359</td>
+<td>94.186047</td>
+<td>0.268524</td>
+<td>-1.055774</td>
+<td>-0.503269</td>
+<td>234.0</td>
+<td>86.0</td>
+<td>320.0</td>
+<td>734.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">30</td>
+<td>Pkm</td>
+<td>mature Glutamatergic</td>
+<td>imature GABAergic</td>
+<td>296.662337</td>
+<td>1.757717e-66</td>
+<td>1</td>
+<td>4.067860e-65</td>
+<td>imature GABAergic__mature Glutamatergic</td>
+<td>ENSMUST00000077735.12</td>
+<td>149.0</td>
+<td>...</td>
+<td>1.872727</td>
+<td>52.482270</td>
+<td>73.090909</td>
+<td>0.401401</td>
+<td>-0.442533</td>
+<td>-0.223438</td>
+<td>141.0</td>
+<td>275.0</td>
+<td>416.0</td>
+<td>664.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">71</td>
+<td>Myl6</td>
+<td>mature Glutamatergic</td>
+<td>radial glia</td>
+<td>276.251023</td>
+<td>4.926999e-62</td>
+<td>1</td>
+<td>9.977173e-61</td>
+<td>mature Glutamatergic__radial glia</td>
+<td>ENSMUST00000218127.1</td>
+<td>156.0</td>
+<td>...</td>
+<td>3.558824</td>
+<td>37.818182</td>
+<td>89.705882</td>
+<td>0.143715</td>
+<td>-1.448639</td>
+<td>-0.468127</td>
+<td>275.0</td>
+<td>68.0</td>
+<td>343.0</td>
+<td>398.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Nsg2</td>
+<td>mature Glutamatergic</td>
+<td>imature Glutamatergic</td>
+<td>6.391678</td>
+<td>1.146566e-02</td>
+<td>1</td>
+<td>1.175593e-02</td>
+<td>imature Glutamatergic__mature Glutamatergic</td>
+<td>ENSMUST00000164181.1</td>
+<td>385.0</td>
+<td>...</td>
+<td>3.370909</td>
+<td>75.213675</td>
+<td>89.090909</td>
+<td>0.593013</td>
+<td>-0.278629</td>
+<td>-0.190546</td>
+<td>234.0</td>
+<td>275.0</td>
+<td>509.0</td>
+<td>1312.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">90</td>
+<td>Psma3</td>
+<td>imature Glutamatergic</td>
+<td>imature GABAergic</td>
+<td>6.343323</td>
+<td>1.178239e-02</td>
+<td>1</td>
+<td>1.200470e-02</td>
+<td>intermediate progenitor__mature Glutamatergic</td>
+<td>ENSMUST00000130411.6</td>
+<td>76.0</td>
+<td>...</td>
+<td>1.025455</td>
+<td>52.325581</td>
+<td>58.181818</td>
+<td>0.401163</td>
+<td>-0.311244</td>
+<td>-0.146474</td>
+<td>86.0</td>
+<td>275.0</td>
+<td>361.0</td>
+<td>358.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">85</td>
+<td>Thra</td>
+<td>imature Glutamatergic</td>
+<td>mature GABAergic</td>
+<td>6.304508</td>
+<td>1.204313e-02</td>
+<td>1</td>
+<td>1.219367e-02</td>
+<td>intermediate progenitor__mature Glutamatergic</td>
+<td>ENSMUST00000163694.3</td>
+<td>93.0</td>
+<td>...</td>
+<td>4.443636</td>
+<td>51.162791</td>
+<td>89.818182</td>
+<td>0.216579</td>
+<td>-1.289582</td>
+<td>-0.569881</td>
+<td>86.0</td>
+<td>275.0</td>
+<td>361.0</td>
+<td>1315.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">166</td>
+<td>Rpl34</td>
+<td>imature GABAergic</td>
+<td>cycling radial glia</td>
+<td>5.721957</td>
+<td>1.675405e-02</td>
+<td>1</td>
+<td>1.685811e-02</td>
+<td>cycling radial glia__mature GABAergic</td>
+<td>ENSMUST00000077609.11</td>
+<td>75.0</td>
+<td>...</td>
+<td>0.220930</td>
+<td>35.042735</td>
+<td>19.186047</td>
+<td>0.290212</td>
+<td>0.663856</td>
+<td>0.140793</td>
+<td>117.0</td>
+<td>172.0</td>
+<td>289.0</td>
+<td>113.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">91</td>
+<td>Rpl29</td>
+<td>imature Glutamatergic</td>
+<td>imature GABAergic</td>
+<td>7.527070</td>
+<td>2.320158e-02</td>
+<td>2</td>
+<td>2.320158e-02</td>
+<td>intermediate progenitor__mature Glutamatergic</td>
+<td>ENSMUST00000017065.14</td>
+<td>42.0</td>
+<td>...</td>
+<td>0.163636</td>
+<td>36.046512</td>
+<td>14.181818</td>
+<td>0.226744</td>
+<td>0.938248</td>
+<td>0.138017</td>
+<td>86.0</td>
+<td>275.0</td>
+<td>361.0</td>
+<td>87.0</td>
+</tr>
+</tbody>
+</table>
+
+<p>145 rows × 22 columns</p>
+</div>
+</div>
+</div>
+<hr>
+<p><a href="https://github.com/cobioda/allos/blob/main/allos/switch_search.py#L583" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="get_top_n_isoforms" class="level3">
+<h3 class="anchored" data-anchor-id="get_top_n_isoforms">get_top_n_isoforms</h3>
+<blockquote class="blockquote">
+<pre><code> get_top_n_isoforms (adata, gene_id, top_n=5, strip=False)</code></pre>
+</blockquote>
+<p>*Get the top_n transcript IDs for a given gene based on overall average expression.</p>
+<p>Parameters: - adata: AnnData object containing transcript-level data. - gene_id: The gene ID to search for corresponding isoforms. - top_n: The number of top isoforms to return based on overall average expression. - strip: Boolean indicating whether to strip the dot and everything after from the ID.</p>
+<p>Returns: - A list of top_n transcript IDs.*</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/cobioda\.github\.io\/allos");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/cobioda/allos/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
