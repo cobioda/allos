@@ -28,6 +28,10 @@ from functools import lru_cache
 import pyranges as pr
 from pyfaidx import Fasta
 import logging
+import base64
+import io
+
+from scipy.sparse import coo_matrix
 
 from .anndata_iso import AnnDataIso
 from .transcript_plots import TranscriptPlots

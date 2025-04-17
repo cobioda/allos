@@ -13,5 +13,6 @@ pyranges
 pyfaidx
 numpy
 jinja2
+plotly
 
 [dev]
