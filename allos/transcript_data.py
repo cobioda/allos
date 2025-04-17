@@ -220,6 +220,63 @@ class TranscriptData:
         df = exons.df
         strand_symbol = df["Strand"].iloc[0]
         return 1 if strand_symbol == '+' else -1
+    # test new stuff
+    def get_gene_name_by_gene_id(self, gene_id: str) -> Optional[str]:
+        """
+        Given a gene_id (e.g. 'ENSMUSG00000000001'), return the associated gene name (symbol)
+        from the loaded GTF annotation.
+
+        Args:
+            gene_id (str): Ensembl gene ID to look up.
+
+        Returns:
+            Optional[str]: The corresponding gene name, or None if not found.
+        """
+        df = self.gr.df
+
+        subset = df[df.gene_id == gene_id]
+        if "gene_name" not in subset.columns:
+            logging.warning("GTF annotation does not contain 'gene_name' column.")
+            return None
+
+        gene_names = subset["gene_name"].dropna().unique()
+
+        if len(gene_names) == 0:
+            logging.warning(f"No gene name found for gene ID {gene_id}.")
+            return None
+        elif len(gene_names) > 1:
+            logging.warning(f"Multiple gene names found for gene ID {gene_id}: {gene_names}. Returning first.")
+
+        return gene_names[0]
+    def get_transcript_name_by_transcript_id(self, transcript_id: str) -> Optional[str]:
+        """
+        Given an Ensembl transcript ID (e.g. 'ENSMUST00000000001'), return the associated
+        transcript name (if available) from the loaded GTF annotation.
+
+        Args:
+            transcript_id (str): The Ensembl transcript ID to look up.
+
+        Returns:
+            Optional[str]: The corresponding transcript name, or None if not found.
+        """
+        df = self.gr.df
+
+        subset = df[df.transcript_id == transcript_id]
+        if "transcript_name" not in subset.columns:
+            logging.warning("GTF annotation does not contain 'transcript_name' column.")
+            return None
+
+        transcript_names = subset["transcript_name"].dropna().unique()
+
+        if len(transcript_names) == 0:
+            logging.warning(f"No transcript name found for transcript ID {transcript_id}.")
+            return None
+        elif len(transcript_names) > 1:
+            logging.warning(f"Multiple transcript names found for transcript ID {transcript_id}: {transcript_names}. Returning first.")
+
+        return transcript_names[0]
+
+
 
     def get_transcripts_by_gene_id(self, gene_id: str) -> List[str]:
         """
@@ -763,6 +820,8 @@ class TranscriptData:
         psi_df = pd.DataFrame(rows)
         psi_df.sort_values(["Chromosome", "Start"], inplace=True)
         return psi_df
+    
+
 
 
 
