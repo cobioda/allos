@@ -75,7 +75,67 @@ class TranscriptPlots:
         else:
             return self.transcript_data.get_exon_coords_and_strand(transcript_id)
 
-    def _make_global_mapping(self, all_exons):
+    def _make_global_mapping(self, exons_list, intron_scaling=1):
+        """
+        Build a function mapping genomic coords → [0,1] visual coords,
+        compressing introns by the given intron_scaling factor.
+        """
+        # 1) find global min/max
+        all_starts = [e[0] for ex in exons_list for e in ex]
+        all_ends   = [e[1] for ex in exons_list for e in ex]
+        min_coord, max_coord = min(all_starts), max(all_ends)
+        region_length = max_coord - min_coord + 1
+
+        # 2) mark exon bases
+        is_exon = np.zeros(region_length, dtype=bool)
+        for exons in exons_list:
+            for start, end in exons:
+                # shift to 0-based
+                s = start - min_coord
+                e = end   - min_coord
+                is_exon[s:e+1] = True
+
+        # 3) build translation
+        coord_translation = np.zeros(region_length, dtype=int)
+        new_pos = 0
+        in_intron = False
+        skip_count = 0
+        max_skip = intron_scaling - 1
+
+        for i in range(region_length):
+            coord_translation[i] = new_pos
+            if is_exon[i]:
+                # exon: always keep
+                in_intron = False
+                new_pos += 1
+            else:
+                # intron
+                if not in_intron:
+                    # first base of intron
+                    in_intron = True
+                    skip_count = 0
+                    new_pos += 1
+                else:
+                    # subsequent intronic bases
+                    if skip_count >= max_skip:
+                        skip_count = 0
+                        new_pos += 1
+                    else:
+                        skip_count += 1
+                        # this base is “skipped” (compressed out)
+
+        # 4) now normalize to [0,1]
+        final_length = new_pos
+        def mapping_fn(x):
+            """Map a genomic coordinate x → [0,1]."""
+            idx = x - min_coord
+            if idx < 0:   idx = 0
+            if idx >= region_length: idx = region_length-1
+            return coord_translation[idx] / final_length
+
+        return mapping_fn
+    
+    def _make_global_mapping(self, all_exons, intron_scaling):
         """
         Build a mapping function f(x) that compresses introns but leaves exons at full length,
         normalizing the entire region to [0..1].
@@ -268,7 +328,7 @@ class TranscriptPlots:
         ax.text(1, offset - height,
                 transcript_name, ha='right', va='top', fontsize=12)
 
-    def _draw_transcripts_list(self, transcripts_ids, _ax, colors=None, draw_cds=False, with_tss=False, cage_df=None, window=0):
+    def _draw_transcripts_list(self, transcripts_ids, _ax, colors=None, draw_cds=False, with_tss=False, cage_df=None, window=0, intron_scaling = 10):
         """
         Draw multiple transcripts with the same global mapping,
         ensuring that exons sharing coordinates line up perfectly.
@@ -283,7 +343,9 @@ class TranscriptPlots:
         if colors is None:
             colors = [self.colors[i % len(self.colors)] for i in range(len(exons_list))]
 
-        mapping_fn = self._make_global_mapping(exons_list)
+        mapping_fn = self._make_global_mapping(exons_list,
+                                           intron_scaling=intron_scaling)
+
 
         plt.close('all')
         plt.figure()
@@ -305,14 +367,112 @@ class TranscriptPlots:
         else:
             return plt
 
-    def draw_transcripts_list(self, transcripts_ids, colors=None, draw_cds=False, with_tss=False, cage_df=None, window=0):
+    def draw_transcripts_list(self, transcripts_ids, colors=None, draw_cds=False, with_tss=False, cage_df=None, window=0, intron_scaling=10):
         """
         Public method to draw a list of transcripts with global intron scaling.
         (Note: draw_cds requires GTF-based transcript_data to highlight CDS regions.)
         """
         if draw_cds and self.transcript_data is None:
             raise Exception('A GTF file is necessary in order to display the CDS region')
-        self._draw_transcripts_list(transcripts_ids, None, colors, draw_cds=draw_cds, with_tss=with_tss, cage_df=cage_df, window=window)
+        self._draw_transcripts_list(transcripts_ids, None, colors, draw_cds=draw_cds, with_tss=with_tss, cage_df=cage_df, window=window, intron_scaling = intron_scaling)
+
+    def draw_transcripts_list_events(
+        self,
+        transcripts_ids,
+        colors=None,
+        draw_cds=False,
+        with_tss=False,
+        cage_df=None,
+        window=0,
+        gene_id=None,
+        intron_scaling = 10
+    ):
+        """
+        Public method to draw a list of transcripts with global intron scaling,
+        plus optional splicing‐event annotation beside each transcript.
+
+        Args:
+            transcripts_ids (list of str)
+            colors (list of str, optional)
+            draw_cds (bool): highlight CDS regions (requires GTF)
+            with_tss (bool)
+            cage_df (DataFrame)
+            window (int)
+            gene_id (str, optional): if provided, annotate each transcript
+                                        with its splicing “events” from
+                                        compare_transcript_isoforms.
+        """
+        if draw_cds and self.transcript_data is None:
+            raise Exception('A GTF file is necessary in order to display the CDS region')
+
+        # 1) if gene_id given, build a mapping transcript_id -> events label
+        events_map = {}
+        if gene_id is not None:
+            iso_df = self.transcript_data.compare_transcript_isoforms(
+                gene_id=gene_id,
+                transcripts=transcripts_ids,
+                reference_transcript= transcripts_ids[0],
+                collapse_events= False
+            )
+            # note: iso_df has columns ['alternative_transcript','events',...]
+            events_map = {
+                row['alternative_transcript']: row['events']
+                for _, row in iso_df.iterrows()
+            }
+
+        # 2) collect exon coords and strand directions
+        exons_list = []
+        directions = []
+        for tr in transcripts_ids:
+            t, d = self._get_coord_from_tscrpt_id(tr)
+            exons_list.append(t)
+            directions.append(d)
+
+        # 3) pick colours if none supplied
+        if colors is None:
+            colors = [self.colors[i % len(self.colors)] for i in range(len(exons_list))]
+
+        # 4) build the 0..1 mapping that compresses introns
+        mapping_fn = self._make_global_mapping(exons_list,
+                                           intron_scaling=intron_scaling)
+
+
+        # 5) initialize figure
+        import matplotlib.pyplot as plt
+        plt.close('all')
+        fig, ax = plt.subplots(figsize=(20, len(exons_list) * 2))
+        ax.set_xlim(-0.05, 1.2)   # extend x‐limit a bit to fit event labels
+        ax.set_ylim((0.1 - 0.5 * len(exons_list), 0.3))
+        ax.axis('off')
+
+        # 6) draw each transcript (and label events)
+        height = 0.2
+        for i, (ex, di, co, tid) in enumerate(zip(exons_list, directions, colors, transcripts_ids)):
+            offset = -0.5 * i
+            # this will draw exons/introns, arrow, and transcript name at x=1
+            self._draw_transcript(
+                ex, di, co, tid, mapping_fn,
+                offset=offset,
+                with_cds=draw_cds,
+                with_tss=with_tss,
+                cage_df=cage_df,
+                window=window
+            )
+            # annotate events if available
+            ev = events_map.get(tid)
+            if ev:
+                # place it just to the right of the transcript name
+                ax.text(
+                    1.02,
+                    offset - height,
+                    ev,
+                    ha='left',
+                    va='top',
+                    fontsize=10,
+                    style='italic'
+                )
+
+        plt.show()
 
     def draw_transcripts_list_unscaled(self, transcripts_ids, colors=None):
         """
