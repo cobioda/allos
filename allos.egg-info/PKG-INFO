@@ -1,4 +1,4 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.2
 Name: allos
 Version: 0.0.2
 Summary: Storage and visualization of long read based single cell datasets
@@ -35,6 +35,18 @@ Requires-Dist: numpy
 Requires-Dist: jinja2
 Requires-Dist: plotly
 Provides-Extra: dev
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
 
 # Allos
 
@@ -127,20 +139,20 @@ sicelore_mouse_data = pp.process_mouse_data()
 ```
 
 
-    🔎 Looking for file at: /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/e18.mouse.clusters.csv
-    ✅ File found at: /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/e18.mouse.clusters.csv
-    ✅ File already exists at: /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_1.txt.gz
+    🔎 Looking for file at: /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.10/site-packages/allos/resources/e18.mouse.clusters.csv
+    ✅ File found at: /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.10/site-packages/allos/resources/e18.mouse.clusters.csv
+    ✅ File already exists at: /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.10/site-packages/allos/resources/data/mouse_1.txt.gz
 
-    🔄 Decompressing /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_1.txt.gz to /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_1.txt...
+    🔄 Decompressing /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.10/site-packages/allos/resources/data/mouse_1.txt.gz to /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.10/site-packages/allos/resources/data/mouse_1.txt...
     ✅ Decompression complete.
     Test data (mouse_1) downloaded successfully
-    ✅ File already exists at: /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_2.txt.gz
+    ✅ File already exists at: /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.10/site-packages/allos/resources/data/mouse_2.txt.gz
 
-    🔄 Decompressing /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_2.txt.gz to /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_2.txt...
+    🔄 Decompressing /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.10/site-packages/allos/resources/data/mouse_2.txt.gz to /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.10/site-packages/allos/resources/data/mouse_2.txt...
     ✅ Decompression complete.
     Test data (mouse_2) downloaded successfully
 
-    /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/anndata/_core/anndata.py:1754: UserWarning: Observation names are not unique. To make them unique, call `.obs_names_make_unique`.
+    /home/mcandrew/.local/lib/python3.10/site-packages/anndata/_core/anndata.py:1756: UserWarning: Observation names are not unique. To make them unique, call `.obs_names_make_unique`.
       utils.warn_names_duplicates("obs")
 
 In this dataset, we observe the mouse data organized in a
@@ -202,12 +214,12 @@ sc.pl.umap(sicelore_mouse_data, color='cell_type')
 sicelore_mouse_data = original_sicelore_mouse_data
 ```
 
-    /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/scanpy/preprocessing/_normalization.py:207: UserWarning: Received a view of an AnnData. Making a copy.
+    /home/mcandrew/.local/lib/python3.10/site-packages/scanpy/preprocessing/_normalization.py:207: UserWarning: Received a view of an AnnData. Making a copy.
       view_to_actual(adata)
-    /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/scanpy/tools/_utils.py:41: UserWarning: You’re trying to run this on 5000 dimensions of `.X`, if you really want this, set `use_rep='X'`.
+    /home/mcandrew/.local/lib/python3.10/site-packages/scanpy/tools/_utils.py:41: UserWarning: You’re trying to run this on 5000 dimensions of `.X`, if you really want this, set `use_rep='X'`.
              Falling back to preprocessing with `sc.pp.pca` and default params.
       warnings.warn(
-    /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/tqdm/auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+    /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.10/site-packages/tqdm/auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
       from .autonotebook import tqdm as notebook_tqdm
 
 ![](index_files/figure-commonmark/cell-5-output-2.png)
@@ -239,7 +251,7 @@ sc.pl.umap(gene_anndata, color='cell_type')
 gene_anndata = original_gene_anndata
 ```
 
-    /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/scanpy/tools/_utils.py:41: UserWarning: You’re trying to run this on 2014 dimensions of `.X`, if you really want this, set `use_rep='X'`.
+    /home/mcandrew/.local/lib/python3.10/site-packages/scanpy/tools/_utils.py:41: UserWarning: You’re trying to run this on 2014 dimensions of `.X`, if you really want this, set `use_rep='X'`.
              Falling back to preprocessing with `sc.pp.pca` and default params.
       warnings.warn(
 
@@ -264,7 +276,7 @@ sc.pl.rank_genes_groups_heatmap(gene_anndata, show_gene_labels=True)
 
     WARNING: dendrogram data not found (using key=dendrogram_cell_type). Running `sc.tl.dendrogram` with default parameters. For fine tuning it is recommended to run `sc.tl.dendrogram` independently.
 
-    /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/scanpy/tools/_utils.py:41: UserWarning: You’re trying to run this on 12561 dimensions of `.X`, if you really want this, set `use_rep='X'`.
+    /home/mcandrew/.local/lib/python3.10/site-packages/scanpy/tools/_utils.py:41: UserWarning: You’re trying to run this on 12561 dimensions of `.X`, if you really want this, set `use_rep='X'`.
              Falling back to preprocessing with `sc.pp.pca` and default params.
       warnings.warn(
 
@@ -311,7 +323,7 @@ sc.pl.rank_genes_groups_heatmap(transcript_matrix, show_gene_labels=True)
 
     WARNING: dendrogram data not found (using key=dendrogram_cell_type). Running `sc.tl.dendrogram` with default parameters. For fine tuning it is recommended to run `sc.tl.dendrogram` independently.
 
-    /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/scanpy/tools/_utils.py:41: UserWarning: You’re trying to run this on 31986 dimensions of `.X`, if you really want this, set `use_rep='X'`.
+    /home/mcandrew/.local/lib/python3.10/site-packages/scanpy/tools/_utils.py:41: UserWarning: You’re trying to run this on 31986 dimensions of `.X`, if you really want this, set `use_rep='X'`.
              Falling back to preprocessing with `sc.pp.pca` and default params.
       warnings.warn(
 
@@ -332,7 +344,7 @@ sc.pp.neighbors(sicelore_mouse_data_copy)
 sc.tl.umap(sicelore_mouse_data_copy)
 ```
 
-    /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/scanpy/tools/_utils.py:41: UserWarning: You’re trying to run this on 31986 dimensions of `.X`, if you really want this, set `use_rep='X'`.
+    /home/mcandrew/.local/lib/python3.10/site-packages/scanpy/tools/_utils.py:41: UserWarning: You’re trying to run this on 31986 dimensions of `.X`, if you really want this, set `use_rep='X'`.
              Falling back to preprocessing with `sc.pp.pca` and default params.
       warnings.warn(
 
@@ -355,15 +367,15 @@ from allos.switch_search import SwitchSearch
 ```
 
 ``` python
-ss = SwitchSearch(sicelore_mouse_data)
+ss = SwitchSearch(sicelore_mouse_data, n_jobs=20)
 ```
 
 ``` python
-switch_list = ss.find_switching_isoforms_wilcoxon(n_jobs=10)
+result_df_transcript = ss.find_switching_isoforms_chi2(cell_group_column='cell_type', return_transcript_metrics=True, n_jobs = 20)
 ```
 
 ``` python
-switch_list.head(5)
+result_df_transcript.sort_values(by='adj_pval').head(20)
 ```
 
 <div>
@@ -379,21 +391,40 @@ switch_list.head(5)
     }
 </style>
 
-|  | transcript_id | scores | log_fold_change | pvals | pvals_adj | group_1 | group_2 | contrast | gene_id | n_cells_group_1 | n_cells_group_2 | total_cells | p_value | direction | percent_expressed_group_1 | percent_expressed_group_2 |
-|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|
-| 5943 | ENSMUST00000034834.15 | 12.270655 | 5.354527 | 1.301969e-34 | 1.156799e-31 | cycling radial glia | mature Glutamatergic | cycling radial glia\_\_mature Glutamatergic | Pkm | 117 | 275 | 392 | 7.113057e-29 | 5.354527 | 88.888889 | 42.181818 |
-| 5944 | ENSMUST00000163694.3 | 11.957458 | 5.027552 | 5.935075e-33 | 4.630227e-30 | mature Glutamatergic | cycling radial glia | cycling radial glia\_\_mature Glutamatergic | Pkm | 275 | 117 | 392 | 2.160587e-27 | -5.027552 | 89.818182 | 43.589744 |
-| 5959 | ENSMUST00000034834.15 | 11.984186 | 5.965338 | 4.300464e-33 | 2.751093e-29 | intermediate progenitor | mature Glutamatergic | intermediate progenitor\_\_mature Glutamatergic | Pkm | 86 | 275 | 361 | 1.154418e-26 | 5.965338 | 94.186047 | 42.181818 |
-| 1486 | ENSMUST00000107849.9 | 11.684690 | 5.028407 | 1.526343e-31 | 1.038757e-28 | mature Glutamatergic | cycling radial glia | cycling radial glia\_\_mature Glutamatergic | Clta | 275 | 117 | 392 | 3.982160e-26 | -5.028407 | 87.636364 | 39.316239 |
-| 5966 | ENSMUST00000034834.15 | 11.383351 | 6.386945 | 5.061634e-30 | 5.996349e-27 | radial glia | mature Glutamatergic | mature Glutamatergic\_\_radial glia | Pkm | 68 | 275 | 343 | 1.591441e-24 | -6.386945 | 95.588235 | 42.181818 |
+|  | gene_id | group_1 | group_2 | chi2_stat | p_value | dof | adj_pval | comparison | transcript_id | count_group1 | ... | mean_expr_group2 | percent_expr_group1 | percent_expr_group2 | avg_psi_group1 | log_fc | delta_psi | n_cells_group1 | n_cells_group2 | total_cells | total_count |
+|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|
+| 66 | Pkm | mature Glutamatergic | intermediate progenitor | 802.886772 | 1.271822e-176 | 1 | 1.087408e-174 | cycling radial glia\_\_mature Glutamatergic | ENSMUST00000163694.3 | 99.0 | ... | 4.443636 | 43.589744 | 89.818182 | 0.145154 | -1.689739 | -0.641306 | 117.0 | 275.0 | 392.0 | 1321.0 |
+| 40 | Clta | mature Glutamatergic | cycling radial glia | 490.319910 | 1.213957e-108 | 1 | 5.189667e-107 | imature GABAergic\_\_mature Glutamatergic | ENSMUST00000034834.15 | 228.0 | ... | 0.712727 | 65.957447 | 42.181818 | 0.442660 | 1.254394 | 0.316393 | 141.0 | 275.0 | 416.0 | 424.0 |
+| 121 | Pkm | imature Glutamatergic | intermediate progenitor | 345.024592 | 5.136026e-77 | 1 | 1.463767e-75 | imature Glutamatergic\_\_intermediate progenitor | ENSMUST00000163694.3 | 682.0 | ... | 1.081395 | 84.615385 | 51.162791 | 0.628403 | 1.065223 | 0.411824 | 234.0 | 86.0 | 320.0 | 775.0 |
+| 122 | Pkm | imature Glutamatergic | intermediate progenitor | 345.024592 | 5.136026e-77 | 1 | 1.463767e-75 | imature Glutamatergic\_\_intermediate progenitor | ENSMUST00000034834.15 | 312.0 | ... | 4.906977 | 58.974359 | 94.186047 | 0.268422 | -1.056153 | -0.503371 | 234.0 | 86.0 | 320.0 | 734.0 |
+| 32 | Pkm | mature Glutamatergic | imature GABAergic | 296.662337 | 1.757717e-66 | 1 | 4.293852e-65 | imature GABAergic\_\_mature Glutamatergic | ENSMUST00000077735.12 | 149.0 | ... | 1.872727 | 52.482270 | 73.090909 | 0.395491 | -0.453186 | -0.226743 | 141.0 | 275.0 | 416.0 | 664.0 |
+| 75 | Myl6 | mature Glutamatergic | radial glia | 276.251023 | 4.926999e-62 | 1 | 1.053146e-60 | mature Glutamatergic\_\_radial glia | ENSMUST00000164181.1 | 927.0 | ... | 2.764706 | 89.090909 | 75.000000 | 0.761366 | 0.748519 | 0.401190 | 275.0 | 68.0 | 343.0 | 1115.0 |
+| 74 | Myl6 | mature Glutamatergic | radial glia | 276.251023 | 4.926999e-62 | 1 | 1.053146e-60 | mature Glutamatergic\_\_radial glia | ENSMUST00000218127.1 | 156.0 | ... | 3.558824 | 37.818182 | 89.705882 | 0.139531 | -1.447055 | -0.453560 | 275.0 | 68.0 | 343.0 | 398.0 |
+| 161 | Pkm | mature GABAergic | intermediate progenitor | 222.766628 | 2.253866e-50 | 1 | 3.211759e-49 | imature GABAergic\_\_mature GABAergic | ENSMUST00000077609.11 | 58.0 | ... | 0.220930 | 31.914894 | 19.186047 | 0.280733 | 0.637155 | 0.132283 | 141.0 | 172.0 | 313.0 | 96.0 |
+| 87 | Tecr | mature Glutamatergic | radial glia | 208.510163 | 2.903431e-47 | 1 | 3.819128e-46 | mature Glutamatergic\_\_radial glia | ENSMUST00000165740.8 | 743.0 | ... | 0.691176 | 83.636364 | 45.588235 | 0.567338 | 1.237740 | 0.402788 | 275.0 | 68.0 | 343.0 | 790.0 |
+| 86 | Tecr | mature Glutamatergic | radial glia | 208.510163 | 2.903431e-47 | 1 | 3.819128e-46 | mature Glutamatergic\_\_radial glia | ENSMUST00000019382.16 | 456.0 | ... | 3.779412 | 67.636364 | 91.176471 | 0.334860 | -0.830608 | -0.433549 | 275.0 | 68.0 | 343.0 | 713.0 |
+| 39 | Cdc42 | mature Glutamatergic | cycling radial glia | 194.385419 | 3.508687e-44 | 1 | 4.285610e-43 | imature GABAergic\_\_mature Glutamatergic | ENSMUST00000163694.3 | 192.0 | ... | 4.443636 | 65.248227 | 89.818182 | 0.450957 | -0.556169 | -0.335503 | 141.0 | 275.0 | 416.0 | 1414.0 |
+| 80 | Rtn4 | mature Glutamatergic | radial glia | 170.023312 | 7.312652e-39 | 1 | 7.815397e-38 | mature Glutamatergic\_\_radial glia | ENSMUST00000078830.10 | 62.0 | ... | 0.647059 | 17.818182 | 45.588235 | 0.037811 | -2.075347 | -0.263449 | 275.0 | 68.0 | 343.0 | 106.0 |
+| 81 | Rtn4 | mature Glutamatergic | radial glia | 170.023312 | 7.312652e-39 | 1 | 7.815397e-38 | mature Glutamatergic\_\_radial glia | ENSMUST00000102843.9 | 1066.0 | ... | 0.808824 | 88.000000 | 47.058824 | 0.823317 | 0.854806 | 0.473107 | 275.0 | 68.0 | 343.0 | 1121.0 |
+| 173 | Pkm | imature GABAergic | cycling radial glia | 163.167055 | 2.299990e-37 | 1 | 2.313520e-36 | cycling radial glia\_\_mature GABAergic | ENSMUST00000077609.11 | 75.0 | ... | 0.220930 | 35.042735 | 19.186047 | 0.280952 | 0.637936 | 0.132503 | 117.0 | 172.0 | 289.0 | 113.0 |
+| 166 | Tecr | mature GABAergic | radial glia | 149.654929 | 2.062456e-34 | 1 | 1.959333e-33 | mature GABAergic\_\_radial glia | ENSMUST00000165740.8 | 200.0 | ... | 0.691176 | 66.279070 | 45.588235 | 0.523353 | 1.157041 | 0.358803 | 172.0 | 68.0 | 240.0 | 247.0 |
+| 165 | Tecr | mature GABAergic | radial glia | 149.654929 | 2.062456e-34 | 1 | 1.959333e-33 | mature GABAergic\_\_radial glia | ENSMUST00000019382.16 | 112.0 | ... | 3.779412 | 48.837209 | 91.176471 | 0.315116 | -0.891379 | -0.453293 | 172.0 | 68.0 | 240.0 | 369.0 |
+| 24 | Clta | mature Glutamatergic | imature GABAergic | 138.181497 | 6.651145e-32 | 1 | 5.986030e-31 | mature GABAergic\_\_mature Glutamatergic | ENSMUST00000034834.15 | 113.0 | ... | 0.712727 | 43.023256 | 42.181818 | 0.250159 | 0.683689 | 0.123891 | 172.0 | 275.0 | 447.0 | 309.0 |
+| 160 | Clta | mature GABAergic | intermediate progenitor | 125.373494 | 4.216298e-29 | 1 | 3.604935e-28 | imature GABAergic\_\_mature GABAergic | ENSMUST00000107849.9 | 146.0 | ... | 1.738372 | 55.319149 | 83.139535 | 0.373815 | -0.619595 | -0.320800 | 141.0 | 172.0 | 313.0 | 445.0 |
+| 118 | Clta | imature Glutamatergic | intermediate progenitor | 120.561990 | 4.765418e-28 | 1 | 3.880412e-27 | imature Glutamatergic\_\_intermediate progenitor | ENSMUST00000107849.9 | 482.0 | ... | 1.197674 | 83.760684 | 55.813953 | 0.666531 | 0.630118 | 0.311584 | 234.0 | 86.0 | 320.0 | 585.0 |
+| 117 | Clta | imature Glutamatergic | intermediate progenitor | 120.561990 | 4.765418e-28 | 1 | 3.880412e-27 | imature Glutamatergic\_\_intermediate progenitor | ENSMUST00000170241.7 | 156.0 | ... | 2.011628 | 45.299145 | 73.255814 | 0.208169 | -0.941952 | -0.325782 | 234.0 | 86.0 | 320.0 | 329.0 |
 
+<p>20 rows × 22 columns</p>
 </div>
 
 ``` python
 vs.plot_transcript_exspression_dotplot(sicelore_mouse_data_copy, gene_id='Clta')
 ```
 
-![](index_files/figure-commonmark/cell-16-output-1.png)
+    /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.10/site-packages/allos/visuals.py:470: UserWarning: set_ticklabels() should only be used with a fixed number of ticks, i.e. after set_ticks() or using a FixedLocator.
+      ax.set_xticklabels(new_labels, rotation=45, ha='right', fontsize=11)
+
+![](index_files/figure-commonmark/cell-16-output-2.png)
 
 ``` python
 vs.plot_transcript_expression_violin(sicelore_mouse_data_copy, gene_id='Clta')
@@ -405,7 +436,10 @@ vs.plot_transcript_expression_violin(sicelore_mouse_data_copy, gene_id='Clta')
 vs.plot_transcript_exspression_dotplot(sicelore_mouse_data_copy, gene_id='Akap9')
 ```
 
-![](index_files/figure-commonmark/cell-18-output-1.png)
+    /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.10/site-packages/allos/visuals.py:470: UserWarning: set_ticklabels() should only be used with a fixed number of ticks, i.e. after set_ticks() or using a FixedLocator.
+      ax.set_xticklabels(new_labels, rotation=45, ha='right', fontsize=11)
+
+![](index_files/figure-commonmark/cell-18-output-2.png)
 
 Let’s explore these transcripts of interest by visualizing them using
 the method described below. We will instantiate our transcript plot
@@ -489,6 +523,7 @@ technique. In this case, we will utilize UMAP for the plot.
 ``` python
 top_n = get_top_n_isoforms(sicelore_mouse_data_copy, gene_id='Clta', strip=False, top_n=3)
 
+
 vs.plot_transcripts(sicelore_mouse_data_copy, transcripts=top_n)
 ```
 
@@ -518,7 +553,10 @@ Let’s explore another potential isoform switch event.
 vs.plot_transcript_exspression_dotplot(sicelore_mouse_data_copy, gene_id='Akap9')
 ```
 
-![](index_files/figure-commonmark/cell-27-output-1.png)
+    /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.10/site-packages/allos/visuals.py:470: UserWarning: set_ticklabels() should only be used with a fixed number of ticks, i.e. after set_ticks() or using a FixedLocator.
+      ax.set_xticklabels(new_labels, rotation=45, ha='right', fontsize=11)
+
+![](index_files/figure-commonmark/cell-27-output-2.png)
 
 ``` python
 top_n = get_top_n_isoforms(sicelore_mouse_data_copy, gene_id='Clta', strip=True, top_n=3)
