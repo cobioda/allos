@@ -21,6 +21,7 @@ def safe_sum(X):
 
 
 # %% ../nbs/005_switch_search.ipynb 5
+from .preprocessing import get_sot_gene_matrix
 def build_gene_metrics_table(
     adata: "anndata.AnnData",
     group_column: str,
@@ -542,6 +543,7 @@ from scipy.sparse import issparse
 from scipy.stats import chi2
 from statsmodels.stats.multitest import multipletests
 
+
 # -----------------------------------------------------------------------------
 # Optional Numba helpers — falls back gracefully if missing
 # -----------------------------------------------------------------------------
@@ -597,7 +599,7 @@ def build_isoform_metrics_table(
     adata: ad.AnnData,
     group_columns: Sequence[str] | str,
     *,
-    comparisons: Sequence[Tuple[str, str]] | None = None,
+    comparisons: list[tuple[str, str]] = None,
     group_vs_rest: bool = False,
     epsilon: float = 1e-6,
     n_jobs: int = -1,
