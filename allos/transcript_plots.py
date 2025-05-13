@@ -34,12 +34,17 @@ def merge_intervals(intervals):
     return merged
 
 class TranscriptPlots:
-    def __init__(self, gtf_file=None, reference_fasta=None, intron_scale=0.1):
+    def __init__(self, gtf_file=None, reference_fasta=None, intron_scale=0.1,
+                 intron_scale_mode='relative', intron_fixed_length=5):
         """
         intron_scale: factor (between 0 and 1) by which intronic regions are compressed.
+        intron_scale_mode: 'relative' or 'fixed' mode for intron scaling.
+        intron_fixed_length: number of “visual units” per intron in fixed mode.
         """
         self.transcript_data = None
         self.intron_scale = intron_scale
+        self.intron_scale_mode = intron_scale_mode
+        self.intron_fixed_length = intron_fixed_length
         self.colors = ['blue', 'green', 'orange', 'purple', 'brown']
         if gtf_file is not None:
             from allos.transcript_data import TranscriptData
@@ -75,222 +80,183 @@ class TranscriptPlots:
         else:
             return self.transcript_data.get_exon_coords_and_strand(transcript_id)
 
-    def _make_global_mapping(self, exons_list, intron_scaling=1):
-        """
-        Build a function mapping genomic coords → [0,1] visual coords,
-        compressing introns by the given intron_scaling factor.
-        """
-        # 1) find global min/max
-        all_starts = [e[0] for ex in exons_list for e in ex]
-        all_ends   = [e[1] for ex in exons_list for e in ex]
-        min_coord, max_coord = min(all_starts), max(all_ends)
-        region_length = max_coord - min_coord + 1
 
-        # 2) mark exon bases
-        is_exon = np.zeros(region_length, dtype=bool)
-        for exons in exons_list:
-            for start, end in exons:
-                # shift to 0-based
-                s = start - min_coord
-                e = end   - min_coord
-                is_exon[s:e+1] = True
-
-        # 3) build translation
-        coord_translation = np.zeros(region_length, dtype=int)
-        new_pos = 0
-        in_intron = False
-        skip_count = 0
-        max_skip = intron_scaling - 1
-
-        for i in range(region_length):
-            coord_translation[i] = new_pos
-            if is_exon[i]:
-                # exon: always keep
-                in_intron = False
-                new_pos += 1
-            else:
-                # intron
-                if not in_intron:
-                    # first base of intron
-                    in_intron = True
-                    skip_count = 0
-                    new_pos += 1
-                else:
-                    # subsequent intronic bases
-                    if skip_count >= max_skip:
-                        skip_count = 0
-                        new_pos += 1
-                    else:
-                        skip_count += 1
-                        # this base is “skipped” (compressed out)
-
-        # 4) now normalize to [0,1]
-        final_length = new_pos
-        def mapping_fn(x):
-            """Map a genomic coordinate x → [0,1]."""
-            idx = x - min_coord
-            if idx < 0:   idx = 0
-            if idx >= region_length: idx = region_length-1
-            return coord_translation[idx] / final_length
-
-        return mapping_fn
     
-    def _make_global_mapping(self, all_exons, intron_scaling):
-        """
-        Build a mapping function f(x) that compresses introns but leaves exons at full length,
-        normalizing the entire region to [0..1].
-        """
+    def _make_global_mapping(self, all_exons):
+        mode = self.intron_scale_mode      # 'relative' or 'fixed'
+        rel_scale = self.intron_scale      # e.g. 0.1
+        fixed_len = self.intron_fixed_length  # e.g. 5
+
+        # 1) merge exonic intervals
         intervals = []
-        for exon_list in all_exons:
-            for e in exon_list:
-                s, e_ = min(e[0], e[1]), max(e[0], e[1])
-                intervals.append([s, e_])
+        for ex in all_exons:
+            for a, b in ex:
+                intervals.append([min(a, b), max(a, b)])
         union_exons = merge_intervals(intervals)
         if not union_exons:
-            raise ValueError("No exonic intervals found.")
+            raise ValueError("No exonic intervals!")
 
-        global_start = min(i[0] for i in union_exons)
-        global_end   = max(i[1] for i in union_exons)
+        start, end = union_exons[0][0], union_exons[-1][1]
 
+        # 2) count bases in exons before x
         def exon_length_before(x):
-            total = 0
-            for (a, b) in union_exons:
+            tot = 0
+            for a, b in union_exons:
                 if x <= a:
                     break
-                total += min(b, x) - a
-            return total
+                tot += min(b, x) - a
+            return tot
 
-        def mapping_fn_unscaled(x):
-            # Introns are scaled by self.intron_scale, exons remain full length.
-            total   = x - global_start
-            exonic  = exon_length_before(x)
-            return self.intron_scale * total + (1 - self.intron_scale) * exonic
+        # 3) layout function (before normalization)
+        def raw(x):
+            genomic = x - start
+            exonic = exon_length_before(x)
+            intronic = genomic - exonic
 
-        scaled_global_end = mapping_fn_unscaled(global_end)
+            if mode == 'relative':
+                return exonic + intronic * rel_scale
+            else:
+                # one “fixed” unit per intron region before x
+                regions = sum(1 for i in range(len(union_exons) - 1)
+                              if union_exons[i][1] < x)
+                return exonic + regions * fixed_len
 
-        def mapping_fn_normalized(x):
-            return mapping_fn_unscaled(x) / scaled_global_end
+        total = raw(end)
+        # 4) normalize to [0..1]
+        return lambda x: raw(x) / total
 
-        return mapping_fn_normalized
 
-    def _draw_transcript(self, exons, direction, color, transcript_name, mapping_fn,
-                         offset=0, with_cds=False, with_tss=False, cage_df=None, window=0):
+    def _draw_transcript(self, exons, direction, color, transcript_name,
+                         mapping_fn, offset=0,
+                         with_cds=False, with_tss=False,
+                         cage_df=None, window=0):
         """
-        Draw the exons/introns in a single transcript using the global mapping_fn,
-        so everything lines up across transcripts with identical coordinates.
-        This version preserves the original exon shapes (including UTR/CDS splits on first and last exons)
-        but removes any special CDS coloring.
+        Draw a single transcript (exons + introns + optional CDS/TSS) using a
+        global mapping_fn so that multiple transcripts align.
         """
+        import matplotlib.pyplot as plt
+
         height = 0.2
         ax = plt.gca()
+
+        # ── BEGIN FIX: canonicalize & sort exons ──
+        # 1) force every exon into [start,end]
+        exons = [[min(a, b), max(a, b)] for a, b in exons]
+        # 2) sort in genomic 5'→3' order (reverse for minus strand)
+        exons.sort(key=lambda e: e[0], reverse=(direction < 0))
+        # 3) now exon[i][0] is the true start, exon[i][1] the true end
+        j, k = 0, 1
+        # 4) build the mapping cache
         cache = {}
         def cached_map(x):
             if x not in cache:
                 cache[x] = mapping_fn(x)
             return cache[x]
+        # ── END FIX ──
 
-        j, k = (0, 1) if direction == 1 else (1, 0)
-
+        # If drawing CDS, fetch coords
         if with_cds:
             t_info = self.get_transcript_info(transcript_name)
-            cds_start, cds_end = t_info['cds_start'], t_info['cds_end']
+            cds_start, cds_end = t_info.get('cds_start'), t_info.get('cds_end')
         else:
             cds_start = cds_end = None
 
-        # Draw introns
+        # Draw intron lines between exons
         for i in range(len(exons) - 1):
-            intron_start = cached_map(exons[i][j])
-            intron_end   = cached_map(exons[i + 1][k])
+            intron_start = cached_map(exons[i][1])   # end of exon i
+            intron_end   = cached_map(exons[i + 1][0])  # start of exon i+1
             ax.plot([intron_start, intron_end],
                     [offset + 0.1, offset + 0.1],
                     color='black', linestyle='-', linewidth=1, zorder=0)
 
-        # Draw exons (UTR/CDS, if available)
+        # Draw exons (with optional CDS/UTR splitting)
         for idx, exon in enumerate(exons):
             exon_start_gen = exon[j]
             exon_end_gen   = exon[k]
-            scaled_exon_start = cached_map(exon_start_gen)
-            scaled_exon_end   = cached_map(exon_end_gen)
-            width = scaled_exon_end - scaled_exon_start
+            sx = cached_map(exon_start_gen)
+            ex = cached_map(exon_end_gen)
+            width = ex - sx
+
             base_color = color
-            base_edgecolor = 'black'
+            base_edge = 'black'
 
-            if with_cds and (cds_start is not None) and (cds_end is not None):
-                left_exon = min(exon_start_gen, exon_end_gen)
-                right_exon = max(exon_start_gen, exon_end_gen)
-                coding_left = max(left_exon, cds_start)
+            if with_cds and cds_start is not None and cds_end is not None:
+                # handle UTR/CDS splits
+                left_exon = exon_start_gen
+                right_exon = exon_end_gen
+                coding_left  = max(left_exon, cds_start)
                 coding_right = min(right_exon, cds_end)
-                coding_exists = coding_left < coding_right
+                is_coding = coding_left < coding_right
 
-                if idx == 0 or idx == len(exons) - 1:
-                    # First/last exon: possibly split UTR/CDS if needed
-                    if coding_exists:
-                        # Left UTR
+                # first or last exon may have UTR+CDS
+                if idx in (0, len(exons) - 1):
+                    if is_coding:
+                        # draw UTR left
                         if left_exon < coding_left:
-                            scaled_utr_left = cached_map(left_exon)
-                            scaled_utr_right = cached_map(coding_left)
-                            utr_width = scaled_utr_right - scaled_utr_left
-                            utr_height = height * 0.6
-                            rect_utr = plt.Rectangle((scaled_utr_left, offset + (height - utr_height) / 2),
-                                                     utr_width, utr_height,
-                                                     fc=base_color, ec=base_edgecolor, zorder=1)
-                            ax.add_patch(rect_utr)
-                        # CDS
-                        scaled_cds_left = cached_map(coding_left)
-                        scaled_cds_right = cached_map(coding_right)
-                        cds_width = scaled_cds_right - scaled_cds_left
-                        rect_cds = plt.Rectangle((scaled_cds_left, offset), cds_width, height,
-                                                 fc=base_color, ec=base_edgecolor, zorder=1)
-                        ax.add_patch(rect_cds)
-                        # Right UTR
+                            u_s = cached_map(left_exon)
+                            u_e = cached_map(coding_left)
+                            u_w = u_e - u_s
+                            utr_h = height * 0.6
+                            ax.add_patch(plt.Rectangle((u_s, offset + (height - utr_h)/2),
+                                                       u_w, utr_h,
+                                                       fc=base_color, ec=base_edge, zorder=1))
+                        # draw CDS
+                        c_s = cached_map(coding_left)
+                        c_e = cached_map(coding_right)
+                        c_w = c_e - c_s
+                        ax.add_patch(plt.Rectangle((c_s, offset),
+                                                   c_w, height,
+                                                   fc=base_color, ec=base_edge, zorder=1))
+                        # draw UTR right
                         if coding_right < right_exon:
-                            scaled_utr_left = cached_map(coding_right)
-                            scaled_utr_right = cached_map(right_exon)
-                            utr_width = scaled_utr_right - scaled_utr_left
-                            utr_height = height * 0.6
-                            rect_utr = plt.Rectangle((scaled_utr_left, offset + (height - utr_height) / 2),
-                                                     utr_width, utr_height,
-                                                     fc=base_color, ec=base_edgecolor, zorder=1)
-                            ax.add_patch(rect_utr)
+                            u_s = cached_map(coding_right)
+                            u_e = cached_map(right_exon)
+                            u_w = u_e - u_s
+                            utr_h = height * 0.6
+                            ax.add_patch(plt.Rectangle((u_s, offset + (height - utr_h)/2),
+                                                       u_w, utr_h,
+                                                       fc=base_color, ec=base_edge, zorder=1))
                     else:
-                        # Entirely non-coding
-                        rect = plt.Rectangle((scaled_exon_start, offset + (height - height * 0.6) / 2),
-                                             width, height * 0.6,
-                                             fc=base_color, ec=base_edgecolor, zorder=1)
-                        ax.add_patch(rect)
-                    continue
+                        # entirely UTR
+                        utr_h = height * 0.6
+                        ax.add_patch(plt.Rectangle((sx, offset + (height - utr_h)/2),
+                                                   width, utr_h,
+                                                   fc=base_color, ec=base_edge, zorder=1))
                 else:
-                    # Middle exons
-                    if coding_exists:
-                        rect = plt.Rectangle((scaled_exon_start, offset), width, height,
-                                             fc=base_color, ec=base_edgecolor, zorder=1)
+                    # middle exon: either full-height coding or half-height UTR
+                    if is_coding:
+                        ax.add_patch(plt.Rectangle((sx, offset),
+                                                   width, height,
+                                                   fc=base_color, ec=base_edge, zorder=1))
                     else:
-                        rect = plt.Rectangle((scaled_exon_start, offset), width, height * 0.6,
-                                             fc=base_color, ec=base_edgecolor, zorder=1)
-                    ax.add_patch(rect)
-                    continue
+                        utr_h = height * 0.6
+                        ax.add_patch(plt.Rectangle((sx, offset + (height - utr_h)/2),
+                                                   width, utr_h,
+                                                   fc=base_color, ec=base_edge, zorder=1))
             else:
-                # No CDS info: draw a full-height exon
-                rect = plt.Rectangle((scaled_exon_start, offset), width, height,
-                                     fc=base_color, ec=base_edgecolor, zorder=1)
-                ax.add_patch(rect)
-        if with_tss and (cage_df is not None) and window > 0:
-            # Draw CAGE peaks
-            tss_coords = self.get_tss_for_transcript(
-                transcript_name,  
-                cage_df=cage_df,
-                window=100
-            )
-            stick_height=0.15
-            radius=0.005
+                # no CDS: draw full exon
+                ax.add_patch(plt.Rectangle((sx, offset),
+                                           width, height,
+                                           fc=base_color, ec=base_edge, zorder=1))
+
+        # Optional TSS/CAGE plotting (unchanged)
+        if with_tss and cage_df is not None and window > 0:
+            tss_coords = self.get_tss_for_transcript(transcript_name,
+                                                     cage_df=cage_df,
+                                                     window=window)
+            stick_h = 0.15
+            radius  = 0.005
             for coord in tss_coords:
                 x = mapping_fn(coord)
-                ax.plot([x, x], [offset + height*2/3, offset + height*2/3 + stick_height], color=color, linewidth=1.2, zorder=2)
-                circle = plt.Circle((x, offset + height*2/3 + stick_height), radius, color=color, zorder=3, clip_on=False)
+                ax.plot([x, x],
+                        [offset + height*2/3, offset + height*2/3 + stick_h],
+                        color=color, linewidth=1.2, zorder=2)
+                circle = plt.Circle((x, offset + height*2/3 + stick_h),
+                                     radius, color=color, zorder=3,
+                                     clip_on=False)
                 ax.add_patch(circle)
-                
 
-        # Direction arrow
+        # Direction arrow (unchanged)
         arrow_y = offset - height/4
         if direction > 0:
             ax.arrow(0, arrow_y, 1, 0,
@@ -303,32 +269,32 @@ class TranscriptPlots:
                      length_includes_head=True, overhang=1,
                      color='black')
 
-        # Tick marks for transcript boundaries
+        # Tick marks & labels at transcript boundaries (unchanged)
         if direction == 1:
-            real_start = exons[0][1]
-            real_end   = exons[-1][0]
+            real_start = exons[0][0]
+            real_end   = exons[-1][1]
         else:
             real_start = exons[-1][1]
             real_end   = exons[0][0]
 
-        scaled_real_start = cached_map(real_start)
-        scaled_real_end   = cached_map(real_end)
+        s_scaled = cached_map(real_start)
+        e_scaled = cached_map(real_end)
+        ax.plot([s_scaled, s_scaled], [arrow_y - 0.03, arrow_y + 0.03], color='black')
+        ax.plot([e_scaled, e_scaled], [arrow_y - 0.03, arrow_y + 0.03], color='black')
+        ax.text(s_scaled, arrow_y - 0.06, str(real_start),
+                ha='center', va='top', fontsize=9)
+        ax.text(e_scaled, arrow_y - 0.06, str(real_end),
+                ha='center', va='top', fontsize=9)
 
-        ax.plot([scaled_real_start, scaled_real_start],
-                [arrow_y - 0.03, arrow_y + 0.03], color='black')
-        ax.plot([scaled_real_end, scaled_real_end],
-                [arrow_y - 0.03, arrow_y + 0.03], color='black')
+        # Transcript name
+        ax.text(1, offset - height, transcript_name,
+                ha='right', va='top', fontsize=12)
 
-        ax.text(scaled_real_start, arrow_y - 0.06,
-                str(real_start), ha='center', va='top', fontsize=9)
-        ax.text(scaled_real_end, arrow_y - 0.06,
-                str(real_end), ha='center', va='top', fontsize=9)
 
-        # Transcript name on right
-        ax.text(1, offset - height,
-                transcript_name, ha='right', va='top', fontsize=12)
-
-    def _draw_transcripts_list(self, transcripts_ids, _ax, colors=None, draw_cds=False, with_tss=False, cage_df=None, window=0, intron_scaling = 10):
+    def _draw_transcripts_list(self, transcripts_ids, _ax,
+                            colors=None, draw_cds=False,
+                            with_tss=False, cage_df=None,
+                            window=0):
         """
         Draw multiple transcripts with the same global mapping,
         ensuring that exons sharing coordinates line up perfectly.
@@ -343,8 +309,8 @@ class TranscriptPlots:
         if colors is None:
             colors = [self.colors[i % len(self.colors)] for i in range(len(exons_list))]
 
-        mapping_fn = self._make_global_mapping(exons_list,
-                                           intron_scaling=intron_scaling)
+        mapping_fn = self._make_global_mapping(exons_list)
+
 
 
         plt.close('all')
@@ -367,14 +333,17 @@ class TranscriptPlots:
         else:
             return plt
 
-    def draw_transcripts_list(self, transcripts_ids, colors=None, draw_cds=False, with_tss=False, cage_df=None, window=0, intron_scaling=10):
+    def draw_transcripts_list(self, transcripts_ids,
+                              colors=None, draw_cds=False,
+                              with_tss=False, cage_df=None,
+                              window=0):
         """
         Public method to draw a list of transcripts with global intron scaling.
         (Note: draw_cds requires GTF-based transcript_data to highlight CDS regions.)
         """
         if draw_cds and self.transcript_data is None:
             raise Exception('A GTF file is necessary in order to display the CDS region')
-        self._draw_transcripts_list(transcripts_ids, None, colors, draw_cds=draw_cds, with_tss=with_tss, cage_df=cage_df, window=window, intron_scaling = intron_scaling)
+        self._draw_transcripts_list(transcripts_ids, None, colors, draw_cds=draw_cds, with_tss=with_tss, cage_df=cage_df, window=window)
 
     def draw_transcripts_list_events(
         self,

@@ -35,3 +35,5 @@ from scipy.sparse import coo_matrix
 
 from .anndata_iso import AnnDataIso
 from .transcript_plots import TranscriptPlots
+from .color_palette import ghibli, synthwave
+import matplotlib.patches as mpatches
