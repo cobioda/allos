@@ -11,7 +11,8 @@ from .preprocessing import get_sot_gene_matrix
 import numpy as np
 
 # %% auto 0
-__all__ = ['SEP', 'safe_sum', 'build_gene_metrics_table', 'build_isoform_metrics_table', 'SwitchSearch',
+__all__ = ['SEP', 'safe_sum', 'build_gene_metrics_table', 'delta_pi_one_gene', 'delta_pi_one_gene_signed',
+           'build_isoform_metrics_table', 'SwitchSearch', 'draw_volcano_panel', 'volcano_grid',
            'filter_sample_replicated_transcripts', 'compute_as_similarity', 'get_top_n_isoforms', 'plot_as_similarity',
            'plot_as_similarity_ordered']
 
@@ -120,6 +121,24 @@ from joblib import Parallel, delayed
 from scipy.sparse import issparse
 from scipy.stats import chi2
 from statsmodels.stats.multitest import multipletests
+
+def delta_pi_one_gene(dpsi: pd.Series) -> float:
+    """Unsigned Tilgner Δπ (always ≥ 0)."""
+    pos = dpsi[dpsi > 0].abs().sort_values(ascending=False)
+    neg = dpsi[dpsi < 0].abs().sort_values(ascending=False)
+    if pos.sum() >= neg.sum():
+        return pos.head(2).sum()
+    return neg.head(2).sum()
+
+
+def delta_pi_one_gene_signed(dpsi: pd.Series) -> float:
+    """Signed Tilgner Δπ (keeps ± sign of the stronger direction)."""
+    pos = dpsi[dpsi > 0].abs().sort_values(ascending=False)
+    neg = dpsi[dpsi < 0].abs().sort_values(ascending=False)
+    if pos.sum() >= neg.sum():
+        return +pos.head(2).sum()
+    return -neg.head(2).sum()
+
 
 # -----------------------------------------------------------------------------
 # Optional Numba helpers — falls back gracefully if missing
@@ -403,23 +422,41 @@ class SwitchSearch(ad.AnnData):
         min_reads: int = 30,
         fdr: float = 0.05,
         return_transcript_metrics: bool = False,
+        calc_effect_size: bool = False,
+        effect_size_mode: str = "abs",           # 'abs' or 'signed'
         drop_unmatched_metrics: bool = True,
         n_jobs: Optional[int] = None,
     ) -> pd.DataFrame:
-        n_jobs = n_jobs or self.n_jobs
+        """
+        χ²-based isoform-switch screen.
 
-        # ------- build composite label per cell ----------------------
+        Parameters
+        ----------
+        …
+        calc_effect_size
+            If True, compute Tilgner Δπ for every significant gene.
+        effect_size_mode
+            'abs'   → unsigned magnitude  (≥ 0)  via `delta_pi_one_gene`
+            'signed'→ keeps ± sign        via `delta_pi_one_gene_signed`
+        """
+        # ------------------------------ sanity ------------------------------
+        n_jobs = n_jobs or self.n_jobs
+        if effect_size_mode not in {"abs", "signed"}:
+            raise ValueError("effect_size_mode must be 'abs' or 'signed'.")
+
+        # ------------------------ composite labels -------------------------
         if secondary_col is None:
             group_key = self.obs[primary_col or self.group_columns[0]].astype(str)
         else:
             if primary_col is None:
                 raise ValueError("`primary_col` must be provided when `secondary_col` is set.")
             group_key = _make_group_key(self.obs, [primary_col, secondary_col])
+
         uniq = group_key.unique().tolist()
         masks = {k: (group_key == k).values for k in uniq}
         iso_counts = {k: _safe_sum(self.X[m]) for k, m in masks.items()}
 
-        # ------- decide comparison pairs -----------------------------
+        # ---------------------- comparison pairs --------------------------
         if group_vs_rest:
             if targets is None:
                 targets = uniq
@@ -443,7 +480,7 @@ class SwitchSearch(ad.AnnData):
                 else:
                     raise ValueError("within must be 'primary', 'secondary', or 'all'.")
 
-        # ------- χ² worker ------------------------------------------
+        # ------------------------ χ² worker -------------------------------
         def _worker(k1: str, k2: str, b_counts: Optional[np.ndarray]):
             a = iso_counts[k1]
             b = b_counts if b_counts is not None else iso_counts[k2]
@@ -454,9 +491,12 @@ class SwitchSearch(ad.AnnData):
             out = []
             for g in np.unique(gene_ids):
                 idx = np.flatnonzero(gene_ids == g)
-                if idx.size < 2:
+                if idx.size < 2:         # need ≥2 tx for χ²
                     continue
-                stat, dof = _chi2_stat(a[valid][idx].astype(np.float64), b[valid][idx].astype(np.float64))
+                stat, dof = _chi2_stat(
+                    a[valid][idx].astype(np.float64),
+                    b[valid][idx].astype(np.float64)
+                )
                 out.append({
                     "gene_id": g,
                     "group_1": k1,
@@ -467,13 +507,10 @@ class SwitchSearch(ad.AnnData):
                 })
             return out
 
-        jobs = []
-        for k1, k2 in pairs:
-            if k2 == "rest":
-                rest_counts = _safe_sum(self.X[~masks[k1]])
-                jobs.append((k1, k2, rest_counts))
-            else:
-                jobs.append((k1, k2, None))
+        jobs = [
+            (k1, k2, _safe_sum(self.X[~masks[k1]])) if k2 == "rest" else (k1, k2, None)
+            for k1, k2 in pairs
+        ]
 
         results = Parallel(n_jobs=n_jobs, backend="threading", prefer="threads")(
             delayed(_worker)(k1, k2, c2) for k1, k2, c2 in jobs
@@ -482,27 +519,217 @@ class SwitchSearch(ad.AnnData):
         if df.empty:
             return df
 
+        # ------------------ multiple-testing correction -------------------
         df["adj_pval"] = multipletests(df["p_value"], method="fdr_bh")[1]
         df = df[df["adj_pval"] <= fdr].copy()
         if df.empty:
             return df
 
-        # ------- metric merge (auto‑fill missing) -------------------
-        if return_transcript_metrics:
+        # ------------------ metric cache (for Δπ or merge) ---------------
+        need_metrics = return_transcript_metrics or calc_effect_size
+        if need_metrics:
             self._ensure_metrics(df, group_vs_rest=group_vs_rest, n_jobs=n_jobs)
+
+        # -------------- attach transcript metrics if requested -----------
+        if return_transcript_metrics:
             tm = self.transcript_metrics
-            filt = tm["gene_id"].isin(df["gene_id"])  # no per‑transcript read filter during merge
-            df = df.merge(tm.loc[filt], on=["gene_id", "group_1", "group_2"], how="left")
+            filt = tm["gene_id"].isin(df["gene_id"])
+            df = df.merge(
+                tm.loc[filt],
+                on=["gene_id", "group_1", "group_2"],
+                how="left"
+            )
             if not drop_unmatched_metrics:
                 df = df.merge(
-                    tm.loc[filt].rename(columns={"group_1": "group_2", "group_2": "group_1"}),
-                    on=["gene_id", "group_1", "group_2"], how="left", suffixes=("", "_alt")
+                    tm.loc[filt].rename(columns={"group_1": "group_2",
+                                                "group_2": "group_1"}),
+                    on=["gene_id", "group_1", "group_2"],
+                    how="left",
+                    suffixes=("", "_alt")
                 )
+
+        # --------------------- Tilgner Δπ effect size --------------------
+        if calc_effect_size:
+            helper = (
+                delta_pi_one_gene_signed if effect_size_mode == "signed"
+                else delta_pi_one_gene
+            )
+            eff = (
+                self.transcript_metrics
+                    .groupby(["gene_id", "group_1", "group_2"])["delta_psi"]
+                    .apply(helper)
+                    .rename("effect_size")
+                    .reset_index()
+            )
+            df = df.merge(eff, on=["gene_id", "group_1", "group_2"], how="left")
+
         return df.reset_index(drop=True)
 
 
 
+
 # %% ../nbs/005_switch_search.ipynb 9
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
+from pathlib import Path
+import warnings
+
+# ─── permanently hide the annoying font-manager warnings ──────────────
+warnings.filterwarnings("ignore", message="findfont: .*", module="matplotlib")
+
+# ───────────────────────────────────────────────────────────────────────
+# helper 1: draw ONE volcano panel on a given Axes
+# ───────────────────────────────────────────────────────────────────────
+def draw_volcano_panel(
+    ax,
+    df_comp,                         # dataframe for ONE (group1, group2)
+    *,
+    effect_col="effect_size",
+    pval_col="adj_pval",
+    fdr_cutoff=0.05,
+    eff_cutoff=0.10,
+    top_n=6,
+    bg_size=10,                      # marker areas (pt²)
+    sig_size=25,
+    font_size=7,
+):
+    """Draws a Δπ vs FDR volcano into *ax* (NO fig.show/save here)."""
+    df = df_comp.copy()
+    df["neg_log10_p"] = -np.log10(df[pval_col].clip(lower=1e-300))
+    sig = (df[pval_col] < fdr_cutoff) & (df[effect_col].abs() >= eff_cutoff)
+
+    # unique top-n labels by |Δπ|
+    top = (df.loc[sig]
+             .drop_duplicates("gene_id")
+             .assign(abs_eff=lambda x: x[effect_col].abs())
+             .nlargest(top_n, "abs_eff"))
+
+    # background + significant points
+    ax.scatter(df.loc[~sig, effect_col], df.loc[~sig, "neg_log10_p"],
+               s=bg_size, color="#BFBFBF", alpha=.6, zorder=1)
+    ax.scatter(df.loc[sig,  effect_col], df.loc[sig,  "neg_log10_p"],
+               s=sig_size, color="#C23B3B", alpha=.85, zorder=2)
+
+    # thresholds
+    ax.axhline(-np.log10(fdr_cutoff), color="k", ls="--", lw=.8)
+    ax.axvline( eff_cutoff,  color="k", ls="--", lw=.8)
+    ax.axvline(-eff_cutoff, color="k", ls="--", lw=.8)
+
+    # gene labels
+    texts = []
+    for _, r in top.iterrows():
+        texts.append(
+            ax.text(r[effect_col], r["neg_log10_p"], r["gene_id"],
+                    ha="center", va="bottom",
+                    fontsize=font_size, color="#C23B3B")
+        )
+
+    # adjust if adjustText available
+    try:
+        from adjustText import adjust_text
+        adjust_text(texts, ax=ax, expand_points=(1.1, 1.35),
+                    arrowprops=dict(arrowstyle="-", lw=.4, color="#666"))
+    except ModuleNotFoundError:
+        # simple vertical stagger fallback
+        y_used = []
+        for t in texts:
+            x, y = t.get_position()
+            while any(abs(y - yy) < 1.0 for yy in y_used):
+                y += 1.0
+            t.set_position((x, y)); y_used.append(y)
+
+    # clip inside frame
+    x_lo, x_hi = ax.get_xlim()
+    y_lo, y_hi = ax.get_ylim()
+    for t in texts:
+        x, y = t.get_position()
+        x = np.clip(x, x_lo + 0.02, x_hi - 0.02)
+        y = min(y, y_hi - 0.5)
+        t.set_position((x, y))
+
+    # axes cosmetics
+    ax.set_xlabel("Δπ", fontsize=font_size+1)
+    ax.set_ylabel("−log$_{10}$ FDR", fontsize=font_size+1)
+    xmax = np.ceil(df[effect_col].abs().max()*1.1/0.05)*0.05
+    ax.set_xlim(-xmax, xmax)
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda y, _: f"{int(y):d}"))
+    ax.tick_params(labelsize=font_size)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+
+    # title = comparison name
+    g1, g2 = df["group_1"].iat[0], df["group_2"].iat[0]
+    ax.set_title(f"{g1}  vs  {g2}", fontsize=font_size+2, pad=4)
+
+
+# ───────────────────────────────────────────────────────────────────────
+# helper 2: make a GRID of all comparisons on one sheet
+# ───────────────────────────────────────────────────────────────────────
+def volcano_grid(
+    df_all,
+    *,
+    n_cols=3,
+    figsize_per_panel=3.0,      # inches
+    save=None,                  # "all_volcanos.pdf" / ".svg" / None
+    show=True,
+    **panel_kw                  # forwarded to draw_volcano_panel
+):
+    """
+    Draw every (group_1, group_2) combo in df_all on one figure grid.
+
+    Parameters
+    ----------
+    n_cols : int
+        How many columns in the grid.
+    figsize_per_panel : float
+        Size of each small square panel (inches).
+    save : str | Path | None
+        Path to save the full figure; skipped if None.
+    show : bool
+        Whether to display the figure inline.
+    panel_kw : dict
+        Extra kwargs for `draw_volcano_panel` (cut-offs, sizes, etc.).
+    """
+    comparisons = list(df_all.groupby(["group_1", "group_2"]))
+    n_panels = len(comparisons)
+    n_rows = int(np.ceil(n_panels / n_cols))
+
+    fig, axes = plt.subplots(
+        n_rows, n_cols,
+        figsize=(n_cols*figsize_per_panel, n_rows*figsize_per_panel),
+        dpi=300,
+        squeeze=False
+    )
+
+    # flatten axes for easy iteration
+    ax_iter = axes.flatten()
+    for idx, ((g1, g2), subdf) in enumerate(comparisons):
+        draw_volcano_panel(
+            ax_iter[idx],
+            subdf,
+            **panel_kw
+        )
+
+    # turn off unused axes
+    for ax in ax_iter[n_panels:]:
+        ax.axis("off")
+
+    fig.tight_layout()
+
+    if save:
+        Path(save).parent.mkdir(parents=True, exist_ok=True)
+        fig.savefig(save, bbox_inches="tight")
+
+    if show:
+        plt.show(block=False)  # Ensure the plot is shown only once
+    else:
+        plt.close(fig)
+
+    return fig
+
+
+# %% ../nbs/005_switch_search.ipynb 10
 def filter_sample_replicated_transcripts(adata, sample_col='sample', min_samples=2, min_umi=1):
     """
     Filters out transcripts that are not detected above a minimum UMI threshold 
@@ -544,7 +771,7 @@ def filter_sample_replicated_transcripts(adata, sample_col='sample', min_samples
 
 
 
-# %% ../nbs/005_switch_search.ipynb 10
+# %% ../nbs/005_switch_search.ipynb 12
 import pandas as pd
 from scipy.stats import spearmanr
 
@@ -597,7 +824,7 @@ def compute_as_similarity(
     return corr
 
 
-# %% ../nbs/005_switch_search.ipynb 11
+# %% ../nbs/005_switch_search.ipynb 13
 def get_top_n_isoforms(adata, gene_id, top_n=5, strip=False):
     """
     Get the top_n transcript IDs for a given gene based on overall average expression.
@@ -629,7 +856,7 @@ def get_top_n_isoforms(adata, gene_id, top_n=5, strip=False):
 
     return top_isoforms
 
-# %% ../nbs/005_switch_search.ipynb 12
+# %% ../nbs/005_switch_search.ipynb 14
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -660,7 +887,7 @@ def plot_as_similarity(sim, cmap='magma'):
     plt.show()
 
 
-# %% ../nbs/005_switch_search.ipynb 13
+# %% ../nbs/005_switch_search.ipynb 15
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.cluster import hierarchy
