@@ -4,8 +4,8 @@
 
 # %% auto 0
 __all__ = ['subset_common_cells', 'transfer_obs', 'get_sot_gene_matrix', 'compute_transcript_abundance_pct',
-           'compute_whole_data_transcript_abundance', 'filter_transcripts_by_abundance', 'gene_wise_correlation',
-           'gene_wise_bland_altman']
+           'compute_whole_data_transcript_abundance', 'filter_transcripts_by_abundance', 'plot_isoform_overview',
+           'gene_wise_correlation', 'gene_wise_bland_altman']
 
 # %% ../nbs/007_preprocesing.ipynb 2
 from .readers_tests import *
@@ -273,7 +273,165 @@ def filter_transcripts_by_abundance(adata, threshold_pct, verbose=False):
     return new_adata
 
 
-# %% ../nbs/007_preprocesing.ipynb 15
+# %% ../nbs/007_preprocesing.ipynb 10
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from typing import Optional
+
+#| export
+def plot_isoform_overview(
+    adata,
+    celltype_col: str = "cell_type",        # column in adata.obs for panel-3 grouping
+    min_counts: int = 1,                    # >0 = gene “expressed”
+    figsize: tuple = (18, 6),
+    save: Optional[str] = None,             # path to PNG/PDF if you want to save
+):
+    """
+    Reproduce the three-panel overview:
+
+        ① Stacked bar: single-isoform vs multi-isoform genes + total transcripts
+        ② Histogram: frequency of *n* isoforms per gene
+        ③ Box/strip plot: genes detected per cell, grouped by cell type
+
+    Parameters
+    ----------
+    adata : AnnData
+        Transcript-level AnnData with `geneId` in ``adata.var``.
+    celltype_col : str
+        Column in ``adata.obs`` to group cells for panel-3 (e.g. 'cell_type').
+    min_counts : int
+        A gene is considered expressed in a cell if its count > ``min_counts``.
+    figsize : tuple
+        Figure size passed to ``plt.subplots``.
+    save : str or None
+        If provided, figure is saved to this path (extension decides format).
+    """
+    # ──────────────────────────────────────────────────────────────
+    # Panel ①  – single- vs multi-isoform genes
+    # ──────────────────────────────────────────────────────────────
+    gene_ids = adata.var["geneId"].values
+    unique_genes, iso_counts = np.unique(gene_ids, return_counts=True)
+
+    n_single  = (iso_counts == 1).sum()
+    n_multi   = (iso_counts > 1).sum()
+    n_genes   = len(unique_genes)
+    n_tx      = adata.n_vars
+
+    pct_multi  = n_multi  / n_genes * 100
+    pct_single = n_single / n_genes * 100
+
+    # ──────────────────────────────────────────────────────────────
+    # Panel ②  – histogram of isoform counts / gene
+    # ──────────────────────────────────────────────────────────────
+    # Compute isoform frequencies
+    isoform_counts = (
+    adata.var.groupby("geneId")["transcriptId"].nunique()
+        .pipe(lambda s: s[s > min_counts])                 # keep genes with ≥min_counts+1 isoforms
+    )
+    # Custom bin edges and labels
+    bins   = [2, 3, 4, 5, 6, 10, 15, 20, 30, np.inf]
+    labels = ["2", "3", "4", "5",
+            "6–9", "10–14", "15–19", "20–29", "30+"]
+
+    binned = pd.cut(isoform_counts, bins=bins, labels=labels, right=False)
+    summary = (binned.value_counts()
+                    .reindex(labels, fill_value=0)
+                    .reset_index()
+                    .rename(columns={"index": "bin", 0: "n_genes"}))
+
+    # ──────────────────────────────────────────────────────────────
+    # Panel ③  – genes detected per cell (by cell type)
+    # ──────────────────────────────────────────────────────────────
+    gen = get_sot_gene_matrix(adata)
+    df_genes = gen.to_df()
+    df_genes[celltype_col] = adata.obs[celltype_col].values
+
+    # Calculate the number of genes detected per cell (sum across gene columns, excluding 'cell_type')
+    gene_counts = df_genes.drop(columns=[celltype_col]).sum(axis=1)
+
+    # Prepare DataFrame for plotting
+    plot_df_genes = df_genes[[celltype_col]].copy()
+    plot_df_genes['n_genes'] = gene_counts.values
+
+    # ──────────────────────────────────────────────────────────────
+    # Plotting
+    # ──────────────────────────────────────────────────────────────
+    sns.set_theme(style="whitegrid", context="talk")
+    fig, axes = plt.subplots(1, 3, figsize=figsize)
+
+    # Panel ①
+    ax0 = axes[0]
+    ax0.bar("genes",  n_multi,  label="Multiple isoforms", color="royalblue")
+    ax0.bar("genes",  n_single, bottom=n_multi, label="Single isoform",  color="seagreen")
+
+    # add percentages
+    ax0.text(
+        0,
+        n_multi / 2,
+        f"{pct_multi:.1f}%",
+        ha="center",
+        va="center",
+        color="white",
+        fontweight="bold",
+    )
+    ax0.text(
+        0,
+        n_multi + n_single / 2,
+        f"{pct_single:.1f}%",
+        ha="center",
+        va="center",
+        color="white",
+        fontweight="bold",
+    )
+
+    ax0.bar("transcripts", n_tx, color="orange")
+    ax0.set_ylabel("count")
+    ax0.set_title("Multiple isoforms genes %")
+    ax0.legend(frameon=False)
+
+    # Panel ②
+    ax1 = axes[1]
+    ax1.bar(summary["transcriptId"], summary["count"],
+            color="royalblue", edgecolor="black")
+
+    ax1.set_xlabel("Number of isoforms per gene")
+    ax1.set_ylabel("Quantity of genes")
+    ax1.set_title("Frequency of isoforms per gene (≥%i)" % (min_counts + 1))
+    ax1.set_xticklabels(ax1.get_xticklabels(), rotation=45, ha="right")
+
+    # Panel ③
+    ax2 = axes[2]
+    sns.boxplot(
+        data=plot_df_genes,
+        x=celltype_col,
+        y="n_genes",
+        ax=ax2,
+        color="skyblue",
+        showfliers=False,
+    )
+    sns.stripplot(
+        data=plot_df_genes,
+        x=celltype_col,
+        y="n_genes",
+        ax=ax2,
+        color="black",
+        alpha=0.4,
+        size=3,
+        jitter=True,
+    )
+    ax2.set_xlabel("")
+    ax2.set_ylabel("n. of genes")
+    ax2.set_title("Nb of genes per cell type")
+    ax2.set_xticklabels(ax2.get_xticklabels(), rotation=45, ha="right")
+
+    plt.tight_layout()
+    if save:
+        fig.savefig(save, dpi=300)
+    return fig
+
+# %% ../nbs/007_preprocesing.ipynb 18
 import math
 import pandas as pd
 import numpy as np
@@ -499,7 +657,7 @@ def gene_wise_correlation(
         plt.show()
 
 
-# %% ../nbs/007_preprocesing.ipynb 17
+# %% ../nbs/007_preprocesing.ipynb 20
 import math
 import pandas as pd
 import numpy as np
