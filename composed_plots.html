@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Combine transcript structure diagrams with quantitative visualizations in a single coordinated figure.">
+
+<title>Composed Plots – allos</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-423ad5ba759ba8d1584d5d13ca0c1f6f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="Composed Plots – allos">
+<meta property="og:description" content="Combine transcript structure diagrams with quantitative visualizations in a single coordinated figure.">
+<meta property="og:site_name" content="allos">
+<meta name="twitter:title" content="Composed Plots – allos">
+<meta name="twitter:description" content="Combine transcript structure diagrams with quantitative visualizations in a single coordinated figure.">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">allos</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./composed_plots.html">Composed Plots</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Allos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./palettes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Palettes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./transcript_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Transcript plots</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./transcript_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Transcript Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./readers_tests.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Readers</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./switch_search.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Switch Search</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./preprocesing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preprocessing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./quant_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quantitative Plots</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./composed_plots.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Composed Plots</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./coord_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coordinate Plots</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./coverage_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coverage Plots</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./protein_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Protein Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./protein_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Protein Plots</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./junctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Junction Data Processing</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#legendpanelbuilder" id="toc-legendpanelbuilder" class="nav-link active" data-scroll-target="#legendpanelbuilder">LegendPanelBuilder</a></li>
+  <li><a href="#dotsizeslot" id="toc-dotsizeslot" class="nav-link" data-scroll-target="#dotsizeslot">DotSizeSlot</a></li>
+  <li><a href="#colorbarslot" id="toc-colorbarslot" class="nav-link" data-scroll-target="#colorbarslot">ColorbarSlot</a></li>
+  <li><a href="#categoricalslot" id="toc-categoricalslot" class="nav-link" data-scroll-target="#categoricalslot">CategoricalSlot</a></li>
+  <li><a href="#make_aligned_transcript_panel_layout" id="toc-make_aligned_transcript_panel_layout" class="nav-link" data-scroll-target="#make_aligned_transcript_panel_layout">make_aligned_transcript_panel_layout</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
+  <li><a href="#api-reference" id="toc-api-reference" class="nav-link" data-scroll-target="#api-reference">API reference</a>
+  <ul class="collapse">
+  <li><a href="#plot_isoform_heatmap_composed" id="toc-plot_isoform_heatmap_composed" class="nav-link" data-scroll-target="#plot_isoform_heatmap_composed">plot_isoform_heatmap_composed</a></li>
+  <li><a href="#plot_isoform_dot_composed" id="toc-plot_isoform_dot_composed" class="nav-link" data-scroll-target="#plot_isoform_dot_composed">plot_isoform_dot_composed</a></li>
+  <li><a href="#plot_isoform_violin_composed" id="toc-plot_isoform_violin_composed" class="nav-link" data-scroll-target="#plot_isoform_violin_composed">plot_isoform_violin_composed</a></li>
+  <li><a href="#plot_isoform_replicates_composed" id="toc-plot_isoform_replicates_composed" class="nav-link" data-scroll-target="#plot_isoform_replicates_composed">plot_isoform_replicates_composed</a></li>
+  <li><a href="#plot_isoform_stacked_bar_composed" id="toc-plot_isoform_stacked_bar_composed" class="nav-link" data-scroll-target="#plot_isoform_stacked_bar_composed">plot_isoform_stacked_bar_composed</a></li>
+  <li><a href="#plot_isoform_umap_composed" id="toc-plot_isoform_umap_composed" class="nav-link" data-scroll-target="#plot_isoform_umap_composed">plot_isoform_umap_composed</a></li>
+  <li><a href="#plot_isoform_density_composed" id="toc-plot_isoform_density_composed" class="nav-link" data-scroll-target="#plot_isoform_density_composed">plot_isoform_density_composed</a></li>
+  <li><a href="#plot_isoform_spatial_composed" id="toc-plot_isoform_spatial_composed" class="nav-link" data-scroll-target="#plot_isoform_spatial_composed">plot_isoform_spatial_composed</a></li>
+  <li><a href="#make_group_color_map" id="toc-make_group_color_map" class="nav-link" data-scroll-target="#make_group_color_map">make_group_color_map</a></li>
+  <li><a href="#plot_isoform_spatial_composed_hd" id="toc-plot_isoform_spatial_composed_hd" class="nav-link" data-scroll-target="#plot_isoform_spatial_composed_hd">plot_isoform_spatial_composed_HD</a></li>
+  <li><a href="#plot_isoform_heatmap_percell_composed" id="toc-plot_isoform_heatmap_percell_composed" class="nav-link" data-scroll-target="#plot_isoform_heatmap_percell_composed">plot_isoform_heatmap_percell_composed</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/cobioda/allos/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Composed Plots</h1>
+</div>
+
+<div>
+  <div class="description">
+    Combine transcript structure diagrams with quantitative visualizations in a single coordinated figure.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<hr>
+<section id="legendpanelbuilder" class="level3">
+<h3 class="anchored" data-anchor-id="legendpanelbuilder">LegendPanelBuilder</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> LegendPanelBuilder(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    ax:Optional[plt.Axes]</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Builder for creating consistent legend panels across different composed plots.</em></p>
+<p>Automatically stacks legend elements vertically with proper spacing: - Categorical legends (group colors) - Colorbars (PSI, GEX, etc.) - Dot size legends (prevalence)</p>
+<hr>
+</section>
+<section id="dotsizeslot" class="level3">
+<h3 class="anchored" data-anchor-id="dotsizeslot">DotSizeSlot</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> DotSizeSlot(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    sizes:List[<span class="bu">float</span>]<span class="op">=</span><span class="va">None</span>, labels:List[<span class="bu">str</span>]<span class="op">=</span><span class="va">None</span>, title:<span class="bu">str</span><span class="op">=</span><span class="st">'Prevalence</span><span class="ch">\n</span><span class="st">(dot size)'</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="va">None</span>:</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Slot for dot size legend.</em></p>
+<hr>
+</section>
+<section id="colorbarslot" class="level3">
+<h3 class="anchored" data-anchor-id="colorbarslot">ColorbarSlot</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ColorbarSlot(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    norm:mpl.colors.Normalize, cmap:mpl.colors.Colormap, label:<span class="bu">str</span><span class="op">=</span><span class="st">''</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="va">None</span>:</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Slot for continuous colorbar.</em></p>
+<hr>
+</section>
+<section id="categoricalslot" class="level3">
+<h3 class="anchored" data-anchor-id="categoricalslot">CategoricalSlot</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> CategoricalSlot(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    groups:List[<span class="bu">str</span>], color_map:Dict[<span class="bu">str</span>, <span class="bu">str</span>], title:<span class="bu">str</span><span class="op">=</span><span class="st">'Groups'</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="va">None</span>:</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Slot for categorical legend (group colors).</em></p>
+<hr>
+</section>
+<section id="make_aligned_transcript_panel_layout" class="level3">
+<h3 class="anchored" data-anchor-id="make_aligned_transcript_panel_layout">make_aligned_transcript_panel_layout</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> make_aligned_transcript_panel_layout(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    tp:TranscriptPlots, transcripts_ids:List[<span class="bu">str</span>], n_panel_cols:<span class="bu">int</span>, fig_width:<span class="bu">float</span><span class="op">=</span><span class="va">None</span>, draw_cds:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    show_ruler:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, bands_frac_top:<span class="bu">float</span><span class="op">=</span><span class="fl">0.0</span>, bands_frac_bottom:<span class="bu">float</span><span class="op">=</span><span class="fl">0.0</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>PanelLayout:</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Create a transcript panel layout with PERFECT alignment.</em></p>
+<p>This wrapper around make_transcript_panel_layout fixes: 1. Panel bounds so dots/cells align exactly with transcript intron lines 2. Band positions (top/bottom) to attach to the realigned panel 3. Legend panel height to match the actual content height</p>
+</section>
+<section id="examples" class="level2">
+<h2 class="anchored" data-anchor-id="examples">Examples</h2>
+<blockquote class="blockquote">
+<p>Composed plots combining transcript structures with quantitative visualizations</p>
+</blockquote>
+<div id="86088dde" class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load spatial mouse data</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scanpy <span class="im">as</span> sc</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the actual spatial mouse data</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>spatial_mouse_data <span class="op">=</span> sc.read_h5ad(<span class="st">'/data/analysis/data_mcandrew/00_allos_0.6_TAB/data/mouse_cbs/mouse_sit/two_mouse_cbs.h5ad'</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Rename spatial coordinates to X_spatial for consistency</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">"spatial"</span> <span class="kw">in</span> spatial_mouse_data.obsm:</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    spatial_mouse_data.obsm[<span class="st">"X_spatial"</span>] <span class="op">=</span> spatial_mouse_data.obsm[<span class="st">"spatial"</span>]</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(spatial_mouse_data)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Spatial coordinates shape: </span><span class="sc">{</span>spatial_mouse_data<span class="sc">.</span>obsm[<span class="st">'X_spatial'</span>]<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="api-reference" class="level2">
+<h2 class="anchored" data-anchor-id="api-reference">API reference</h2>
+<hr>
+<section id="plot_isoform_heatmap_composed" class="level3">
+<h3 class="anchored" data-anchor-id="plot_isoform_heatmap_composed">plot_isoform_heatmap_composed</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_isoform_heatmap_composed(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    transcript_data, <span class="co"># Transcript annotation data</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    adata, <span class="co"># Annotated data object with transcript counts</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    gene_id:<span class="bu">str</span>, <span class="co"># Gene ID to plot</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    group_col:<span class="bu">str</span>, <span class="co"># Column in adata.obs defining groups (e.g., 'cell_type')</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    top_n:<span class="bu">int</span><span class="op">=</span><span class="dv">2</span>, <span class="co"># Number of top isoforms to show</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    estimator:<span class="bu">str</span><span class="op">=</span><span class="st">'pseudobulk'</span>, <span class="co"># PSI estimator</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    dirichlet_alpha:<span class="bu">float</span><span class="op">=</span><span class="fl">0.5</span>, <span class="co"># Dirichlet alpha parameter</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    epsilon:<span class="bu">float</span><span class="op">=</span><span class="fl">1e-06</span>, <span class="co"># Small value to avoid division by zero</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    visible_groups:Optional[List[<span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, <span class="co"># Subset of groups to display</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    cmap:<span class="bu">str</span><span class="op">=</span><span class="st">'magma'</span>, <span class="co"># Colormap for PSI heatmap</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    colorbar_label:<span class="bu">str</span><span class="op">=</span><span class="st">'PSI'</span>, <span class="co"># Label for PSI colorbar</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    fig_width:<span class="bu">float</span><span class="op">=</span><span class="fl">20.0</span>, <span class="co"># Figure width in inches</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    draw_cds:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Whether to draw CDS regions</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    show_ticks:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Whether to show ruler ticks</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    add_gex_band:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># Whether to add gene expression band</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    add_group_color_band:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># Whether to add group color band</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    group_color_map:Optional[Dict[<span class="bu">str</span>, <span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, <span class="co"># Custom color map for groups</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    gex_band_position:<span class="bu">str</span><span class="op">=</span><span class="st">'top'</span>, <span class="co"># Position of GEX band ("top" or "bottom")</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    group_band_position:<span class="bu">str</span><span class="op">=</span><span class="st">'bottom'</span>, <span class="co"># Position of group color band ("top" or "bottom")</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    show_panel_colorbar:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># default off: use legend instead</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    show_group_legend:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># default off: group labels on x-axis are sufficient</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    legend_pad:<span class="bu">float</span><span class="op">=</span><span class="fl">0.02</span>, <span class="co"># horizontal padding between plot and legend</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    label_offset_h:<span class="bu">float</span><span class="op">=</span><span class="dv">0</span>, <span class="co"># horizontal offset for x-axis labels (positive = right)</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    label_offset_v:<span class="bu">float</span><span class="op">=</span><span class="dv">0</span>, <span class="co"># vertical offset for x-axis labels (positive = down)</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    row_pitch:<span class="bu">float</span><span class="op">=</span><span class="fl">0.45</span>, <span class="co"># vertical spacing between transcript rows (smaller = tighter)</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    intron_scale:<span class="bu">float</span><span class="op">=</span><span class="fl">0.15</span>, <span class="co"># intron compression (smaller = more compressed)</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    color_offset:<span class="bu">int</span><span class="op">=</span><span class="dv">0</span>, <span class="co"># rotate transcript color palette by this many steps</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>Tuple[plt.Figure, List[<span class="bu">str</span>], List[<span class="bu">str</span>], np.ndarray]: <span class="co"># The matplotlib figure</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Plot composed figure with transcript structures and heatmap.</em></p>
+<hr>
+</section>
+<section id="plot_isoform_dot_composed" class="level3">
+<h3 class="anchored" data-anchor-id="plot_isoform_dot_composed">plot_isoform_dot_composed</h3>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_isoform_dot_composed(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    transcript_data, adata, gene_id:<span class="bu">str</span>, group_col:<span class="bu">str</span>, top_n:<span class="bu">int</span><span class="op">=</span><span class="dv">2</span>, estimator:<span class="bu">str</span><span class="op">=</span><span class="st">'pseudobulk'</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    dirichlet_alpha:<span class="bu">float</span><span class="op">=</span><span class="fl">0.5</span>, epsilon:<span class="bu">float</span><span class="op">=</span><span class="fl">1e-06</span>, visible_groups:Optional[List[<span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    size_mode:<span class="bu">str</span><span class="op">=</span><span class="st">'prevalence'</span>, psi_threshold:<span class="bu">float</span><span class="op">=</span><span class="fl">0.05</span>, cmap:<span class="bu">str</span><span class="op">=</span><span class="st">'magma'</span>, colorbar_label:<span class="bu">str</span><span class="op">=</span><span class="st">'PSI'</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    fig_width:<span class="bu">float</span><span class="op">=</span><span class="fl">20.0</span>, draw_cds:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, show_ticks:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, add_gex_band:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    add_group_color_band:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, group_color_map:Optional[Dict[<span class="bu">str</span>, <span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, gex_band_position:<span class="bu">str</span><span class="op">=</span><span class="st">'top'</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    group_band_position:<span class="bu">str</span><span class="op">=</span><span class="st">'bottom'</span>, show_panel_colorbar:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># use legend instead</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    label_offset_h:<span class="bu">float</span><span class="op">=</span><span class="fl">0.0</span>, <span class="co"># horizontal offset for x-axis labels (positive = right)</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    label_offset_v:<span class="bu">float</span><span class="op">=</span><span class="fl">0.0</span>, <span class="co"># vertical offset for x-axis labels (positive = down)</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    row_pitch:<span class="bu">float</span><span class="op">=</span><span class="fl">0.45</span>, <span class="co"># vertical spacing between transcript rows (smaller = tighter)</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    intron_scale:<span class="bu">float</span><span class="op">=</span><span class="fl">0.15</span>, <span class="co"># intron compression (smaller = more compressed)</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    color_offset:<span class="bu">int</span><span class="op">=</span><span class="dv">0</span>, <span class="co"># rotate transcript color palette by this many steps</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>Tuple[plt.Figure, List[<span class="bu">str</span>], List[<span class="bu">str</span>], np.ndarray, np.ndarray]:</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Call self as a function.</em></p>
+<hr>
+</section>
+<section id="plot_isoform_violin_composed" class="level3">
+<h3 class="anchored" data-anchor-id="plot_isoform_violin_composed">plot_isoform_violin_composed</h3>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_isoform_violin_composed(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    transcript_data, <span class="co"># TranscriptData object for gene/transcript lookups</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    adata, <span class="co"># Annotated data object with transcript counts</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    gene_id:<span class="bu">str</span>, <span class="co"># Gene ID to plot</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    group_col:<span class="bu">str</span>, <span class="co"># Column in adata.obs defining groups (e.g., 'cell_type')</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    gene_col:<span class="bu">str</span><span class="op">=</span><span class="st">'geneId'</span>, <span class="co"># Column in adata.var mapping transcripts to genes</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    layer:<span class="bu">str</span> <span class="op">|</span> <span class="va">None</span><span class="op">=</span><span class="va">None</span>, <span class="co"># Layer in adata.layers to use. If None, uses adata.X</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    top_n:<span class="bu">int</span> <span class="op">|</span> <span class="va">None</span><span class="op">=</span><span class="va">None</span>, <span class="co"># Number of top isoforms to plot by mean expression.</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>Mutually exclusive <span class="cf">with</span> `transcripts`.</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    transcripts:List[<span class="bu">str</span>] <span class="op">|</span> <span class="va">None</span><span class="op">=</span><span class="va">None</span>, <span class="co"># Specific transcript IDs to plot.</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>Mutually exclusive <span class="cf">with</span> `top_n`.</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    log1p:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Apply log1p transformation to counts</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    drop_zeros:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># Remove zero values before plotting</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    min_cells_per_group:<span class="bu">int</span><span class="op">=</span><span class="dv">10</span>, <span class="co"># Minimum cells required per group to include</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    fig_width:<span class="bu">float</span><span class="op">=</span><span class="fl">20.0</span>, <span class="co"># Overall figure width in inches</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    draw_cds:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Draw CDS regions on transcript structures</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    show_ticks:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Show genomic coordinate ruler</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    palette:<span class="bu">str</span> <span class="op">|</span> <span class="bu">list</span><span class="op">=</span><span class="st">'tab10'</span>, <span class="co"># Color palette for groups (used if group_color_map is not provided)</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    stripplot:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Overlay scatter points on violins</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    point_size:<span class="bu">float</span><span class="op">=</span><span class="fl">2.0</span>, <span class="co"># Size of scatter points</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    point_alpha:<span class="bu">float</span><span class="op">=</span><span class="fl">0.4</span>, <span class="co"># Alpha transparency of points</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    jitter:<span class="bu">float</span><span class="op">=</span><span class="fl">0.25</span>, <span class="co"># Horizontal jitter width for points</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    sharey:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># Share y-axis across all violin panels (default False for better visibility)</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>    visible_groups:Optional[List[<span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, <span class="co"># Subset of groups to display. If None, all groups are shown.</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    add_gex_band:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># Add a gene-expression (CP10k) quantitative band above the panel.</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    add_group_color_band:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># Add colored band showing group categories</span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    group_color_map:Optional[Dict[<span class="bu">str</span>, <span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, <span class="co"># Custom color mapping for groups. If provided, overrides palette for</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>both violin colors <span class="kw">and</span> group color band.</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>    row_pitch:<span class="bu">float</span><span class="op">=</span><span class="fl">0.45</span>, <span class="co"># vertical spacing between transcript rows</span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>    intron_scale:<span class="bu">float</span><span class="op">=</span><span class="fl">0.15</span>, <span class="co"># intron compression (smaller = more compressed)</span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>    color_offset:<span class="bu">int</span><span class="op">=</span><span class="dv">0</span>, <span class="co"># rotate transcript color palette by this many steps</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>    panel_x0:<span class="bu">float</span><span class="op">=</span><span class="fl">1.15</span>, <span class="co"># horizontal gap between transcripts and violin panel</span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>Tuple[plt.Figure, List[<span class="bu">str</span>], List[<span class="bu">str</span>]]: <span class="co"># The matplotlib figure</span></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Plot violin plots showing isoform expression with transcript structures.</em></p>
+<p>Creates a multi-panel layout with transcript structures on the left and violin plots for each isoform-group combination on the right.</p>
+<hr>
+</section>
+<section id="plot_isoform_replicates_composed" class="level3">
+<h3 class="anchored" data-anchor-id="plot_isoform_replicates_composed">plot_isoform_replicates_composed</h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_isoform_replicates_composed(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    transcript_data, <span class="co"># Transcript data object for structure plots</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    adata, <span class="co"># Annotated data object</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    gene_id:<span class="bu">str</span>, <span class="co"># Gene ID to plot</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    group_col:<span class="bu">str</span>, <span class="co"># Column in adata.obs defining groups (e.g., 'cell_type')</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    replicate_col:<span class="bu">str</span>, <span class="co"># Column in adata.obs defining replicates (e.g., 'batch', 'sample_id')</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    top_n:<span class="bu">int</span><span class="op">=</span><span class="dv">2</span>, <span class="co"># Number of top isoforms to plot</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    estimator:<span class="bu">str</span><span class="op">=</span><span class="st">'pseudobulk'</span>, <span class="co"># PSI estimator ('pseudobulk', 'dirichlet', 'cell-mean', 'cell-median', 'coverage-weighted')</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    dirichlet_alpha:<span class="bu">float</span><span class="op">=</span><span class="fl">0.5</span>, <span class="co"># Dirichlet alpha parameter</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    epsilon:<span class="bu">float</span><span class="op">=</span><span class="fl">1e-06</span>, <span class="co"># Small value to avoid division by zero</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    visible_groups:Optional[List[<span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, <span class="co"># Subset of groups to display</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    fig_width:<span class="bu">float</span><span class="op">=</span><span class="fl">20.0</span>, <span class="co"># Figure width in inches</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    draw_cds:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># If True, draw CDS regions in transcript structures</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    show_ticks:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># If True, show ruler ticks</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    add_gex_band:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># If True, add GEX band</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    add_group_color_band:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># If True, add group color band</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    group_color_map:Optional[Dict[<span class="bu">str</span>, <span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, <span class="co"># Custom color map for groups</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    box_overlay:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># If True, overlay boxplots on scatter points</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    point_size:<span class="bu">float</span><span class="op">=</span><span class="fl">4.0</span>, <span class="co"># Size of scatter points</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    point_alpha:<span class="bu">float</span><span class="op">=</span><span class="fl">0.85</span>, <span class="co"># Alpha transparency of points</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    jitter_width:<span class="bu">float</span><span class="op">=</span><span class="fl">0.12</span>, <span class="co"># Width of horizontal jitter for points</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    label_wrap:<span class="bu">int</span><span class="op">=</span><span class="dv">14</span>, <span class="co"># Width for wrapping x-axis labels</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    label_rot:<span class="bu">int</span><span class="op">=</span><span class="dv">35</span>, <span class="co"># Rotation angle for x-axis labels</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    row_pitch:<span class="bu">float</span><span class="op">=</span><span class="fl">0.45</span>, <span class="co"># vertical spacing between transcript rows</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    intron_scale:<span class="bu">float</span><span class="op">=</span><span class="fl">0.15</span>, <span class="co"># intron compression (smaller = more compressed)</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    color_offset:<span class="bu">int</span><span class="op">=</span><span class="dv">0</span>, <span class="co"># rotate transcript color palette by this many steps</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>Tuple[plt.Figure, List[<span class="bu">str</span>], List[<span class="bu">str</span>], Dict[Tuple[<span class="bu">int</span>, <span class="bu">int</span>], np.ndarray]]: <span class="co"># The matplotlib figure</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Composed plot: transcript structures + replicate PSI variability.</em></p>
+<p>Left: Transcript structure glyphs Right: Replicate plots showing PSI variability across biological replicates</p>
+<hr>
+</section>
+<section id="plot_isoform_stacked_bar_composed" class="level3">
+<h3 class="anchored" data-anchor-id="plot_isoform_stacked_bar_composed">plot_isoform_stacked_bar_composed</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_isoform_stacked_bar_composed(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    transcript_data, <span class="co"># Transcript annotation data</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    adata, <span class="co"># Annotated data object with transcript counts</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    gene_id:<span class="bu">str</span>, <span class="co"># Gene ID to plot</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    group_col:<span class="bu">str</span>, <span class="co"># Column in adata.obs defining groups (e.g., 'cell_type')</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    top_n:Optional[<span class="bu">int</span>]<span class="op">=</span><span class="va">None</span>, <span class="co"># Number of top isoforms to show separately. Others grouped as "Other".</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>If <span class="va">None</span>, shows <span class="bu">all</span> isoforms.</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    estimator:<span class="bu">str</span><span class="op">=</span><span class="st">'pseudobulk'</span>, <span class="co"># PSI estimator ('pseudobulk', 'dirichlet', 'cell-mean', 'cell-median', 'coverage-weighted')</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    dirichlet_alpha:<span class="bu">float</span><span class="op">=</span><span class="fl">0.5</span>, <span class="co"># Dirichlet alpha parameter</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    epsilon:<span class="bu">float</span><span class="op">=</span><span class="fl">1e-06</span>, <span class="co"># Small value to avoid division by zero</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    compute_on_selection_only:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># If True, compute PSI only on selected top_n isoforms (rescaled to sum to 100%).</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>If <span class="va">False</span>, compute PSI on <span class="bu">all</span> isoforms <span class="kw">and</span> show remaining <span class="im">as</span> <span class="st">"Other"</span> category.</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    visible_groups:Optional[List[<span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, <span class="co"># Subset of groups to display. If None, all groups are shown.</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    fig_width:<span class="bu">float</span><span class="op">=</span><span class="fl">16.0</span>, <span class="co"># Figure width in inches</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    draw_cds:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Whether to draw CDS regions in transcript structures</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    show_ticks:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Whether to show ruler ticks</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>    label_wrap:<span class="bu">int</span><span class="op">=</span><span class="dv">14</span>, <span class="co"># Width for wrapping x-axis labels</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>    label_rot:<span class="bu">int</span><span class="op">=</span><span class="dv">45</span>, <span class="co"># Rotation angle for x-axis labels</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    show_values:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># Whether to show percentage values on bars</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>    show_title:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># Whether to show the figure title</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>    add_group_color_band:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># Add a categorical color band above the panel showing group identity.</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>    group_color_map:Optional[Dict[<span class="bu">str</span>, <span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, <span class="co"># Custom color mapping for groups used in the color band.</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>    add_gex_band:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># Add a gene-expression (CP10k) quantitative band above the panel.</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>    add_gex_bar:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># Whether to add gene expression bar above stacked bars</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>    gex_bar_height:<span class="bu">float</span><span class="op">=</span><span class="fl">0.003</span>, <span class="co"># Fixed height of gene expression bar as fraction of main plot height</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>    gex_legend_width:<span class="bu">float</span><span class="op">=</span><span class="fl">0.35</span>, <span class="co"># Width of the GEX legend colorbar (as fraction, 0-1)</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>    gex_legend_x:<span class="bu">float</span><span class="op">=</span><span class="fl">0.15</span>, <span class="co"># Horizontal position of GEX legend colorbar (0=left, 1=right)</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>    row_pitch:<span class="bu">float</span><span class="op">=</span><span class="fl">0.45</span>, <span class="co"># vertical spacing between transcript rows</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>    intron_scale:<span class="bu">float</span><span class="op">=</span><span class="fl">0.15</span>, <span class="co"># intron compression (smaller = more compressed)</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>    color_offset:<span class="bu">int</span><span class="op">=</span><span class="dv">0</span>, <span class="co"># rotate transcript color palette by this many steps</span></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>Tuple[plt.Figure, List[<span class="bu">str</span>], List[<span class="bu">str</span>], np.ndarray]: <span class="co"># The matplotlib figure</span></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Plot composed figure with transcript structures and stacked bar chart.</em></p>
+<p>Creates a two-panel figure showing: - Left: Transcript structures for isoforms - Right: Stacked bar chart showing isoform composition per group</p>
+<p>Colors are matched between transcript structures and bar segments.</p>
+<hr>
+</section>
+<section id="plot_isoform_umap_composed" class="level3">
+<h3 class="anchored" data-anchor-id="plot_isoform_umap_composed">plot_isoform_umap_composed</h3>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_isoform_umap_composed(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    transcript_data, adata, gene_id:<span class="bu">str</span>, group_col:<span class="bu">str</span>, top_n:<span class="bu">int</span><span class="op">=</span><span class="dv">2</span>, estimator:<span class="bu">str</span><span class="op">=</span><span class="st">'pseudobulk'</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    dirichlet_alpha:<span class="bu">float</span><span class="op">=</span><span class="fl">0.5</span>, epsilon:<span class="bu">float</span><span class="op">=</span><span class="fl">1e-06</span>, visible_groups:Optional[List[<span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    show_individual_colorbars:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># If True, show a small colorbar for each UMAP plot panel.</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    use_per_panel_scale:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># If True, each panel has its own colorbar scale based on its data.</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>If <span class="va">False</span> (default), <span class="bu">all</span> panels share a <span class="kw">global</span> scale.</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    fig_width:<span class="bu">float</span><span class="op">=</span><span class="fl">20.0</span>, draw_cds:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, show_ticks:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, add_gex_band:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    add_group_color_band:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, group_color_map:Optional[Dict[<span class="bu">str</span>, <span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, umap_basis:<span class="bu">str</span><span class="op">=</span><span class="st">'umap'</span>,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    umap_cmaps:Optional[List[<span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, umap_max_cols:<span class="bu">int</span><span class="op">=</span><span class="dv">2</span>, umap_size:<span class="bu">float</span><span class="op">=</span><span class="fl">5.0</span>, umap_alpha:<span class="bu">float</span><span class="op">=</span><span class="fl">0.9</span>,</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    use_global_vmin_vmax:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, vmin:Optional[<span class="bu">float</span>]<span class="op">=</span><span class="va">None</span>, vmax:Optional[<span class="bu">float</span>]<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    use_density:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># If True, show KDE-based density instead of raw expression.</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    density_adjust:<span class="bu">float</span><span class="op">=</span><span class="fl">1.0</span>, <span class="co"># Bandwidth adjustment for KDE (only used if use_density=True).</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    row_pitch:<span class="bu">float</span><span class="op">=</span><span class="fl">0.45</span>, <span class="co"># vertical spacing between transcript rows</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    intron_scale:<span class="bu">float</span><span class="op">=</span><span class="fl">0.15</span>, <span class="co"># intron compression (smaller = more compressed)</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>Tuple[plt.Figure, List[<span class="bu">str</span>], List[<span class="bu">str</span>]]:</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Composed plot: transcript structures + UMAP embeddings.</em></p>
+<p>Left: Transcript structure glyphs Right: Tiled UMAP plots (one per isoform)</p>
+<hr>
+</section>
+<section id="plot_isoform_density_composed" class="level3">
+<h3 class="anchored" data-anchor-id="plot_isoform_density_composed">plot_isoform_density_composed</h3>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_isoform_density_composed(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    transcript_data, adata, gene_id:<span class="bu">str</span>, group_col:<span class="bu">str</span>, top_n:<span class="bu">int</span><span class="op">=</span><span class="dv">2</span>, estimator:<span class="bu">str</span><span class="op">=</span><span class="st">'pseudobulk'</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    dirichlet_alpha:<span class="bu">float</span><span class="op">=</span><span class="fl">0.5</span>, epsilon:<span class="bu">float</span><span class="op">=</span><span class="fl">1e-06</span>, visible_groups:Optional[List[<span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    show_individual_colorbars:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># If True, show a small colorbar for each density plot panel.</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    use_per_panel_scale:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># If True, each panel has its own colorbar scale based on its data.</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>If <span class="va">False</span> (default), <span class="bu">all</span> panels share a <span class="kw">global</span> scale.</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    fig_width:<span class="bu">float</span><span class="op">=</span><span class="fl">20.0</span>, draw_cds:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, show_ticks:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, add_gex_band:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    add_group_color_band:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, group_color_map:Optional[Dict[<span class="bu">str</span>, <span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, density_basis:<span class="bu">str</span><span class="op">=</span><span class="st">'umap'</span>,</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    density_cmaps:Optional[List[<span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, density_max_cols:<span class="bu">int</span><span class="op">=</span><span class="dv">2</span>, density_size:<span class="bu">float</span><span class="op">=</span><span class="fl">5.0</span>, density_alpha:<span class="bu">float</span><span class="op">=</span><span class="fl">0.9</span>,</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    density_adjust:<span class="bu">float</span><span class="op">=</span><span class="fl">1.0</span>, use_global_vmin_vmax:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, vmin:Optional[<span class="bu">float</span>]<span class="op">=</span><span class="va">None</span>, vmax:Optional[<span class="bu">float</span>]<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    row_pitch:<span class="bu">float</span><span class="op">=</span><span class="fl">0.45</span>, <span class="co"># vertical spacing between transcript rows</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    intron_scale:<span class="bu">float</span><span class="op">=</span><span class="fl">0.15</span>, <span class="co"># intron compression (smaller = more compressed)</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>Tuple[plt.Figure, List[<span class="bu">str</span>], List[<span class="bu">str</span>]]:</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Composed plot: transcript structures + density (KDE) embeddings.</em></p>
+<p>Left: Transcript structure glyphs Right: Tiled density plots (one per isoform, showing spatial density via KDE)</p>
+<hr>
+</section>
+<section id="plot_isoform_spatial_composed" class="level3">
+<h3 class="anchored" data-anchor-id="plot_isoform_spatial_composed">plot_isoform_spatial_composed</h3>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_isoform_spatial_composed(</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    transcript_data, adata, gene_id:<span class="bu">str</span>, group_col:<span class="bu">str</span>, top_n:<span class="bu">int</span><span class="op">=</span><span class="dv">2</span>, estimator:<span class="bu">str</span><span class="op">=</span><span class="st">'pseudobulk'</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    dirichlet_alpha:<span class="bu">float</span><span class="op">=</span><span class="fl">0.5</span>, epsilon:<span class="bu">float</span><span class="op">=</span><span class="fl">1e-06</span>, visible_groups:Optional[List[<span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    show_individual_colorbars:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, use_per_panel_scale:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, fig_width:<span class="bu">float</span><span class="op">=</span><span class="fl">20.0</span>, draw_cds:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    show_ticks:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, add_gex_band:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, add_group_color_band:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    group_color_map:Optional[Dict[<span class="bu">str</span>, <span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, spatial_basis:<span class="bu">str</span><span class="op">=</span><span class="st">'spatial'</span>, spatial_cmap:Optional[<span class="bu">str</span>]<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    spatial_cmaps:Optional[List[<span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, spatial_max_cols:<span class="bu">int</span><span class="op">=</span><span class="dv">2</span>, spatial_size:<span class="bu">float</span><span class="op">=</span><span class="fl">5.0</span>, spatial_alpha:<span class="bu">float</span><span class="op">=</span><span class="fl">0.9</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    use_global_vmin_vmax:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, vmin:Optional[<span class="bu">float</span>]<span class="op">=</span><span class="va">None</span>, vmax:Optional[<span class="bu">float</span>]<span class="op">=</span><span class="va">None</span>, invert_y:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    use_density:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, density_adjust:<span class="bu">float</span><span class="op">=</span><span class="fl">1.0</span>, aspect_equal:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, color_offset:<span class="bu">int</span><span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    intron_scale:<span class="bu">float</span><span class="op">=</span><span class="fl">0.15</span>, <span class="co"># intron compression (smaller = more compressed)</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>Tuple[plt.Figure, List[<span class="bu">str</span>], List[<span class="bu">str</span>]]:</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Composed plot: transcript structures + spatial embeddings.</em></p>
+<p>Left: Transcript structure glyphs Right: Tiled spatial plots (one per isoform)</p>
+<p>If use_density=False (default): colour = raw isoform expression. If use_density=True: colour = KDE-based spatial density of that isoform.</p>
+<p>spatial_cmap: single colormap name applied to all panels (e.g.&nbsp;“Reds”, “magma”). Overrides the per-mode default. spatial_cmaps takes precedence if also provided. spatial_cmaps: per-isoform colormap list; overrides spatial_cmap. aspect_equal: if True (default), each spatial subplot uses equal x/y scaling, preserving true tissue geometry. Set False to fill the available cell area. use_per_panel_scale: if True, each panel has its own colorbar scale based on its data. If False (default), all panels share a global scale. color_offset: rotate transcript color palette by this many steps.</p>
+<hr>
+</section>
+<section id="make_group_color_map" class="level3">
+<h3 class="anchored" data-anchor-id="make_group_color_map">make_group_color_map</h3>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> make_group_color_map(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    groups:List[<span class="bu">str</span>], cmap_name:<span class="bu">str</span><span class="op">=</span><span class="st">'tab20'</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>Dict[<span class="bu">str</span>, <span class="bu">str</span>]:</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Create a color map for categorical groups.</em></p>
+<hr>
+</section>
+<section id="plot_isoform_spatial_composed_hd" class="level3">
+<h3 class="anchored" data-anchor-id="plot_isoform_spatial_composed_hd">plot_isoform_spatial_composed_HD</h3>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_isoform_spatial_composed_HD(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    transcript_data, adata, gene_id:<span class="bu">str</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    top_n:<span class="bu">int</span><span class="op">=</span><span class="dv">2</span>, <span class="co"># Number of top-expressed isoforms to show (by total expression).</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    fig_width:<span class="bu">float</span><span class="op">=</span><span class="fl">20.0</span>, draw_cds:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, show_ticks:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, show_individual_colorbars:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    spatial_cmap:Optional[<span class="bu">str</span>]<span class="op">=</span><span class="va">None</span>, <span class="co"># Single colormap applied to all panels (e.g. "Reds", "magma").</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>spatial_cmaps takes precedence <span class="cf">if</span> also provided.</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    spatial_cmaps:Optional[List[<span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, <span class="co"># Per-isoform colormap list; overrides spatial_cmap.</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    spatial_max_cols:<span class="bu">int</span><span class="op">=</span><span class="dv">2</span>, spatial_size:<span class="bu">float</span><span class="op">=</span><span class="fl">5.0</span>, spatial_alpha:<span class="bu">float</span><span class="op">=</span><span class="fl">0.9</span>, invert_y:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    aspect_equal:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># If True (default), each spatial subplot uses equal x/y scaling,</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>preserving true tissue geometry.</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    color_offset:<span class="bu">int</span><span class="op">=</span><span class="dv">0</span>, <span class="co"># Rotate transcript color palette by this many steps.</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    row_pitch:<span class="bu">float</span><span class="op">=</span><span class="fl">0.45</span>, intron_scale:<span class="bu">float</span><span class="op">=</span><span class="fl">0.15</span>, <span class="co"># intron compression (smaller = more compressed)</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    layer:Optional[<span class="bu">str</span>]<span class="op">=</span><span class="va">None</span>, <span class="co"># Layer to read expression from. Defaults to 'counts' if present.</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    transcripts:Optional[List[<span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, <span class="co"># Explicit transcript IDs — bypasses top_n selection.</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    log_scale:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Use LogNorm colorscale. Default True for visium_like style.</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    norm_per_spot:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># Normalise by per-spot library size before plotting.</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    norm_target:<span class="bu">float</span><span class="op">=</span><span class="fl">10000.0</span>, <span class="co"># CPM target when norm_per_spot=True (default 1e4).</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    hd_marker:<span class="bu">str</span><span class="op">=</span><span class="st">'s'</span>, hd_bg_color:<span class="bu">str</span><span class="op">=</span><span class="st">'#E6E6E6'</span>, hd_bg_alpha:<span class="bu">float</span><span class="op">=</span><span class="fl">0.35</span>, hd_bg_size_factor:<span class="bu">float</span><span class="op">=</span><span class="fl">1.0</span>,</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    bin_factor:Optional[<span class="bu">int</span>]<span class="op">=</span><span class="va">None</span>, rotate:<span class="bu">float</span><span class="op">=</span><span class="dv">0</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>Tuple[plt.Figure, List[<span class="bu">str</span>]]:</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Composed plot for Visium HD: transcript structure glyphs + spatial scatter panels.</em></p>
+<p>Renders square-bin scatter on a white background (visium_like style), using array_col/array_row from adata.obs for spatial coordinates.</p>
+<hr>
+</section>
+<section id="plot_isoform_heatmap_percell_composed" class="level3">
+<h3 class="anchored" data-anchor-id="plot_isoform_heatmap_percell_composed">plot_isoform_heatmap_percell_composed</h3>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_isoform_heatmap_percell_composed(</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    transcript_data, <span class="co"># Transcript annotation data</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    adata, <span class="co"># Annotated data object with transcript counts</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    gene_id:<span class="bu">str</span>, <span class="co"># Gene ID to plot</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    group_col:<span class="bu">str</span>, <span class="co"># Column in adata.obs for grouping/sorting cells (e.g., 'cell_type')</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    top_n:<span class="bu">int</span><span class="op">=</span><span class="dv">2</span>, <span class="co"># Number of top isoforms to include</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    epsilon:<span class="bu">float</span><span class="op">=</span><span class="fl">1e-06</span>, <span class="co"># Small value to avoid division by zero</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    cell_subset:Optional[List[<span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, <span class="co"># Specific cell IDs to include</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    max_cells:Optional[<span class="bu">int</span>]<span class="op">=</span><span class="dv">500</span>, <span class="co"># Maximum number of cells to plot</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    cluster_within_groups:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Whether to hierarchically cluster cells within each group</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    cmap:<span class="bu">str</span><span class="op">=</span><span class="st">'magma'</span>, <span class="co"># Colormap name</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    colorbar_label:<span class="bu">str</span><span class="op">=</span><span class="st">'PSI'</span>, <span class="co"># Label for colorbar</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    fig_width:<span class="bu">float</span><span class="op">=</span><span class="fl">20.0</span>, <span class="co"># Figure width in inches</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    draw_cds:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Whether to draw CDS regions</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    show_ticks:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Whether to show ruler ticks</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    add_group_color_band:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># Add group color band</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>    group_color_map:Optional[Dict[<span class="bu">str</span>, <span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, <span class="co"># Custom color map for groups</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    group_band_position:<span class="bu">str</span><span class="op">=</span><span class="st">'bottom'</span>, <span class="co"># Position of group color band ("top" or "bottom")</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    show_panel_colorbar:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># Whether to show panel colorbar</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>    show_group_boundaries:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Whether to show vertical lines between groups</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    row_pitch:<span class="bu">float</span><span class="op">=</span><span class="fl">0.45</span>, <span class="co"># vertical spacing between transcript rows</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>    intron_scale:<span class="bu">float</span><span class="op">=</span><span class="fl">0.15</span>, <span class="co"># intron compression (smaller = more compressed)</span></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>    color_offset:<span class="bu">int</span><span class="op">=</span><span class="dv">0</span>, <span class="co"># rotate transcript color palette by this many steps</span></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>Tuple[plt.Figure, List[<span class="bu">str</span>], List[<span class="bu">str</span>], np.ndarray]: <span class="co"># The matplotlib figure</span></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Plot a composed per-cell heatmap with transcript structure.</em></p>
+<p>This function combines transcript structure visualization with a per-cell heatmap of isoform PSI values. Cells are sorted by group and optionally clustered within each group.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/cobioda\.github\.io\/allos");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/cobioda/allos/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

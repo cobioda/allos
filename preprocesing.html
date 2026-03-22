@@ -2,11 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.42">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="This module focuses on preprocessing single-cell RNA sequencing data, ensuring compatibility and efficiency across diverse datasets. It provides essential methods for data cleaning, normalization, and integration, facilitating seamless analysis within the Allos framework.">
+<meta name="description" content="Core preprocessing utilities for isoform-resolution single-cell data.">
 
 <title>Preprocessing – allos</title>
 <style>
@@ -70,10 +70,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-ae44de7e3b26b230a7801128389852ee.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-423ad5ba759ba8d1584d5d13ca0c1f6f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -105,17 +105,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <link rel="stylesheet" href="styles.css">
 <meta property="og:title" content="Preprocessing – allos">
-<meta property="og:description" content="This module focuses on preprocessing single-cell RNA sequencing data, ensuring compatibility and efficiency across diverse datasets. It provides essential methods for data cleaning, normalization, and integration, facilitating seamless analysis within the Allos framework.">
-<meta property="og:image" content="https://cobioda.github.io/allos/007_preprocesing_files/figure-html/cell-15-output-1.png">
+<meta property="og:description" content="Core preprocessing utilities for isoform-resolution single-cell data.">
 <meta property="og:site_name" content="allos">
-<meta property="og:image:height" content="1463">
-<meta property="og:image:width" content="1475">
 <meta name="twitter:title" content="Preprocessing – allos">
-<meta name="twitter:description" content="This module focuses on preprocessing single-cell RNA sequencing data, ensuring compatibility and efficiency across diverse datasets. It provides essential methods for data cleaning, normalization, and integration, facilitating seamless analysis within the Allos framework.">
-<meta name="twitter:image" content="https://cobioda.github.io/allos/007_preprocesing_files/figure-html/cell-15-output-1.png">
-<meta name="twitter:image-height" content="1463">
-<meta name="twitter:image-width" content="1475">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:description" content="Core preprocessing utilities for isoform-resolution single-cell data.">
+<meta name="twitter:card" content="summary">
 </head>
 
 <body class="nav-sidebar floating nav-fixed">
@@ -183,20 +177,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./anndata_iso.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">IsoAdata</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./switch_search.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Detecting Switches</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./gene_report.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Gene Report Module</span></a>
+ <span class="menu-text">Switch Search</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -207,14 +189,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./visuals.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Visualizations</span></a>
+  <a href="./quant_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quantitative Plots</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./metacells.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Metacells</span></a>
+  <a href="./composed_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Composed Plots</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./coord_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coordinate Plots</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./coverage_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coverage Plots</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./protein_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Protein Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./protein_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Protein Plots</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./junctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Junction Data Processing</span></a>
   </div>
 </li>
     </ul>
@@ -227,14 +239,53 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#subset_common_cells" id="toc-subset_common_cells" class="nav-link active" data-scroll-target="#subset_common_cells">subset_common_cells</a></li>
-  <li><a href="#transfer_obs" id="toc-transfer_obs" class="nav-link" data-scroll-target="#transfer_obs">transfer_obs</a></li>
-  <li><a href="#get_sot_gene_matrix" id="toc-get_sot_gene_matrix" class="nav-link" data-scroll-target="#get_sot_gene_matrix">get_sot_gene_matrix</a></li>
-  <li><a href="#compute_transcript_abundance_pct" id="toc-compute_transcript_abundance_pct" class="nav-link" data-scroll-target="#compute_transcript_abundance_pct">compute_transcript_abundance_pct</a></li>
-  <li><a href="#compute_whole_data_transcript_abundance" id="toc-compute_whole_data_transcript_abundance" class="nav-link" data-scroll-target="#compute_whole_data_transcript_abundance">compute_whole_data_transcript_abundance</a></li>
-  <li><a href="#filter_transcripts_by_abundance" id="toc-filter_transcripts_by_abundance" class="nav-link" data-scroll-target="#filter_transcripts_by_abundance">filter_transcripts_by_abundance</a></li>
+  <li><a href="#compute_whole_data_transcript_abundance" id="toc-compute_whole_data_transcript_abundance" class="nav-link active" data-scroll-target="#compute_whole_data_transcript_abundance">compute_whole_data_transcript_abundance</a></li>
+  <li><a href="#plot_isoform_overview" id="toc-plot_isoform_overview" class="nav-link" data-scroll-target="#plot_isoform_overview">plot_isoform_overview</a></li>
   <li><a href="#gene_wise_correlation" id="toc-gene_wise_correlation" class="nav-link" data-scroll-target="#gene_wise_correlation">gene_wise_correlation</a></li>
+  <li><a href="#cell_umi_violin" id="toc-cell_umi_violin" class="nav-link" data-scroll-target="#cell_umi_violin">cell_umi_violin</a></li>
+  <li><a href="#cell_umi_correlation" id="toc-cell_umi_correlation" class="nav-link" data-scroll-target="#cell_umi_correlation">cell_umi_correlation</a></li>
   <li><a href="#gene_wise_bland_altman" id="toc-gene_wise_bland_altman" class="nav-link" data-scroll-target="#gene_wise_bland_altman">gene_wise_bland_altman</a></li>
+  <li><a href="#gene_wise_by_length" id="toc-gene_wise_by_length" class="nav-link" data-scroll-target="#gene_wise_by_length">gene_wise_by_length</a></li>
+  <li><a href="#plot_discovery_rarefaction" id="toc-plot_discovery_rarefaction" class="nav-link" data-scroll-target="#plot_discovery_rarefaction">plot_discovery_rarefaction</a></li>
+  <li><a href="#plot_delta_dominance" id="toc-plot_delta_dominance" class="nav-link" data-scroll-target="#plot_delta_dominance">plot_delta_dominance</a></li>
+  <li><a href="#cell_umi_capture_ratio" id="toc-cell_umi_capture_ratio" class="nav-link" data-scroll-target="#cell_umi_capture_ratio">cell_umi_capture_ratio</a></li>
+  <li><a href="#plot_length_by_annotation_status" id="toc-plot_length_by_annotation_status" class="nav-link" data-scroll-target="#plot_length_by_annotation_status">plot_length_by_annotation_status</a></li>
+  <li><a href="#plot_length_by_biotype" id="toc-plot_length_by_biotype" class="nav-link" data-scroll-target="#plot_length_by_biotype">plot_length_by_biotype</a></li>
+  <li><a href="#plot_coverage_by_transcript_length" id="toc-plot_coverage_by_transcript_length" class="nav-link" data-scroll-target="#plot_coverage_by_transcript_length">plot_coverage_by_transcript_length</a></li>
+  <li><a href="#plot_read_length_vs_position" id="toc-plot_read_length_vs_position" class="nav-link" data-scroll-target="#plot_read_length_vs_position">plot_read_length_vs_position</a></li>
+  <li><a href="#plot_full_length_ratio" id="toc-plot_full_length_ratio" class="nav-link" data-scroll-target="#plot_full_length_ratio">plot_full_length_ratio</a></li>
+  <li><a href="#plot_tes_enrichment" id="toc-plot_tes_enrichment" class="nav-link" data-scroll-target="#plot_tes_enrichment">plot_tes_enrichment</a></li>
+  <li><a href="#plot_tss_enrichment" id="toc-plot_tss_enrichment" class="nav-link" data-scroll-target="#plot_tss_enrichment">plot_tss_enrichment</a></li>
+  <li><a href="#plot_read_start_positions" id="toc-plot_read_start_positions" class="nav-link" data-scroll-target="#plot_read_start_positions">plot_read_start_positions</a></li>
+  <li><a href="#plot_gene_coverage_single" id="toc-plot_gene_coverage_single" class="nav-link" data-scroll-target="#plot_gene_coverage_single">plot_gene_coverage_single</a></li>
+  <li><a href="#plot_gene_coverage" id="toc-plot_gene_coverage" class="nav-link" data-scroll-target="#plot_gene_coverage">plot_gene_coverage</a></li>
+  <li><a href="#plot_gene_body_coverage_comparison" id="toc-plot_gene_body_coverage_comparison" class="nav-link" data-scroll-target="#plot_gene_body_coverage_comparison">plot_gene_body_coverage_comparison</a></li>
+  <li><a href="#plot_gene_body_coverage" id="toc-plot_gene_body_coverage" class="nav-link" data-scroll-target="#plot_gene_body_coverage">plot_gene_body_coverage</a></li>
+  <li><a href="#plot_end_bias_note" id="toc-plot_end_bias_note" class="nav-link" data-scroll-target="#plot_end_bias_note">plot_end_bias_note</a></li>
+  <li><a href="#plot_length_bias_by_expression" id="toc-plot_length_bias_by_expression" class="nav-link" data-scroll-target="#plot_length_bias_by_expression">plot_length_bias_by_expression</a></li>
+  <li><a href="#plot_length_bias" id="toc-plot_length_bias" class="nav-link" data-scroll-target="#plot_length_bias">plot_length_bias</a></li>
+  <li><a href="#plot_length_expression_correlation" id="toc-plot_length_expression_correlation" class="nav-link" data-scroll-target="#plot_length_expression_correlation">plot_length_expression_correlation</a></li>
+  <li><a href="#plot_biotype_by_group" id="toc-plot_biotype_by_group" class="nav-link" data-scroll-target="#plot_biotype_by_group">plot_biotype_by_group</a></li>
+  <li><a href="#plot_biotype_breakdown" id="toc-plot_biotype_breakdown" class="nav-link" data-scroll-target="#plot_biotype_breakdown">plot_biotype_breakdown</a></li>
+  <li><a href="#plot_detected_transcript_lengths" id="toc-plot_detected_transcript_lengths" class="nav-link" data-scroll-target="#plot_detected_transcript_lengths">plot_detected_transcript_lengths</a></li>
+  <li><a href="#plot_transcript_length_distribution" id="toc-plot_transcript_length_distribution" class="nav-link" data-scroll-target="#plot_transcript_length_distribution">plot_transcript_length_distribution</a></li>
+  <li><a href="#plot_isoforms_per_gene_by_group" id="toc-plot_isoforms_per_gene_by_group" class="nav-link" data-scroll-target="#plot_isoforms_per_gene_by_group">plot_isoforms_per_gene_by_group</a></li>
+  <li><a href="#plot_isoforms_per_gene" id="toc-plot_isoforms_per_gene" class="nav-link" data-scroll-target="#plot_isoforms_per_gene">plot_isoforms_per_gene</a></li>
+  <li><a href="#compute_gene_body_coverage" id="toc-compute_gene_body_coverage" class="nav-link" data-scroll-target="#compute_gene_body_coverage">compute_gene_body_coverage</a></li>
+  <li><a href="#coverageresult" id="toc-coverageresult" class="nav-link" data-scroll-target="#coverageresult">CoverageResult</a></li>
+  <li><a href="#transcript-length-analysis" id="toc-transcript-length-analysis" class="nav-link" data-scroll-target="#transcript-length-analysis">Transcript Length Analysis</a>
+  <ul class="collapse">
+  <li><a href="#plot_transcript_length_abundance" id="toc-plot_transcript_length_abundance" class="nav-link" data-scroll-target="#plot_transcript_length_abundance">plot_transcript_length_abundance</a></li>
+  </ul></li>
+  <li><a href="#api-reference" id="toc-api-reference" class="nav-link" data-scroll-target="#api-reference">API reference</a>
+  <ul class="collapse">
+  <li><a href="#plot_isoform_complexity" id="toc-plot_isoform_complexity" class="nav-link" data-scroll-target="#plot_isoform_complexity">plot_isoform_complexity</a></li>
+  <li><a href="#filter_transcripts_by_abundance" id="toc-filter_transcripts_by_abundance" class="nav-link" data-scroll-target="#filter_transcripts_by_abundance">filter_transcripts_by_abundance</a></li>
+  <li><a href="#compute_transcript_abundance_pct" id="toc-compute_transcript_abundance_pct" class="nav-link" data-scroll-target="#compute_transcript_abundance_pct">compute_transcript_abundance_pct</a></li>
+  <li><a href="#get_sot_gene_matrix" id="toc-get_sot_gene_matrix" class="nav-link" data-scroll-target="#get_sot_gene_matrix">get_sot_gene_matrix</a></li>
+  <li><a href="#subset_common_cells" id="toc-subset_common_cells" class="nav-link" data-scroll-target="#subset_common_cells">subset_common_cells</a></li>
+  <li><a href="#transfer_obs" id="toc-transfer_obs" class="nav-link" data-scroll-target="#transfer_obs">transfer_obs</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/cobioda/allos/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -248,7 +299,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div>
   <div class="description">
-    This module focuses on preprocessing single-cell RNA sequencing data, ensuring compatibility and efficiency across diverse datasets. It provides essential methods for data cleaning, normalization, and integration, facilitating seamless analysis within the Allos framework.
+    Core preprocessing utilities for isoform-resolution single-cell data.
   </div>
 </div>
 
@@ -267,461 +318,607 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
 <hr>
-<p><a href="https://github.com/cobioda/allos/blob/main/allos/preprocessing.py#L19" target="_blank" style="float:right; font-size:smaller">source</a></p>
-<section id="subset_common_cells" class="level3">
-<h3 class="anchored" data-anchor-id="subset_common_cells">subset_common_cells</h3>
-<blockquote class="blockquote">
-<pre><code> subset_common_cells (dataset1:anndata._core.anndata.AnnData,
-                      dataset2:anndata._core.anndata.AnnData)</code></pre>
-</blockquote>
-<p><em>Subset <code>dataset1</code> to only include cells that are also present in <code>dataset2</code>.</em></p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 9%">
-<col style="width: 38%">
-<col style="width: 52%">
-</colgroup>
-<thead>
-<tr class="header">
-<th></th>
-<th><strong>Type</strong></th>
-<th><strong>Details</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>dataset1</td>
-<td>AnnData</td>
-<td>First dataset to be subsetted.</td>
-</tr>
-<tr class="even">
-<td>dataset2</td>
-<td>AnnData</td>
-<td>Second dataset to compare with.</td>
-</tr>
-<tr class="odd">
-<td><strong>Returns</strong></td>
-<td><strong>AnnData</strong></td>
-<td><strong>Subset of <code>dataset1</code> containing only cells also found in <code>dataset2</code>.</strong></td>
-</tr>
-</tbody>
-</table>
-<hr>
-<p><a href="https://github.com/cobioda/allos/blob/main/allos/preprocessing.py#L37" target="_blank" style="float:right; font-size:smaller">source</a></p>
-</section>
-<section id="transfer_obs" class="level3">
-<h3 class="anchored" data-anchor-id="transfer_obs">transfer_obs</h3>
-<blockquote class="blockquote">
-<pre><code> transfer_obs (dataset1:anndata._core.anndata.AnnData,
-               dataset2:anndata._core.anndata.AnnData)</code></pre>
-</blockquote>
-<p><em>Transfer <code>.obs</code> metadata from <code>dataset1</code> to <code>dataset2</code> one by one, while preserving the <code>.var</code> DataFrame of <code>dataset2</code>.</em></p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 9%">
-<col style="width: 38%">
-<col style="width: 52%">
-</colgroup>
-<thead>
-<tr class="header">
-<th></th>
-<th><strong>Type</strong></th>
-<th><strong>Details</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>dataset1</td>
-<td>AnnData</td>
-<td>Source AnnData object with .obs metadata to transfer.</td>
-</tr>
-<tr class="even">
-<td>dataset2</td>
-<td>AnnData</td>
-<td>Target AnnData object to receive .obs metadata.</td>
-</tr>
-<tr class="odd">
-<td><strong>Returns</strong></td>
-<td><strong>AnnData</strong></td>
-<td><strong>The modified <code>dataset2</code> with .obs from <code>dataset1</code> transferred.</strong></td>
-</tr>
-</tbody>
-</table>
-<div id="cell-4" class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>combined_mouse_data <span class="op">=</span> process_mouse_data()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-🔎 Looking for file at: /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/e18.mouse.clusters.csv
-✅ File found at: /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/e18.mouse.clusters.csv
-✅ File already exists at: /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_1.txt.gz
-
-🔄 Decompressing /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_1.txt.gz to /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_1.txt...
-✅ Decompression complete.
-Test data (mouse_1) downloaded successfully
-✅ File already exists at: /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_2.txt.gz
-
-🔄 Decompressing /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_2.txt.gz to /data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/allos/resources/data/mouse_2.txt...
-✅ Decompression complete.
-Test data (mouse_2) downloaded successfully</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/anndata/_core/anndata.py:1754: UserWarning: Observation names are not unique. To make them unique, call `.obs_names_make_unique`.
-  utils.warn_names_duplicates("obs")</code></pre>
-</div>
-</div>
-<hr>
-<p><a href="https://github.com/cobioda/allos/blob/main/allos/preprocessing.py#L64" target="_blank" style="float:right; font-size:smaller">source</a></p>
-</section>
-<section id="get_sot_gene_matrix" class="level3">
-<h3 class="anchored" data-anchor-id="get_sot_gene_matrix">get_sot_gene_matrix</h3>
-<blockquote class="blockquote">
-<pre><code> get_sot_gene_matrix (adata)</code></pre>
-</blockquote>
-<p><em>Construct a gene-level count matrix from transcript-level data.</em></p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 9%">
-<col style="width: 38%">
-<col style="width: 52%">
-</colgroup>
-<thead>
-<tr class="header">
-<th></th>
-<th><strong>Type</strong></th>
-<th><strong>Details</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>adata</td>
-<td>AnnData</td>
-<td>Input AnnData with transcript-level counts. Must have a column <code>geneId</code><br>in <code>adata.var</code> containing the gene ID for each transcript.</td>
-</tr>
-<tr class="even">
-<td><strong>Returns</strong></td>
-<td><strong>AnnData</strong></td>
-<td><strong>A new AnnData object where columns (var) represent unique genes, <br>and values are aggregated transcript counts.</strong></td>
-</tr>
-</tbody>
-</table>
-<hr>
-<p><a href="https://github.com/cobioda/allos/blob/main/allos/preprocessing.py#L117" target="_blank" style="float:right; font-size:smaller">source</a></p>
-</section>
-<section id="compute_transcript_abundance_pct" class="level3">
-<h3 class="anchored" data-anchor-id="compute_transcript_abundance_pct">compute_transcript_abundance_pct</h3>
-<blockquote class="blockquote">
-<pre><code> compute_transcript_abundance_pct (adata)</code></pre>
-</blockquote>
-<p>*Compute transcript abundance percentages (“percent spliced in”) for each transcript within its gene. For each cell and transcript, this is computed as:</p>
-<p>transcript_pct = (transcript count / total gene count) * 100*</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 9%">
-<col style="width: 38%">
-<col style="width: 52%">
-</colgroup>
-<thead>
-<tr class="header">
-<th></th>
-<th><strong>Type</strong></th>
-<th><strong>Details</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>adata</td>
-<td>AnnData</td>
-<td>AnnData object with transcript-level counts. Must have a column ‘geneId’ in adata.var.</td>
-</tr>
-<tr class="even">
-<td><strong>Returns</strong></td>
-<td><strong>AnnData</strong></td>
-<td><strong>A new AnnData object with the same obs and var as the input, where X holds <br>transcript abundance percentages.</strong></td>
-</tr>
-</tbody>
-</table>
-<hr>
-<p><a href="https://github.com/cobioda/allos/blob/main/allos/preprocessing.py#L160" target="_blank" style="float:right; font-size:smaller">source</a></p>
-</section>
 <section id="compute_whole_data_transcript_abundance" class="level3">
 <h3 class="anchored" data-anchor-id="compute_whole_data_transcript_abundance">compute_whole_data_transcript_abundance</h3>
-<blockquote class="blockquote">
-<pre><code> compute_whole_data_transcript_abundance (adata)</code></pre>
-</blockquote>
-<p>*Compute transcript abundance percentages for the entire dataset by aggregating transcript counts across all cells into a single composite sample.</p>
-<p>This function sums the transcript counts over all cells, constructs a new AnnData with a single observation, and then computes transcript abundance percentages using compute_transcript_abundance_pct.*</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 9%">
-<col style="width: 38%">
-<col style="width: 52%">
-</colgroup>
-<thead>
-<tr class="header">
-<th></th>
-<th><strong>Type</strong></th>
-<th><strong>Details</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>adata</td>
-<td>AnnData</td>
-<td>AnnData object with transcript-level counts. Must have a ‘geneId’ column in adata.var.</td>
-</tr>
-<tr class="even">
-<td><strong>Returns</strong></td>
-<td><strong>AnnData</strong></td>
-<td><strong>A new AnnData object with one observation representing the aggregated data <br>where X holds transcript abundance percentages.</strong></td>
-</tr>
-</tbody>
-</table>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> compute_whole_data_transcript_abundance(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    adata, <span class="co"># AnnData object with transcript-level counts. Must have a 'geneId' column in adata.var.</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>): <span class="co"># A new AnnData object with one observation representing the aggregated data </span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>where X holds transcript abundance percentages.</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Compute transcript abundance percentages for the entire dataset by aggregating </em> transcript counts across all cells into a single composite sample.</p>
+<p>This function sums the transcript counts over all cells, constructs a new AnnData with a single observation, and then computes transcript abundance percentages using compute_transcript_abundance_pct.</p>
 <hr>
-<p><a href="https://github.com/cobioda/allos/blob/main/allos/preprocessing.py#L204" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
-<section id="filter_transcripts_by_abundance" class="level3">
-<h3 class="anchored" data-anchor-id="filter_transcripts_by_abundance">filter_transcripts_by_abundance</h3>
-<blockquote class="blockquote">
-<pre><code> filter_transcripts_by_abundance (adata, threshold_pct, verbose=False)</code></pre>
-</blockquote>
-<p>*Filter transcripts from an AnnData object based on their overall transcript abundance percentage, computed by aggregating transcript counts across all cells and leveraging overall gene counts.</p>
-<p>The overall abundance percentage for each transcript is calculated as:</p>
-<pre><code>overall_pct = (total transcript count) / (total gene count for its gene) * 100</code></pre>
-<p>This function uses the compute_whole_data_transcript_abundance function internally to leverage the gene mapping information (via the ‘geneId’ in adata.var). Transcripts with an overall abundance percentage below the specified threshold (threshold_pct) are filtered out.*</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 6%">
-<col style="width: 25%">
-<col style="width: 34%">
-<col style="width: 34%">
-</colgroup>
-<thead>
-<tr class="header">
-<th></th>
-<th><strong>Type</strong></th>
-<th><strong>Default</strong></th>
-<th><strong>Details</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>adata</td>
-<td>AnnData</td>
-<td></td>
-<td>AnnData object with transcript-level counts. Must have a ‘geneId’ column in adata.var.</td>
-</tr>
-<tr class="even">
-<td>threshold_pct</td>
-<td>float</td>
-<td></td>
-<td>Minimum overall transcript abundance percentage required to keep a transcript.</td>
-</tr>
-<tr class="odd">
-<td>verbose</td>
-<td>bool</td>
-<td>False</td>
-<td>If True, prints the number of transcripts kept and the threshold used. Default is False.</td>
-</tr>
-<tr class="even">
-<td><strong>Returns</strong></td>
-<td><strong>AnnData</strong></td>
-<td></td>
-<td><strong>A new AnnData object with the filtered transcript matrix.</strong></td>
-</tr>
-</tbody>
-</table>
-<div id="cell-9" class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>combined_mouse_data_filtered <span class="op">=</span> filter_transcripts_by_abundance(combined_mouse_data, threshold_pct<span class="op">=</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-10" class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>combined_mouse_data_filtered</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<pre><code>AnnData object with n_obs × n_vars = 1109 × 24917
-    obs: 'batch', 'cell_type'
-    var: 'geneId'</code></pre>
-</div>
-</div>
-<div id="cell-11" class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>combined_mouse_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<pre><code>View of AnnData object with n_obs × n_vars = 1109 × 31986
-    obs: 'batch', 'cell_type'
-    var: 'geneId'</code></pre>
-</div>
-</div>
-<div id="cell-12" class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>gene_adata <span class="op">=</span> get_sot_gene_matrix(combined_mouse_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-13" class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>gene_adata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<pre><code>AnnData object with n_obs × n_vars = 1109 × 12561
-    obs: 'batch', 'cell_type'</code></pre>
-</div>
-</div>
-<pre><code>/opt/hostedtoolcache/Python/3.10.16/x64/lib/python3.10/site-packages/fastcore/docscrape.py:230: UserWarning: Unknown section Note
-  else: warn(msg)</code></pre>
+<section id="plot_isoform_overview" class="level3">
+<h3 class="anchored" data-anchor-id="plot_isoform_overview">plot_isoform_overview</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_isoform_overview(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    adata, <span class="co"># Transcript-level AnnData with `geneId` in ``adata.var``.</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    celltype_col:<span class="bu">str</span><span class="op">=</span><span class="st">'cell_type'</span>, <span class="co"># column in adata.obs for panel-3 grouping</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    min_counts:<span class="bu">int</span><span class="op">=</span><span class="dv">1</span>, <span class="co"># &gt;0 = gene “expressed”</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    figsize:<span class="bu">tuple</span><span class="op">=</span>(<span class="dv">18</span>, <span class="dv">6</span>), <span class="co"># Figure size passed to ``plt.subplots``.</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    save:Optional<span class="op">=</span><span class="va">None</span>, <span class="co"># path to PNG/PDF if you want to save</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Reproduce the three-panel overview:</em></p>
+<p>① Stacked bar: single-isoform vs multi-isoform genes + total transcripts ② Histogram: frequency of <em>n</em> isoforms per gene ③ Box/strip plot: genes detected per cell, grouped by cell type</p>
 <hr>
-<p><a href="https://github.com/cobioda/allos/blob/main/allos/preprocessing.py#L284" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="gene_wise_correlation" class="level3">
 <h3 class="anchored" data-anchor-id="gene_wise_correlation">gene_wise_correlation</h3>
-<blockquote class="blockquote">
-<pre><code> gene_wise_correlation (adata_1, adata_2, label_1='Short_Reads',
-                        label_2='Long_Reads', density_hist=True,
-                        facet_obs=None)</code></pre>
-</blockquote>
-<p><em>Generalized function to compute gene-level counts for each dataset, merge them, and plot a log correlation. If facet_obs is specified, creates per-category plots.</em></p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 6%">
-<col style="width: 25%">
-<col style="width: 34%">
-<col style="width: 34%">
-</colgroup>
-<thead>
-<tr class="header">
-<th></th>
-<th><strong>Type</strong></th>
-<th><strong>Default</strong></th>
-<th><strong>Details</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>adata_1</td>
-<td>AnnData</td>
-<td></td>
-<td>First AnnData, presumably transcript-level. Must have a ‘geneId’ column in .var.</td>
-</tr>
-<tr class="even">
-<td>adata_2</td>
-<td>AnnData</td>
-<td></td>
-<td>Second AnnData, presumably transcript-level. Must have a ‘geneId’ column in .var.</td>
-</tr>
-<tr class="odd">
-<td>label_1</td>
-<td>str</td>
-<td>Short_Reads</td>
-<td>Label for the first dataset in the merged DataFrame and on plots.</td>
-</tr>
-<tr class="even">
-<td>label_2</td>
-<td>str</td>
-<td>Long_Reads</td>
-<td>Label for the second dataset in the merged DataFrame and on plots.</td>
-</tr>
-<tr class="odd">
-<td>density_hist</td>
-<td>bool</td>
-<td>True</td>
-<td>If True, display a scatter with marginal histograms. Otherwise, just a scatter.</td>
-</tr>
-<tr class="even">
-<td>facet_obs</td>
-<td>NoneType</td>
-<td>None</td>
-<td>If provided, facet by the unique categories in adata_1.obs[facet_obs] and<br>subset adata_2 identically, producing one subplot per category.</td>
-</tr>
-<tr class="odd">
-<td><strong>Returns</strong></td>
-<td><strong>pd.DataFrame</strong></td>
-<td></td>
-<td><strong>- If facet_obs is None: a DataFrame of shape [n_genes, 5] with columns:<br> [‘gene_name’, label_1, label_2, ‘log_x’, ‘log_y’].<br>- If facet_obs is not None: a concatenated DataFrame of all categories,<br> with an extra column ‘facet’ indicating the category.</strong></td>
-</tr>
-</tbody>
-</table>
-<div id="cell-15" class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>gene_wise_correlation(adata_1<span class="op">=</span>gene_adata, adata_2<span class="op">=</span>combined_mouse_data, label_1<span class="op">=</span><span class="st">"gene matrix"</span>, label_2 <span class="op">=</span> <span class="st">"isoform matrix"</span>, density_hist <span class="op">=</span> <span class="va">True</span>, facet_obs <span class="op">=</span> <span class="st">"cell_type"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="007_preprocesing_files/figure-html/cell-15-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gene_wise_correlation(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    adata_1, adata_2, label_1:<span class="bu">str</span><span class="op">=</span><span class="st">'Short_Reads'</span>, label_2:<span class="bu">str</span><span class="op">=</span><span class="st">'Long_Reads'</span>, density_hist:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    facet_obs:NoneType<span class="op">=</span><span class="va">None</span>, title:Optional<span class="op">=</span><span class="va">None</span>, figsize:Tuple<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">6</span>), dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>, save:Optional<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Call self as a function.</em></p>
 <hr>
-<p><a href="https://github.com/cobioda/allos/blob/main/allos/preprocessing.py#L509" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="cell_umi_violin" class="level3">
+<h3 class="anchored" data-anchor-id="cell_umi_violin">cell_umi_violin</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> cell_umi_violin(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    adata_1, adata_2, label_1:<span class="bu">str</span><span class="op">=</span><span class="st">'Short_Reads'</span>, label_2:<span class="bu">str</span><span class="op">=</span><span class="st">'Long_Reads'</span>, facet_obs:NoneType<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    title:<span class="bu">str</span><span class="op">=</span><span class="st">'UMI Distribution per Cell'</span>, figsize:Tuple<span class="op">=</span>(<span class="dv">5</span>, <span class="dv">5</span>), dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>, save:Optional<span class="op">=</span><span class="va">None</span>, show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Call self as a function.</em></p>
+<hr>
+</section>
+<section id="cell_umi_correlation" class="level3">
+<h3 class="anchored" data-anchor-id="cell_umi_correlation">cell_umi_correlation</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> cell_umi_correlation(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    adata_1, adata_2, label_1:<span class="bu">str</span><span class="op">=</span><span class="st">'Short_Reads'</span>, label_2:<span class="bu">str</span><span class="op">=</span><span class="st">'Long_Reads'</span>, facet_obs:NoneType<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Call self as a function.</em></p>
+<hr>
 </section>
 <section id="gene_wise_bland_altman" class="level3">
 <h3 class="anchored" data-anchor-id="gene_wise_bland_altman">gene_wise_bland_altman</h3>
-<blockquote class="blockquote">
-<pre><code> gene_wise_bland_altman (adata_1, adata_2, label_1='Short_Reads',
-                         label_2='Long_Reads', facet_obs=None)</code></pre>
-</blockquote>
-<p>*Similar logic to gene_wise_correlation, but produces a Bland–Altman plot of the log1p-transformed gene counts. If facet_obs is given, one subplot per category.</p>
-<p>Steps: 1) (Optionally) convert each AnnData to gene-level if needed. 2) Sum counts across cells in each AnnData. 3) Merge on gene_name. 4) Bland–Altman: difference vs.&nbsp;mean of log1p(counts).*</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 6%">
-<col style="width: 25%">
-<col style="width: 34%">
-<col style="width: 34%">
-</colgroup>
-<thead>
-<tr class="header">
-<th></th>
-<th><strong>Type</strong></th>
-<th><strong>Default</strong></th>
-<th><strong>Details</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>adata_1</td>
-<td>AnnData</td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td>adata_2</td>
-<td>AnnData</td>
-<td></td>
-<td>Both should be gene-level or convertible to gene-level (e.g., via get_sot_gene_matrix).</td>
-</tr>
-<tr class="odd">
-<td>label_1</td>
-<td>str</td>
-<td>Short_Reads</td>
-<td>Label for the first dataset in merged outputs &amp; plot axes.</td>
-</tr>
-<tr class="even">
-<td>label_2</td>
-<td>str</td>
-<td>Long_Reads</td>
-<td>Label for the second dataset in merged outputs &amp; plot axes.</td>
-</tr>
-<tr class="odd">
-<td>facet_obs</td>
-<td>NoneType</td>
-<td>None</td>
-<td>If not None, create one subplot per category in <code>adata_1.obs[facet_obs]</code>.</td>
-</tr>
-<tr class="even">
-<td><strong>Returns</strong></td>
-<td><strong>pd.DataFrame</strong></td>
-<td></td>
-<td><strong>- If facet_obs is None: a single DataFrame with columns<br> [gene_name, label_1, label_2, log_x, log_y, mean_val, diff_val].<br>- If facet_obs is not None: concatenated DataFrame with all categories,<br> plus ‘facet’ indicating each category.</strong></td>
-</tr>
-</tbody>
-</table>
-<div id="cell-17" class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>gene_wise_bland_altman(adata_1<span class="op">=</span>gene_adata, adata_2<span class="op">=</span>combined_mouse_data, label_1<span class="op">=</span><span class="st">"gene matrix"</span>, label_2 <span class="op">=</span> <span class="st">"isoform matrix"</span>, facet_obs <span class="op">=</span> <span class="st">"cell_type"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="007_preprocesing_files/figure-html/cell-17-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<div id="cell-18" class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nbdev<span class="op">;</span> nbdev.nbdev_export()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gene_wise_bland_altman(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    adata_1, adata_2, label_1:<span class="bu">str</span><span class="op">=</span><span class="st">'Short_Reads'</span>, label_2:<span class="bu">str</span><span class="op">=</span><span class="st">'Long_Reads'</span>, facet_obs:NoneType<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    title:Optional<span class="op">=</span><span class="va">None</span>, figsize:Tuple<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">5</span>), dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>, save:Optional<span class="op">=</span><span class="va">None</span>, show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Call self as a function.</em></p>
+<hr>
+</section>
+<section id="gene_wise_by_length" class="level3">
+<h3 class="anchored" data-anchor-id="gene_wise_by_length">gene_wise_by_length</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gene_wise_by_length(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    adata_1, adata_2, td, label_1:<span class="bu">str</span><span class="op">=</span><span class="st">'gene matrix'</span>, label_2:<span class="bu">str</span><span class="op">=</span><span class="st">'isoform matrix'</span>, n_quantiles:<span class="bu">int</span><span class="op">=</span><span class="dv">4</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    length_agg:<span class="bu">str</span><span class="op">=</span><span class="st">'median'</span>, gene_key:<span class="bu">str</span><span class="op">=</span><span class="st">'gene_name'</span>, plot_type:<span class="bu">str</span><span class="op">=</span><span class="st">'correlation'</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Call self as a function.</em></p>
+<hr>
+</section>
+<section id="plot_discovery_rarefaction" class="level3">
+<h3 class="anchored" data-anchor-id="plot_discovery_rarefaction">plot_discovery_rarefaction</h3>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_discovery_rarefaction(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    adata_1, adata_2, label_1:<span class="bu">str</span><span class="op">=</span><span class="st">'gene matrix'</span>, label_2:<span class="bu">str</span><span class="op">=</span><span class="st">'isoform matrix'</span>, gene_col:<span class="bu">str</span><span class="op">=</span><span class="st">'geneId'</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    fractions:NoneType<span class="op">=</span><span class="va">None</span>, n_iter:<span class="bu">int</span><span class="op">=</span><span class="dv">5</span>, random_state:<span class="bu">int</span><span class="op">=</span><span class="dv">42</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Rarefaction curve showing feature discovery as a function of cells subsampled.</em> Three lines: 1. Unique genes detected (gene matrix) 2. Unique isoforms detected (isoform matrix) 3. Unique genes detected via isoform matrix (gene-collapsed)</p>
+<hr>
+</section>
+<section id="plot_delta_dominance" class="level3">
+<h3 class="anchored" data-anchor-id="plot_delta_dominance">plot_delta_dominance</h3>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_delta_dominance(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    adata, label:<span class="bu">str</span><span class="op">=</span><span class="st">'isoform matrix'</span>, gene_col:<span class="bu">str</span><span class="op">=</span><span class="st">'geneId'</span>, gene_name_col:<span class="bu">str</span><span class="op">=</span><span class="st">'gene_name'</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    cell_type_col:<span class="bu">str</span><span class="op">=</span><span class="st">'cell_type'</span>, min_isoforms:<span class="bu">int</span><span class="op">=</span><span class="dv">2</span>, min_counts:<span class="bu">int</span><span class="op">=</span><span class="dv">20</span>, n_label:<span class="bu">int</span><span class="op">=</span><span class="dv">25</span>, n_heatmap:<span class="bu">int</span><span class="op">=</span><span class="dv">12</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Call self as a function.</em></p>
+<hr>
+</section>
+<section id="cell_umi_capture_ratio" class="level3">
+<h3 class="anchored" data-anchor-id="cell_umi_capture_ratio">cell_umi_capture_ratio</h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> cell_umi_capture_ratio(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    adata_1, adata_2, label_1:<span class="bu">str</span><span class="op">=</span><span class="st">'gene matrix'</span>, label_2:<span class="bu">str</span><span class="op">=</span><span class="st">'isoform matrix'</span>, facet_obs:NoneType<span class="op">=</span><span class="va">None</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>For each shared cell, compute log2(adata_2 UMIs / adata_1 UMIs) and</em> show as violin plot, optionally faceted by a obs column (e.g.&nbsp;cell_type).</p>
+<p>Ratio &lt; 0 means adata_2 captures fewer UMIs (expected for isoform vs gene).</p>
+<hr>
+</section>
+<section id="plot_length_by_annotation_status" class="level3">
+<h3 class="anchored" data-anchor-id="plot_length_by_annotation_status">plot_length_by_annotation_status</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_length_by_annotation_status(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    td, adata, adata_tx_col:Optional<span class="op">=</span><span class="va">None</span>, layer:Optional<span class="op">=</span><span class="va">None</span>, log_scale:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    title:<span class="bu">str</span><span class="op">=</span><span class="st">'Transcript Length: Annotated vs Novel'</span>, figsize:Tuple<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>), dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>, save:Optional<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Compare length distributions between annotated and potentially novel transcripts.</em></p>
+<p>Transcripts in adata that match GTF annotations are “annotated”. Those without GTF match may be novel isoforms.</p>
+<hr>
+</section>
+<section id="plot_length_by_biotype" class="level3">
+<h3 class="anchored" data-anchor-id="plot_length_by_biotype">plot_length_by_biotype</h3>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_length_by_biotype(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    td, adata, adata_tx_col:Optional<span class="op">=</span><span class="va">None</span>, biotype_col:<span class="bu">str</span><span class="op">=</span><span class="st">'transcript_type'</span>, <span class="co"># column in adata.var or from GTF</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    top_n_biotypes:<span class="bu">int</span><span class="op">=</span><span class="dv">8</span>, log_scale:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, show_counts:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, title:<span class="bu">str</span><span class="op">=</span><span class="st">'Transcript Length by Biotype'</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    figsize:Optional<span class="op">=</span><span class="va">None</span>, dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>, save:Optional<span class="op">=</span><span class="va">None</span>, show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Plot transcript length distribution grouped by biotype (protein_coding, lncRNA, etc.).</em></p>
+<p>Biotypes are retrieved from TranscriptData (GTF annotation).</p>
+<hr>
+</section>
+<section id="plot_coverage_by_transcript_length" class="level3">
+<h3 class="anchored" data-anchor-id="plot_coverage_by_transcript_length">plot_coverage_by_transcript_length</h3>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_coverage_by_transcript_length(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    bam_path:<span class="bu">str</span>, <span class="co"># Path to BAM file.</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    td, <span class="co"># TranscriptData object.</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    length_bins:List<span class="op">=</span>[(<span class="dv">0</span>, <span class="dv">1000</span>), (<span class="dv">1000</span>, <span class="dv">2000</span>), (<span class="dv">2000</span>, <span class="dv">5000</span>), (<span class="dv">5000</span>, <span class="dv">100000</span>)], <span class="co"># Transcript length bins as (min, max) pairs.</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    n_percentiles:<span class="bu">int</span><span class="op">=</span><span class="dv">101</span>, max_per_bin:<span class="bu">int</span><span class="op">=</span><span class="dv">500</span>, min_reads:<span class="bu">int</span><span class="op">=</span><span class="dv">10</span>, title:<span class="bu">str</span><span class="op">=</span><span class="st">'Coverage by Transcript Length'</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    figsize:Tuple<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>), dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>, save:Optional<span class="op">=</span><span class="va">None</span>, show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Gene body coverage stratified by transcript length.</em></p>
+<p>OPTIMIZED: Uses count_coverage for fast pre-filtering.</p>
+<p>LRGASP found: “coverage strongly dropped towards the 5’ end for the longest molecules” This reveals if longer transcripts have worse 5’ capture.</p>
+<hr>
+</section>
+<section id="plot_read_length_vs_position" class="level3">
+<h3 class="anchored" data-anchor-id="plot_read_length_vs_position">plot_read_length_vs_position</h3>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_read_length_vs_position(</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    bam_path:<span class="bu">str</span>, <span class="co"># Path to BAM file.</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    td, <span class="co"># TranscriptData object.</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    max_transcripts:<span class="bu">int</span><span class="op">=</span><span class="dv">2000</span>, min_length:<span class="bu">int</span><span class="op">=</span><span class="dv">500</span>, min_reads:<span class="bu">int</span><span class="op">=</span><span class="dv">10</span>, title:<span class="bu">str</span><span class="op">=</span><span class="st">'Read Length vs Transcript Position'</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    figsize:Tuple<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>), dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>, save:Optional<span class="op">=</span><span class="va">None</span>, show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Analyze correlation between read length and position along transcript.</em></p>
+<p>Reveals if truncated reads are biased to certain positions: - Short reads at 3’ = RT fell off early (5’ dropout) - Short reads uniform = random degradation - Long reads at 3’ = good full-length capture</p>
+<hr>
+</section>
+<section id="plot_full_length_ratio" class="level3">
+<h3 class="anchored" data-anchor-id="plot_full_length_ratio">plot_full_length_ratio</h3>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_full_length_ratio(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    bam_path:<span class="bu">str</span>, <span class="co"># Path to BAM file.</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    td, <span class="co"># TranscriptData object.</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    tss_tolerance:<span class="bu">int</span><span class="op">=</span><span class="dv">50</span>, <span class="co"># How close to annotated TSS to count as "reaching TSS" (default 50bp).</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    tes_tolerance:<span class="bu">int</span><span class="op">=</span><span class="dv">50</span>, <span class="co"># How close to annotated TES to count as "reaching TES" (default 50bp).</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    max_transcripts:<span class="bu">int</span><span class="op">=</span><span class="dv">5000</span>, min_length:<span class="bu">int</span><span class="op">=</span><span class="dv">500</span>, min_reads:<span class="bu">int</span><span class="op">=</span><span class="dv">5</span>, title:<span class="bu">str</span><span class="op">=</span><span class="st">'Full-Length Transcript Capture'</span>,</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    figsize:Tuple<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>), dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>, save:Optional<span class="op">=</span><span class="va">None</span>, show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Calculate the percentage of reads that are full-length (TSS to TES).</em></p>
+<p>This is THE key metric for long-read RNA-seq - what fraction of reads span from the annotated TSS to TES?</p>
+<hr>
+</section>
+<section id="plot_tes_enrichment" class="level3">
+<h3 class="anchored" data-anchor-id="plot_tes_enrichment">plot_tes_enrichment</h3>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_tes_enrichment(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    bam_path:<span class="bu">str</span>, <span class="co"># Path to BAM file.</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    td, <span class="co"># TranscriptData object.</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    window:<span class="bu">int</span><span class="op">=</span><span class="dv">2000</span>, <span class="co"># Window size around TES (default ±2000bp).</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    n_bins:<span class="bu">int</span><span class="op">=</span><span class="dv">100</span>, max_transcripts:<span class="bu">int</span><span class="op">=</span><span class="dv">5000</span>, min_length:<span class="bu">int</span><span class="op">=</span><span class="dv">500</span>, title:<span class="bu">str</span><span class="op">=</span><span class="st">'TES Enrichment (Poly-A Site)'</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    figsize:Tuple<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>), dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>, save:Optional<span class="op">=</span><span class="va">None</span>, show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Calculate TES (Transcription End Site / Poly-A site) enrichment.</em></p>
+<p>For poly-A primed single-cell data, reads should be enriched at TES. This measures how well the 3’ end is captured.</p>
+<hr>
+</section>
+<section id="plot_tss_enrichment" class="level3">
+<h3 class="anchored" data-anchor-id="plot_tss_enrichment">plot_tss_enrichment</h3>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_tss_enrichment(</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    bam_path:<span class="bu">str</span>, <span class="co"># Path to BAM file.</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    td, <span class="co"># TranscriptData object.</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    window:<span class="bu">int</span><span class="op">=</span><span class="dv">2000</span>, <span class="co"># Window size around TSS (default ±2000bp).</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    n_bins:<span class="bu">int</span><span class="op">=</span><span class="dv">100</span>, <span class="co"># Number of bins for the profile.</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    max_transcripts:<span class="bu">int</span><span class="op">=</span><span class="dv">5000</span>, min_length:<span class="bu">int</span><span class="op">=</span><span class="dv">500</span>, title:<span class="bu">str</span><span class="op">=</span><span class="st">'TSS Enrichment'</span>, figsize:Tuple<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>), dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    save:Optional<span class="op">=</span><span class="va">None</span>, show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Calculate TSS (Transcription Start Site) enrichment score.</em></p>
+<p>For long-read data, this measures how well reads capture the true 5’ end. High TSS enrichment = good full-length capture.</p>
+<p>TSS enrichment score (ENCODE definition): Signal at TSS / Signal at flanks</p>
+<hr>
+</section>
+<section id="plot_read_start_positions" class="level3">
+<h3 class="anchored" data-anchor-id="plot_read_start_positions">plot_read_start_positions</h3>
+<div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_read_start_positions(</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    bam_path:<span class="bu">str</span>, td, n_bins:<span class="bu">int</span><span class="op">=</span><span class="dv">100</span>, max_transcripts:<span class="bu">int</span><span class="op">=</span><span class="dv">2000</span>, min_reads:<span class="bu">int</span><span class="op">=</span><span class="dv">10</span>, min_length:<span class="bu">int</span><span class="op">=</span><span class="dv">500</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    title:<span class="bu">str</span><span class="op">=</span><span class="st">"Read Start Position Distribution (5' → 3')"</span>, figsize:Tuple<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>), dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>, save:Optional<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Plot where reads START along the transcript body (5’ to 3’).</em></p>
+<p>Unlike coverage (which is flattened by long reads), read start positions reveal the true 3’ bias from poly-A priming.</p>
+<p>For poly-A primed single-cell data, expect reads to START near the 3’ end.</p>
+<hr>
+</section>
+<section id="plot_gene_coverage_single" class="level3">
+<h3 class="anchored" data-anchor-id="plot_gene_coverage_single">plot_gene_coverage_single</h3>
+<div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_gene_coverage_single(</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    bam_path:<span class="bu">str</span>, <span class="co"># Path to BAM file.</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    td, <span class="co"># TranscriptData object.</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    gene:<span class="bu">str</span>, <span class="co"># Gene name or gene ID to plot.</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    transcript_id:Optional<span class="op">=</span><span class="va">None</span>, <span class="co"># Specific transcript ID. If None, uses longest transcript for the gene.</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    n_percentiles:<span class="bu">int</span><span class="op">=</span><span class="dv">101</span>, <span class="co"># Number of percentile points (default 101).</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    strand_specificity:<span class="bu">str</span><span class="op">=</span><span class="st">'NONE'</span>, <span class="co"># "NONE", "FIRST_READ", or "SECOND_READ".</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    show_reads:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># If True, show individual read positions as a heatmap below coverage.</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    title:Optional<span class="op">=</span><span class="va">None</span>, figsize:Tuple<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>), dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>, save:Optional<span class="op">=</span><span class="va">None</span>, show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Plot gene body coverage for a SINGLE gene.</em></p>
+<p>Useful for inspecting coverage patterns of specific genes of interest.</p>
+<hr>
+</section>
+<section id="plot_gene_coverage" class="level3">
+<h3 class="anchored" data-anchor-id="plot_gene_coverage">plot_gene_coverage</h3>
+<div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_gene_coverage(</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    bam_path:<span class="bu">str</span>, <span class="co"># Path to BAM file (must be coordinate-sorted and indexed).</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    td, <span class="co"># TranscriptData object with transcript annotations.</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    adata:NoneType<span class="op">=</span><span class="va">None</span>, <span class="co"># If provided, uses adata.var[adata_rank_col] to select top transcripts.</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>This <span class="kw">is</span> the FASTEST option <span class="op">-</span> skips BAM scanning <span class="cf">for</span> ranking.</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    n_threads:<span class="bu">int</span><span class="op">=</span><span class="dv">4</span>, <span class="co"># Threads for BAM decompression (default 4).</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    n_percentiles:<span class="bu">int</span><span class="op">=</span><span class="dv">101</span>, min_length:<span class="bu">int</span><span class="op">=</span><span class="dv">500</span>, end_bias_bases:<span class="bu">int</span><span class="op">=</span><span class="dv">100</span>,</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    top_n_transcripts:<span class="bu">int</span><span class="op">=</span><span class="dv">1000</span>, <span class="co"># Number of top transcripts to analyze (default 1000).</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    max_depth:<span class="bu">int</span><span class="op">=</span><span class="dv">5000000</span>, <span class="co"># Skip transcripts with depth &gt; this value (default 5M). Avoids hotspots.</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    quick_mode:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># If True and adata not provided, only sample first 100bp for ranking.</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    normalize_by:<span class="bu">str</span><span class="op">=</span><span class="st">'max'</span>, title:<span class="bu">str</span><span class="op">=</span><span class="st">'Gene Body Coverage'</span>, figsize:Tuple<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">5</span>), dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>, save:Optional<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Gene body coverage replicating Picard CollectRnaSeqMetrics algorithm.</em></p>
+<p>FAST VERSION with multiple optimization strategies: - Option 1: Use adata expression to pre-select top transcripts (fastest) - Option 2: Skip hotspots with depth &gt; max_depth - Option 3: Quick mode - sample first 100bp for ranking (default)</p>
+<hr>
+</section>
+<section id="plot_gene_body_coverage_comparison" class="level3">
+<h3 class="anchored" data-anchor-id="plot_gene_body_coverage_comparison">plot_gene_body_coverage_comparison</h3>
+<div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_gene_body_coverage_comparison(</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    bam_paths:<span class="bu">dict</span>, <span class="co"># Dictionary mapping sample names to BAM file paths.</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    td, n_bins:<span class="bu">int</span><span class="op">=</span><span class="dv">100</span>, max_transcripts:<span class="bu">int</span><span class="op">=</span><span class="dv">1500</span>, min_reads:<span class="bu">int</span><span class="op">=</span><span class="dv">10</span>, min_length:<span class="bu">int</span><span class="op">=</span><span class="dv">500</span>,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    stranded:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># If True, only count reads matching transcript strand (default True).</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    title:<span class="bu">str</span><span class="op">=</span><span class="st">'Gene Body Coverage Comparison'</span>, figsize:Tuple<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>), dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>, save:Optional<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Compare gene body coverage profiles across multiple samples.</em></p>
+<p>OPTIMIZED: Uses count_coverage for fast pre-filtering.</p>
+<hr>
+</section>
+<section id="plot_gene_body_coverage" class="level3">
+<h3 class="anchored" data-anchor-id="plot_gene_body_coverage">plot_gene_body_coverage</h3>
+<div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_gene_body_coverage(</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    bam_path:<span class="bu">str</span>, <span class="co"># Path to BAM file (genome-aligned).</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    td, <span class="co"># TranscriptData object with transcript annotations.</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    n_bins:<span class="bu">int</span><span class="op">=</span><span class="dv">100</span>, <span class="co"># Number of bins along transcript body (default 100).</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    max_transcripts:<span class="bu">int</span><span class="op">=</span><span class="dv">2000</span>, <span class="co"># Maximum transcripts to sample for speed.</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    min_reads:<span class="bu">int</span><span class="op">=</span><span class="dv">10</span>, <span class="co"># Minimum reads per transcript to include.</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    min_length:<span class="bu">int</span><span class="op">=</span><span class="dv">500</span>, <span class="co"># Minimum transcript length (bp) to include.</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    stranded:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># If True, only count reads matching transcript strand (default True).</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>For single<span class="op">-</span>cell RNA<span class="op">-</span>seq <span class="cf">with</span> poly<span class="op">-</span>A priming, should be <span class="va">True</span>.</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    title:<span class="bu">str</span><span class="op">=</span><span class="st">"Gene Body Coverage (5' → 3')"</span>, figsize:Tuple<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>), dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>, save:Optional<span class="op">=</span><span class="va">None</span>, show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>    return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Plot gene body coverage profile from 5’ to 3’ end using BAM file.</em></p>
+<p>OPTIMIZED: Uses count_coverage for fast pre-filtering before detailed analysis.</p>
+<p>Works with GENOME-aligned BAMs by mapping genomic coordinates to transcript positions.</p>
+<hr>
+</section>
+<section id="plot_end_bias_note" class="level3">
+<h3 class="anchored" data-anchor-id="plot_end_bias_note">plot_end_bias_note</h3>
+<div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_end_bias_note(</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Note: 5’/3’ end bias analysis requires read-level data (BAM files).</em></p>
+<p>To assess whether transcripts are truncated at the 5’ or 3’ end, you need to analyze the coverage profile across transcript bodies from aligned reads.</p>
+<p>Recommended tools for this analysis: - RSeQC (geneBody_coverage.py) - Picard CollectRnaSeqMetrics - Custom analysis with pysam</p>
+<p>What to look for: - Flat coverage = good full-length capture - 3’ bias (common in poly-A selection) = higher coverage at 3’ end - 5’ dropout (cDNA synthesis issue) = lower coverage at 5’ end</p>
+<p>This function is a placeholder - implement with BAM data if available.</p>
+<hr>
+</section>
+<section id="plot_length_bias_by_expression" class="level3">
+<h3 class="anchored" data-anchor-id="plot_length_bias_by_expression">plot_length_bias_by_expression</h3>
+<div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_length_bias_by_expression(</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    td, <span class="co"># TranscriptData object.</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    adata, <span class="co"># AnnData object with transcript-level data.</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    adata_tx_col:Optional<span class="op">=</span><span class="va">None</span>, layer:Optional<span class="op">=</span><span class="va">None</span>, n_expr_bins:<span class="bu">int</span><span class="op">=</span><span class="dv">5</span>, <span class="co"># Number of expression level bins.</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    title:<span class="bu">str</span><span class="op">=</span><span class="st">'Length Bias by Expression Level'</span>, figsize:Tuple<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">5</span>), dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>, save:Optional<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>For transcripts at similar expression levels, are longer ones detected in fewer cells?</em></p>
+<p>This controls for expression level to reveal true length bias in detection. If there’s length bias, within each expression bin, longer transcripts should have lower detection rates.</p>
+<hr>
+</section>
+<section id="plot_length_bias" class="level3">
+<h3 class="anchored" data-anchor-id="plot_length_bias">plot_length_bias</h3>
+<div class="sourceCode" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_length_bias(</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    td, <span class="co"># TranscriptData object (contains all GTF transcripts).</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    adata, <span class="co"># AnnData object with detected transcripts.</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    adata_tx_col:Optional<span class="op">=</span><span class="va">None</span>, <span class="co"># Column in adata.var containing transcript IDs.</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    n_bins:<span class="bu">int</span><span class="op">=</span><span class="dv">25</span>, <span class="co"># Number of bins for the histogram.</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    title:<span class="bu">str</span><span class="op">=</span><span class="st">'Length Bias Assessment'</span>, figsize:Tuple<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">5</span>), dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>, save:Optional<span class="op">=</span><span class="va">None</span>, show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>): <span class="co"># 1. Overlaid histograms (GTF vs Detected)</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="fl">2.</span> Enrichment ratio (Detected<span class="op">/</span>Expected) by length <span class="bu">bin</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="fl">3.</span> Cumulative distribution comparison</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Compare length distribution of ALL transcripts in GTF vs those DETECTED in your data.</em></p>
+<p>This reveals systematic length bias - if longer transcripts are under-represented in your detected set compared to the annotation, you have length bias.</p>
+<hr>
+</section>
+<section id="plot_length_expression_correlation" class="level3">
+<h3 class="anchored" data-anchor-id="plot_length_expression_correlation">plot_length_expression_correlation</h3>
+<div class="sourceCode" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_length_expression_correlation(</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    td, adata, adata_tx_col:Optional<span class="op">=</span><span class="va">None</span>, layer:Optional<span class="op">=</span><span class="va">None</span>, color_by:<span class="bu">str</span><span class="op">=</span><span class="st">'density'</span>, log_expression:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    log_length:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Changed default to True</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    min_expression:<span class="bu">float</span><span class="op">=</span><span class="dv">0</span>, <span class="co"># New: filter low expression</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    show_marginals:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># New: marginal histograms</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    title:<span class="bu">str</span><span class="op">=</span><span class="st">'Transcript Length vs Expression'</span>, figsize:Tuple<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">8</span>), dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>, save:Optional<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Scatter plot of transcript length vs mean expression with marginal histograms.</em></p>
+<p>Useful for identifying length biases in detection.</p>
+<hr>
+</section>
+<section id="plot_biotype_by_group" class="level3">
+<h3 class="anchored" data-anchor-id="plot_biotype_by_group">plot_biotype_by_group</h3>
+<div class="sourceCode" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_biotype_by_group(</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    td, <span class="co"># TranscriptData object.</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    adata, <span class="co"># AnnData object with transcript-level data.</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    groupby:<span class="bu">str</span>, <span class="co"># Column in adata.obs to group by.</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    adata_tx_col:Optional<span class="op">=</span><span class="va">None</span>, layer:Optional<span class="op">=</span><span class="va">None</span>, min_total:<span class="bu">int</span><span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    top_n_biotypes:<span class="bu">int</span><span class="op">=</span><span class="dv">6</span>, <span class="co"># Number of biotypes to show (rest grouped as "other").</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    normalize:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># If True, show percentages (stacked to 100%). If False, show counts.</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    title:Optional<span class="op">=</span><span class="va">None</span>, palette:Optional<span class="op">=</span><span class="va">None</span>, figsize:Optional<span class="op">=</span><span class="va">None</span>, dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>, save:Optional<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>    show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Stacked bar chart showing biotype composition across groups (e.g., cell types).</em></p>
+<hr>
+</section>
+<section id="plot_biotype_breakdown" class="level3">
+<h3 class="anchored" data-anchor-id="plot_biotype_breakdown">plot_biotype_breakdown</h3>
+<div class="sourceCode" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_biotype_breakdown(</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    td, <span class="co"># TranscriptData object.</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    adata, <span class="co"># AnnData object with transcript-level data.</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    adata_tx_col:Optional<span class="op">=</span><span class="va">None</span>, <span class="co"># Column in adata.var containing transcript IDs.</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    top_n:<span class="bu">int</span><span class="op">=</span><span class="dv">8</span>, <span class="co"># Number of top biotypes to show (rest grouped as "other").</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    title:<span class="bu">str</span><span class="op">=</span><span class="st">'Transcript Biotype Breakdown'</span>, colors:Optional<span class="op">=</span><span class="va">None</span>, figsize:Tuple<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">5</span>), dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>,</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    save:Optional<span class="op">=</span><span class="va">None</span>, show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Bar chart showing breakdown of transcripts by biotype (protein_coding, lncRNA, etc.).</em></p>
+<p>Similar style to the isoforms-per-gene plot.</p>
+<hr>
+</section>
+<section id="plot_detected_transcript_lengths" class="level3">
+<h3 class="anchored" data-anchor-id="plot_detected_transcript_lengths">plot_detected_transcript_lengths</h3>
+<div class="sourceCode" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_detected_transcript_lengths(</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    td, <span class="co"># TranscriptData object.</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    adata, <span class="co"># AnnData object with transcript-level data.</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    adata_tx_col:Optional<span class="op">=</span><span class="va">None</span>, <span class="co"># Column in adata.var containing transcript IDs.</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    log_scale:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Whether to log10-transform lengths.</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    show_stats:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Whether to show summary statistics.</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>    bins:<span class="bu">int</span><span class="op">=</span><span class="dv">50</span>, <span class="co"># Number of histogram bins.</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>    title:<span class="bu">str</span><span class="op">=</span><span class="st">'Detected Transcript Lengths'</span>, color:Optional<span class="op">=</span><span class="va">None</span>, figsize:Tuple<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>), dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>,</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>    save:Optional<span class="op">=</span><span class="va">None</span>, show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Simple histogram of annotated lengths for all detected transcripts.</em></p>
+<p>Shows the length distribution of transcripts present in your dataset based on GTF annotations.</p>
+<hr>
+</section>
+<section id="plot_transcript_length_distribution" class="level3">
+<h3 class="anchored" data-anchor-id="plot_transcript_length_distribution">plot_transcript_length_distribution</h3>
+<div class="sourceCode" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_transcript_length_distribution(</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    td, <span class="co"># TranscriptData object.</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    adata, <span class="co"># AnnData object with transcript-level data.</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    groupby:Optional<span class="op">=</span><span class="va">None</span>, <span class="co"># Column in adata.obs to group by.</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    adata_tx_col:Optional<span class="op">=</span><span class="va">None</span>, layer:Optional<span class="op">=</span><span class="va">None</span>, log_scale:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Changed default to True</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    plot_type:<span class="bu">str</span><span class="op">=</span><span class="st">'violin'</span>, <span class="co"># "violin", "box", or "ridge".</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    show_stats:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># New: show statistical annotations</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    title:Optional<span class="op">=</span><span class="va">None</span>, palette:Optional<span class="op">=</span><span class="va">None</span>, figsize:Optional<span class="op">=</span><span class="va">None</span>, dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>, save:Optional<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>    show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Plot distribution of transcript lengths, optionally grouped by cell type.</em></p>
+<hr>
+</section>
+<section id="plot_isoforms_per_gene_by_group" class="level3">
+<h3 class="anchored" data-anchor-id="plot_isoforms_per_gene_by_group">plot_isoforms_per_gene_by_group</h3>
+<div class="sourceCode" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_isoforms_per_gene_by_group(</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    td, <span class="co"># TranscriptData object from allos.transcript_data.</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    adata, <span class="co"># AnnData object with transcript-level data.</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    groupby, <span class="co"># Column(s) in adata.obs to group by.</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    layer:Optional<span class="op">=</span><span class="va">None</span>, <span class="co"># Layer to use for counts. If None, uses 'counts' layer or X.</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    min_total:<span class="bu">int</span><span class="op">=</span><span class="dv">1</span>, <span class="co"># Minimum total count for a transcript to be considered present.</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    adata_tx_col:Optional<span class="op">=</span><span class="va">None</span>, <span class="co"># Column in adata.var containing transcript IDs.</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>    title:Optional<span class="op">=</span><span class="va">None</span>, <span class="co"># Plot title. If None, auto-generated.</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>    palette:Union<span class="op">=</span><span class="va">None</span>, <span class="co"># Colors for groups. Pass a list (ordered by group) or a dict</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>mapping {group_name: color}. If <span class="va">None</span>, uses ALLOS palette.</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>    figsize:Optional<span class="op">=</span><span class="va">None</span>, <span class="co"># Figure size. If None, auto-calculated.</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>    dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>, <span class="co"># Figure DPI.</span></span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>    bar_mode:<span class="bu">str</span><span class="op">=</span><span class="st">'grouped'</span>, <span class="co"># 'grouped' for side-by-side bars, 'faceted' for separate subplots.</span></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>    show_legend:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Whether to show legend (grouped mode only).</span></span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>    save:Optional<span class="op">=</span><span class="va">None</span>, <span class="co"># Path to save figure.</span></span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>    show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Whether to display the plot.</span></span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>    return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># If True, return (dict, fig). Otherwise return None.</span></span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>): <span class="co"># If return_data=True: (dict with counts/percent/totals, figure)</span></span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Plot isoforms per gene by group using TranscriptData object.</em></p>
+<hr>
+</section>
+<section id="plot_isoforms_per_gene" class="level3">
+<h3 class="anchored" data-anchor-id="plot_isoforms_per_gene">plot_isoforms_per_gene</h3>
+<div class="sourceCode" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_isoforms_per_gene(</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    td, <span class="co"># TranscriptData object from allos.transcript_data.</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    adata:NoneType<span class="op">=</span><span class="va">None</span>, <span class="co"># If provided, filter to transcripts present in adata.</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    adata_tx_col:NoneType<span class="op">=</span><span class="va">None</span>, <span class="co"># Column in adata.var containing transcript IDs. If None, uses var.index.</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    title:<span class="bu">str</span><span class="op">=</span><span class="st">'Isoforms per Gene'</span>, <span class="co"># Plot title.</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    colors:Optional<span class="op">=</span><span class="va">None</span>, <span class="co"># Colors for bars. If None, uses ALLOS palette.</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    show_percentages:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Whether to show percentage labels on bars.</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    figsize:Tuple<span class="op">=</span>(<span class="dv">5</span>, <span class="dv">4</span>), <span class="co"># Figure size.</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>    dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>, <span class="co"># Figure DPI.</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>    save:Optional<span class="op">=</span><span class="va">None</span>, <span class="co"># Path to save figure.</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>    show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Whether to display the plot.</span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>    return_data:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># If True, return (DataFrame, fig, ax). Otherwise return None.</span></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>): <span class="co"># If return_data=True: (DataFrame with bin counts, figure, axes)</span></span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Plot isoform distribution using TranscriptData object.</em></p>
+<hr>
+</section>
+<section id="compute_gene_body_coverage" class="level3">
+<h3 class="anchored" data-anchor-id="compute_gene_body_coverage">compute_gene_body_coverage</h3>
+<div class="sourceCode" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> compute_gene_body_coverage(</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    bam_path:<span class="bu">str</span>, td, n_bins:<span class="bu">int</span><span class="op">=</span><span class="dv">101</span>, <span class="co"># Picard uses 0-100 inclusive = 101 values</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    min_length:<span class="bu">int</span><span class="op">=</span><span class="dv">500</span>, top_n:<span class="bu">int</span><span class="op">=</span><span class="dv">1000</span>, n_workers:<span class="bu">int</span><span class="op">=</span><span class="dv">20</span>, verbose:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>CoverageResult:</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Gene body coverage matching Picard’s algorithm exactly.</em></p>
+<hr>
+</section>
+<section id="coverageresult" class="level3">
+<h3 class="anchored" data-anchor-id="coverageresult">CoverageResult</h3>
+<div class="sourceCode" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> CoverageResult(</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    coverage:ndarray, five_prime_bias:<span class="bu">float</span>, three_prime_bias:<span class="bu">float</span>, ratio:<span class="bu">float</span>, n_transcripts:<span class="bu">int</span>, n_bins:<span class="bu">int</span>,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    total_records:<span class="bu">int</span>, mapped_reads:<span class="bu">int</span>, elapsed_seconds:<span class="bu">float</span>, bam_path:<span class="bu">str</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="va">None</span>:</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="transcript-length-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="transcript-length-analysis">Transcript Length Analysis</h2>
+<hr>
+<section id="plot_transcript_length_abundance" class="level3">
+<h3 class="anchored" data-anchor-id="plot_transcript_length_abundance">plot_transcript_length_abundance</h3>
+<div class="sourceCode" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_transcript_length_abundance(</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    td, adata, adata_tx_col:Optional<span class="op">=</span><span class="va">None</span>, bins:<span class="bu">int</span><span class="op">=</span><span class="dv">60</span>, y_axis:<span class="bu">str</span><span class="op">=</span><span class="st">'percent'</span>, <span class="co"># "percent", "count", or "density"</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    title:<span class="bu">str</span><span class="op">=</span><span class="st">'Transcript Length vs Abundance'</span>, figsize:Tuple<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>), dpi:<span class="bu">int</span><span class="op">=</span><span class="dv">150</span>, save:Optional<span class="op">=</span><span class="va">None</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Call self as a function.</em></p>
+</section>
+</section>
+<section id="api-reference" class="level2">
+<h2 class="anchored" data-anchor-id="api-reference">API reference</h2>
+<hr>
+<section id="plot_isoform_complexity" class="level3">
+<h3 class="anchored" data-anchor-id="plot_isoform_complexity">plot_isoform_complexity</h3>
+<div class="sourceCode" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_isoform_complexity(</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    adata, <span class="co"># transcript-level AnnData</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    label:<span class="bu">str</span><span class="op">=</span><span class="st">'isoform matrix'</span>, gene_col:<span class="bu">str</span><span class="op">=</span><span class="st">'geneId'</span>,</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    facet_obs:NoneType<span class="op">=</span><span class="va">None</span>, <span class="co"># e.g. "cell_type" — if None, uses pseudobulk across all cells</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    min_isoforms:<span class="bu">int</span><span class="op">=</span><span class="dv">2</span>, <span class="co"># only analyse genes with &gt;= N isoforms</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    min_counts:<span class="bu">int</span><span class="op">=</span><span class="dv">10</span>, <span class="co"># minimum total counts per gene to include</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>For each gene with &gt;= min_isoforms, compute across cells (or per cell type):</em> - Dominant isoform fraction: counts of most expressed isoform / total gene counts - Shannon entropy: -sum(p * log2(p)) across isoforms (0 = one isoform dominates, log2(n_isoforms) = perfectly even) - Normalised entropy: entropy / log2(n_isoforms) — 0 to 1 scale</p>
+<p>Shows distribution of these metrics across genes.</p>
+<hr>
+</section>
+<section id="filter_transcripts_by_abundance" class="level3">
+<h3 class="anchored" data-anchor-id="filter_transcripts_by_abundance">filter_transcripts_by_abundance</h3>
+<div class="sourceCode" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> filter_transcripts_by_abundance(</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    adata, <span class="co"># AnnData object with transcript-level counts. Must have a 'geneId' column in adata.var.</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    threshold_pct, <span class="co"># Minimum overall transcript abundance percentage required to keep a transcript.</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    verbose:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># If True, prints the number of transcripts kept and the threshold used. Default is False.</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>): <span class="co"># A new AnnData object with the filtered transcript matrix.</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Filter transcripts from an AnnData object based on their overall transcript abundance percentage,</em> computed by aggregating transcript counts across all cells and leveraging overall gene counts.</p>
+<p>The overall abundance percentage for each transcript is calculated as:</p>
+<pre><code>overall_pct = (total transcript count) / (total gene count for its gene) * 100</code></pre>
+<p>This function uses the compute_whole_data_transcript_abundance function internally to leverage the gene mapping information (via the ‘geneId’ in adata.var). Transcripts with an overall abundance percentage below the specified threshold (threshold_pct) are filtered out.</p>
+<hr>
+</section>
+<section id="compute_transcript_abundance_pct" class="level3">
+<h3 class="anchored" data-anchor-id="compute_transcript_abundance_pct">compute_transcript_abundance_pct</h3>
+<div class="sourceCode" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> compute_transcript_abundance_pct(</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    adata, <span class="co"># AnnData object with transcript-level counts. Must have a column 'geneId' in adata.var.</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>): <span class="co"># A new AnnData object with the same obs and var as the input, where X holds </span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>transcript abundance percentages.</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Compute transcript abundance percentages (“percent spliced in”) for each transcript </em> within its gene. For each cell and transcript, this is computed as:</p>
+<p>transcript_pct = (transcript count / total gene count) * 100</p>
+<hr>
+</section>
+<section id="get_sot_gene_matrix" class="level3">
+<h3 class="anchored" data-anchor-id="get_sot_gene_matrix">get_sot_gene_matrix</h3>
+<div class="sourceCode" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_sot_gene_matrix(</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>    adata, <span class="co"># Input AnnData with transcript-level counts. Must have a column `geneId`</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="kw">in</span> `adata.var` containing the gene ID <span class="cf">for</span> each transcript.</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>): <span class="co"># A new AnnData object where columns (var) represent unique genes, </span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="kw">and</span> values are aggregated transcript counts.</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Construct a gene-level count matrix from transcript-level data.</em></p>
+<hr>
+</section>
+<section id="subset_common_cells" class="level3">
+<h3 class="anchored" data-anchor-id="subset_common_cells">subset_common_cells</h3>
+<div class="sourceCode" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> subset_common_cells(</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    dataset1:AnnData, <span class="co"># First dataset to be subsetted.</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    dataset2:AnnData, <span class="co"># Second dataset to compare with.</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>AnnData: <span class="co"># Subset of `dataset1` containing only cells also found in `dataset2`.</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Subset <code>dataset1</code> to only include cells that are also present in <code>dataset2</code>.</em></p>
+<hr>
+</section>
+<section id="transfer_obs" class="level3">
+<h3 class="anchored" data-anchor-id="transfer_obs">transfer_obs</h3>
+<div class="sourceCode" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> transfer_obs(</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>    dataset1:AnnData, <span class="co"># Source AnnData object with .obs metadata to transfer.</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    dataset2:AnnData, <span class="co"># Target AnnData object to receive .obs metadata.</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>AnnData: <span class="co"># The modified `dataset2` with .obs from `dataset1` transferred.</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Transfer <code>.obs</code> metadata from <code>dataset1</code> to <code>dataset2</code> one by one, while preserving the <code>.var</code> DataFrame of <code>dataset2</code>.</em></p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

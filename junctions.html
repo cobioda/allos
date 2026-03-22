@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Load isoform-resolution single-cell data into Allos from a variety of formats.">
+<meta name="description" content="Utilities for converting SiCeLoRe-style junction matrices into AnnData Zarr format for scalable single-cell analysis.">
 
-<title>Readers – allos</title>
+<title>Junction Data Processing – allos</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -104,11 +104,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="Readers – allos">
-<meta property="og:description" content="Load isoform-resolution single-cell data into Allos from a variety of formats.">
+<meta property="og:title" content="Junction Data Processing – allos">
+<meta property="og:description" content="Utilities for converting SiCeLoRe-style junction matrices into AnnData Zarr format for scalable single-cell analysis.">
 <meta property="og:site_name" content="allos">
-<meta name="twitter:title" content="Readers – allos">
-<meta name="twitter:description" content="Load isoform-resolution single-cell data into Allos from a variety of formats.">
+<meta name="twitter:title" content="Junction Data Processing – allos">
+<meta name="twitter:description" content="Utilities for converting SiCeLoRe-style junction matrices into AnnData Zarr format for scalable single-cell analysis.">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -133,7 +133,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./readers_tests.html">Readers</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./junctions.html">Junction Data Processing</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -171,7 +171,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./readers_tests.html" class="sidebar-item-text sidebar-link active">
+  <a href="./readers_tests.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Readers</span></a>
   </div>
 </li>
@@ -225,7 +225,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./junctions.html" class="sidebar-item-text sidebar-link">
+  <a href="./junctions.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Junction Data Processing</span></a>
   </div>
 </li>
@@ -239,13 +239,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#get_resource_path" id="toc-get_resource_path" class="nav-link active" data-scroll-target="#get_resource_path">get_resource_path</a></li>
-  <li><a href="#download_test_data" id="toc-download_test_data" class="nav-link" data-scroll-target="#download_test_data">download_test_data</a></li>
-  <li><a href="#iso_concat" id="toc-iso_concat" class="nav-link" data-scroll-target="#iso_concat">iso_concat</a></li>
-  <li><a href="#api-reference" id="toc-api-reference" class="nav-link" data-scroll-target="#api-reference">API reference</a>
+  <li><a href="#juncmatrix_to_zarr" id="toc-juncmatrix_to_zarr" class="nav-link active" data-scroll-target="#juncmatrix_to_zarr">juncmatrix_to_zarr</a></li>
+  <li><a href="#batch_juncmatrix_to_zarr" id="toc-batch_juncmatrix_to_zarr" class="nav-link" data-scroll-target="#batch_juncmatrix_to_zarr">batch_juncmatrix_to_zarr</a></li>
+  <li><a href="#merge_junction_zarrs" id="toc-merge_junction_zarrs" class="nav-link" data-scroll-target="#merge_junction_zarrs">merge_junction_zarrs</a></li>
+  <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a>
   <ul class="collapse">
-  <li><a href="#read_sicelore_isomatrix" id="toc-read_sicelore_isomatrix" class="nav-link" data-scroll-target="#read_sicelore_isomatrix">read_sicelore_isomatrix</a></li>
-  <li><a href="#process_mouse_data" id="toc-process_mouse_data" class="nav-link" data-scroll-target="#process_mouse_data">process_mouse_data</a></li>
+  <li><a href="#convert-a-single-juncmatrix-to-zarr" id="toc-convert-a-single-juncmatrix-to-zarr" class="nav-link" data-scroll-target="#convert-a-single-juncmatrix-to-zarr">Convert a single juncmatrix to Zarr</a></li>
+  <li><a href="#batch-convert-and-merge-multiple-samples" id="toc-batch-convert-and-merge-multiple-samples" class="nav-link" data-scroll-target="#batch-convert-and-merge-multiple-samples">Batch convert and merge multiple samples</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/cobioda/allos/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
@@ -255,12 +255,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Readers</h1>
+<h1 class="title">Junction Data Processing</h1>
 </div>
 
 <div>
   <div class="description">
-    Load isoform-resolution single-cell data into Allos from a variety of formats.
+    Utilities for converting SiCeLoRe-style junction matrices into AnnData Zarr format for scalable single-cell analysis.
   </div>
 </div>
 
@@ -279,65 +279,106 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
 <hr>
-<section id="get_resource_path" class="level3">
-<h3 class="anchored" data-anchor-id="get_resource_path">get_resource_path</h3>
+<section id="juncmatrix_to_zarr" class="level3">
+<h3 class="anchored" data-anchor-id="juncmatrix_to_zarr">juncmatrix_to_zarr</h3>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_resource_path(</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    filename</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>):</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><em>Find the correct path to the resources/ directory based on execution context.</em></p>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> juncmatrix_to_zarr(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    junc_path:Union[<span class="bu">str</span>, Path], out_zarr:Union[<span class="bu">str</span>, Path], sample:Optional[<span class="bu">str</span>]<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    gtf:Optional[Union[<span class="bu">str</span>, Path]]<span class="op">=</span><span class="va">None</span>, threads:<span class="bu">int</span><span class="op">=</span><span class="dv">4</span>, chunksize:<span class="bu">int</span><span class="op">=</span><span class="dv">20000</span>, estimate_total:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    gene_progress:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, cellmeta_path:Optional[Union[<span class="bu">str</span>, Path]]<span class="op">=</span><span class="va">None</span>, barcode_prefix:Optional[<span class="bu">str</span>]<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    overwrite:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, show_progress:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>Path:</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Convert one SiCeLoRe-style juncmatrix(.txt|.gz) to a sparse AnnData Zarr store.</em></p>
+<p>Output AnnData: - X: sparse CSR, shape (cells × junctions) - obs: barcode index (prefixed), includes ‘sample’ + optional cell metadata - var: index is junction id, contains ONLY ‘geneId’ where geneId is: - Ensembl gene_id if GTF mapping succeeds - otherwise the junction prefix (gene symbol) so it is NEVER NaN</p>
 <hr>
 </section>
-<section id="download_test_data" class="level3">
-<h3 class="anchored" data-anchor-id="download_test_data">download_test_data</h3>
+<section id="batch_juncmatrix_to_zarr" class="level3">
+<h3 class="anchored" data-anchor-id="batch_juncmatrix_to_zarr">batch_juncmatrix_to_zarr</h3>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> download_test_data(</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    url:<span class="bu">str</span><span class="op">=</span><span class="st">'https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3748nnn/GSM3748087/suppl/GSM3748087</span><span class="sc">%5F</span><span class="st">190c.isoforms.matrix.txt.gz'</span>, <span class="co"># URL to download the data from.</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    output_filename:<span class="bu">str</span><span class="op">=</span><span class="va">None</span>, <span class="co"># Name of the file to save the data as (default: name from the URL).</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    decompress:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Whether to decompress the file if it is a gzip archive (default True).</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="bu">str</span>: <span class="co"># Path to the downloaded or decompressed file.</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> batch_juncmatrix_to_zarr(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    inputs:Union[<span class="bu">str</span>, Path, Sequence[Union[<span class="bu">str</span>, Path]]], outroot:Union[<span class="bu">str</span>, Path],</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    gtf:Optional[Union[<span class="bu">str</span>, Path]]<span class="op">=</span><span class="va">None</span>, threads:<span class="bu">int</span><span class="op">=</span><span class="dv">4</span>, chunksize:<span class="bu">int</span><span class="op">=</span><span class="dv">20000</span>, estimate_total:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    gene_progress:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, overwrite:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, show_progress:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="bu">list</span>[Path]:</span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><em>Download test data to the correct directory, dynamically adjusting based on the execution context.</em> Optionally decompresses gzip files if detected.</p>
+<p><em>Call self as a function.</em></p>
 <hr>
 </section>
-<section id="iso_concat" class="level3">
-<h3 class="anchored" data-anchor-id="iso_concat">iso_concat</h3>
+<section id="merge_junction_zarrs" class="level3">
+<h3 class="anchored" data-anchor-id="merge_junction_zarrs">merge_junction_zarrs</h3>
 <div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> iso_concat(</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    data_inputs, batch_info:NoneType<span class="op">=</span><span class="va">None</span>, batch_type:<span class="bu">str</span><span class="op">=</span><span class="st">'path'</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>):</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><em>Concatenates a list of AnnData objects or paths to AnnData objects based on the union of transcriptIds,</em> while preserving geneId information which might be non-unique per transcriptId. Missing values are filled with zeros. Adds a batch column to <code>.obs</code> based on the file path, obs_names, or numeric.</p>
-<p>Parameters: data_inputs (list of str or AnnData): List of paths to AnnData objects or AnnData objects to concatenate. batch_info (list of str, optional): List of batch identifiers for each AnnData object in data_inputs. If not provided, batch identifiers are extracted from file paths, obs_names, or a numeric sequence. batch_type (str, optional): Specifies which type of batch information to use. One of [‘path’, ‘obs_names’, ‘numeric’]. Defaults to ‘path’.</p>
-<p>Returns: AnnData: A single concatenated AnnData object with harmonized features, geneId annotations, and batch info.</p>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> merge_junction_zarrs(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    root_or_paths:Union[<span class="bu">str</span>, Path, Sequence[Union[<span class="bu">str</span>, Path]]], out_zarr:Union[<span class="bu">str</span>, Path], join:<span class="bu">str</span><span class="op">=</span><span class="st">'outer'</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    sample_key:<span class="bu">str</span><span class="op">=</span><span class="st">'sample'</span>, ensure_unique_barcodes:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, skip_hidden:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    skip_names:Iterable[<span class="bu">str</span>]<span class="op">=</span>(<span class="st">'ANALYSIS'</span>,), overwrite:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, show_progress:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>Path:</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Call self as a function.</em></p>
 </section>
-<section id="api-reference" class="level2">
-<h2 class="anchored" data-anchor-id="api-reference">API reference</h2>
-<hr>
-<section id="read_sicelore_isomatrix" class="level3">
-<h3 class="anchored" data-anchor-id="read_sicelore_isomatrix">read_sicelore_isomatrix</h3>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> read_sicelore_isomatrix(</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    file_path:<span class="bu">str</span>, <span class="co"># Path to the isomatrix file (tab-delimited).</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    gene_id_label:<span class="bu">str</span><span class="op">=</span><span class="st">'geneId'</span>, <span class="co"># Row/column label used for gene IDs (default "geneId").</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    transcript_id_label:<span class="bu">str</span><span class="op">=</span><span class="st">'transcriptId'</span>, <span class="co"># Row/column label used for transcript IDs (default "transcriptId").</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    remove_undef:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Whether to remove rows with transcriptId="undef" (default True).</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    sparse:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># Whether to store the matrix in sparse format (default False).</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>AnnData: <span class="co"># An AnnData object containing numeric data in `.X` and metadata in `.var`.</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><em>Read a SiCeLoRe isomatrix file (tab-delimited) and convert it into a scanpy-compatible AnnData object.</em></p>
-<hr>
+<section id="usage" class="level2">
+<h2 class="anchored" data-anchor-id="usage">Usage</h2>
+<p>An optional GTF file can be provided to map junction gene-name prefixes to Ensembl gene IDs. Download a GTF for your organism if needed:</p>
+<div id="eab010bd" class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib.request</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>data_dir <span class="op">=</span> Path(<span class="st">'../data'</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>data_dir.mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>gtf_url <span class="op">=</span> <span class="st">'ftp://ftp.ensembl.org/pub/release-102/gtf/mus_musculus/Mus_musculus.GRCm38.102.gtf.gz'</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>gtf_local <span class="op">=</span> data_dir <span class="op">/</span> <span class="st">'Mus_musculus.GRCm38.102.gtf.gz'</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> gtf_local.exists():</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'Downloading GRCm38 GTF ...'</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    urllib.request.urlretrieve(gtf_url, gtf_local)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Done:'</span>, gtf_local)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="convert-a-single-juncmatrix-to-zarr" class="level3">
+<h3 class="anchored" data-anchor-id="convert-a-single-juncmatrix-to-zarr">Convert a single juncmatrix to Zarr</h3>
+<div id="c4695d4b" class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>juncmatrix_to_zarr(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'/data/analysis/data_mcandrew/00_allos_0.6_TAB/data/s190_juncmatrix.txt'</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'/data/analysis/data_mcandrew/00_allos_0.6_TAB/data/s190_junc_adta.zarr'</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    gtf<span class="op">=</span>gtf_local,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    threads<span class="op">=</span><span class="dv">30</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    chunksize<span class="op">=</span><span class="dv">20_000</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    estimate_total<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    gene_progress<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
-<section id="process_mouse_data" class="level3">
-<h3 class="anchored" data-anchor-id="process_mouse_data">process_mouse_data</h3>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> process_mouse_data(</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>):</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><em>Downloads test data, reads two mouse isoform count matrices, and merges them into a single AnnData object.</em> It also reads a CSV file containing barcode-to-cell_type mappings, merges this information into the AnnData object’s obs DataFrame, and filters out entries with no cell_type assigned.</p>
-<p>Returns: combined_mouse_data (AnnData): The merged and annotated AnnData object.</p>
+<section id="batch-convert-and-merge-multiple-samples" class="level3">
+<h3 class="anchored" data-anchor-id="batch-convert-and-merge-multiple-samples">Batch convert and merge multiple samples</h3>
+<div id="b89a8bd1" class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge per-sample Zarr stores into a single cohort Zarr</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>z1 <span class="op">=</span> Path(<span class="st">'/data/analysis/data_mcandrew/00_allos_0.6_TAB/data/s190_junc_adta.zarr'</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>z2 <span class="op">=</span> Path(<span class="st">'/data/analysis/data_mcandrew/00_allos_0.6_TAB/data/s951_junc_adta.zarr'</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>out_merged <span class="op">=</span> Path(<span class="st">'/data/analysis/data_mcandrew/00_allos_0.6_TAB/data/s190_s951_junc_merged.zarr'</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>merged_path <span class="op">=</span> merge_junction_zarrs(</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    [z1, z2],</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    out_merged,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    join<span class="op">=</span><span class="st">'outer'</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    sample_key<span class="op">=</span><span class="st">'sample'</span>,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    overwrite<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Merged written to:'</span>, merged_path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="b57e59a1" class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> anndata <span class="im">as</span> ad</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> ad.read_zarr(<span class="bu">str</span>(out_merged))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'shape:'</span>, A.shape)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'obs cols:'</span>, <span class="bu">list</span>(A.obs.columns))</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'var cols:'</span>, <span class="bu">list</span>(A.var.columns))</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">'sample'</span> <span class="kw">in</span> A.obs:</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(A.obs[<span class="st">'sample'</span>].value_counts())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
 </section>

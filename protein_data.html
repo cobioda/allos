@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Load isoform-resolution single-cell data into Allos from a variety of formats.">
+<meta name="description" content="Retrieve protein domain annotations and map them to genomic coordinates via Ensembl and InterPro.">
 
-<title>Readers – allos</title>
+<title>Protein Data – allos</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -104,11 +104,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="Readers – allos">
-<meta property="og:description" content="Load isoform-resolution single-cell data into Allos from a variety of formats.">
+<meta property="og:title" content="Protein Data – allos">
+<meta property="og:description" content="Retrieve protein domain annotations and map them to genomic coordinates via Ensembl and InterPro.">
 <meta property="og:site_name" content="allos">
-<meta name="twitter:title" content="Readers – allos">
-<meta name="twitter:description" content="Load isoform-resolution single-cell data into Allos from a variety of formats.">
+<meta name="twitter:title" content="Protein Data – allos">
+<meta name="twitter:description" content="Retrieve protein domain annotations and map them to genomic coordinates via Ensembl and InterPro.">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -133,7 +133,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./readers_tests.html">Readers</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./protein_data.html">Protein Data</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -171,7 +171,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./readers_tests.html" class="sidebar-item-text sidebar-link active">
+  <a href="./readers_tests.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Readers</span></a>
   </div>
 </li>
@@ -213,7 +213,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./protein_data.html" class="sidebar-item-text sidebar-link">
+  <a href="./protein_data.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Protein Data</span></a>
   </div>
 </li>
@@ -239,14 +239,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#get_resource_path" id="toc-get_resource_path" class="nav-link active" data-scroll-target="#get_resource_path">get_resource_path</a></li>
-  <li><a href="#download_test_data" id="toc-download_test_data" class="nav-link" data-scroll-target="#download_test_data">download_test_data</a></li>
-  <li><a href="#iso_concat" id="toc-iso_concat" class="nav-link" data-scroll-target="#iso_concat">iso_concat</a></li>
-  <li><a href="#api-reference" id="toc-api-reference" class="nav-link" data-scroll-target="#api-reference">API reference</a>
+  <li><a href="#helper-functions" id="toc-helper-functions" class="nav-link active" data-scroll-target="#helper-functions">Helper Functions</a>
   <ul class="collapse">
-  <li><a href="#read_sicelore_isomatrix" id="toc-read_sicelore_isomatrix" class="nav-link" data-scroll-target="#read_sicelore_isomatrix">read_sicelore_isomatrix</a></li>
-  <li><a href="#process_mouse_data" id="toc-process_mouse_data" class="nav-link" data-scroll-target="#process_mouse_data">process_mouse_data</a></li>
+  <li><a href="#ensembl-rest-api" id="toc-ensembl-rest-api" class="nav-link" data-scroll-target="#ensembl-rest-api">Ensembl REST API</a></li>
+  <li><a href="#interpro-rest-api" id="toc-interpro-rest-api" class="nav-link" data-scroll-target="#interpro-rest-api">InterPro REST API</a></li>
+  <li><a href="#unified-translation-features-fetcher" id="toc-unified-translation-features-fetcher" class="nav-link" data-scroll-target="#unified-translation-features-fetcher">Unified Translation &amp; Features Fetcher</a></li>
+  <li><a href="#feature-processing" id="toc-feature-processing" class="nav-link" data-scroll-target="#feature-processing">Feature Processing</a></li>
+  <li><a href="#genomic-coordinate-mapping" id="toc-genomic-coordinate-mapping" class="nav-link" data-scroll-target="#genomic-coordinate-mapping">Genomic Coordinate Mapping</a></li>
   </ul></li>
+  <li><a href="#proteindata-class" id="toc-proteindata-class" class="nav-link" data-scroll-target="#proteindata-class">ProteinData Class</a>
+  <ul class="collapse">
+  <li><a href="#proteindata" id="toc-proteindata" class="nav-link" data-scroll-target="#proteindata">ProteinData</a></li>
+  </ul></li>
+  <li><a href="#api-reference" id="toc-api-reference" class="nav-link" data-scroll-target="#api-reference">API reference</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/cobioda/allos/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -255,12 +260,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Readers</h1>
+<h1 class="title">Protein Data</h1>
 </div>
 
 <div>
   <div class="description">
-    Load isoform-resolution single-cell data into Allos from a variety of formats.
+    Retrieve protein domain annotations and map them to genomic coordinates via Ensembl and InterPro.
   </div>
 </div>
 
@@ -278,69 +283,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<section id="helper-functions" class="level2">
+<h2 class="anchored" data-anchor-id="helper-functions">Helper Functions</h2>
+<p>Private helper functions for API calls and data processing.</p>
+<section id="ensembl-rest-api" class="level3">
+<h3 class="anchored" data-anchor-id="ensembl-rest-api">Ensembl REST API</h3>
+</section>
+<section id="interpro-rest-api" class="level3">
+<h3 class="anchored" data-anchor-id="interpro-rest-api">InterPro REST API</h3>
+</section>
+<section id="unified-translation-features-fetcher" class="level3">
+<h3 class="anchored" data-anchor-id="unified-translation-features-fetcher">Unified Translation &amp; Features Fetcher</h3>
+</section>
+<section id="feature-processing" class="level3">
+<h3 class="anchored" data-anchor-id="feature-processing">Feature Processing</h3>
+</section>
+<section id="genomic-coordinate-mapping" class="level3">
+<h3 class="anchored" data-anchor-id="genomic-coordinate-mapping">Genomic Coordinate Mapping</h3>
+</section>
+</section>
+<section id="proteindata-class" class="level2">
+<h2 class="anchored" data-anchor-id="proteindata-class">ProteinData Class</h2>
+<p>Main class for retrieving protein domain information and mapping to genomic coordinates.</p>
 <hr>
-<section id="get_resource_path" class="level3">
-<h3 class="anchored" data-anchor-id="get_resource_path">get_resource_path</h3>
+<section id="proteindata" class="level3">
+<h3 class="anchored" data-anchor-id="proteindata">ProteinData</h3>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_resource_path(</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    filename</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ProteinData(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    transcript_data, provider:<span class="bu">str</span><span class="op">=</span><span class="st">'ensembl'</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>):</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><em>Find the correct path to the resources/ directory based on execution context.</em></p>
-<hr>
+<p><em>Protein domain retrieval and genomic coordinate mapping.</em></p>
+<p>Provides methods for fetching protein domains from Ensembl or InterPro APIs and mapping amino acid coordinates to genomic positions.</p>
 </section>
-<section id="download_test_data" class="level3">
-<h3 class="anchored" data-anchor-id="download_test_data">download_test_data</h3>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> download_test_data(</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    url:<span class="bu">str</span><span class="op">=</span><span class="st">'https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3748nnn/GSM3748087/suppl/GSM3748087</span><span class="sc">%5F</span><span class="st">190c.isoforms.matrix.txt.gz'</span>, <span class="co"># URL to download the data from.</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    output_filename:<span class="bu">str</span><span class="op">=</span><span class="va">None</span>, <span class="co"># Name of the file to save the data as (default: name from the URL).</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    decompress:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Whether to decompress the file if it is a gzip archive (default True).</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="bu">str</span>: <span class="co"># Path to the downloaded or decompressed file.</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><em>Download test data to the correct directory, dynamically adjusting based on the execution context.</em> Optionally decompresses gzip files if detected.</p>
-<hr>
-</section>
-<section id="iso_concat" class="level3">
-<h3 class="anchored" data-anchor-id="iso_concat">iso_concat</h3>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> iso_concat(</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    data_inputs, batch_info:NoneType<span class="op">=</span><span class="va">None</span>, batch_type:<span class="bu">str</span><span class="op">=</span><span class="st">'path'</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>):</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><em>Concatenates a list of AnnData objects or paths to AnnData objects based on the union of transcriptIds,</em> while preserving geneId information which might be non-unique per transcriptId. Missing values are filled with zeros. Adds a batch column to <code>.obs</code> based on the file path, obs_names, or numeric.</p>
-<p>Parameters: data_inputs (list of str or AnnData): List of paths to AnnData objects or AnnData objects to concatenate. batch_info (list of str, optional): List of batch identifiers for each AnnData object in data_inputs. If not provided, batch identifiers are extracted from file paths, obs_names, or a numeric sequence. batch_type (str, optional): Specifies which type of batch information to use. One of [‘path’, ‘obs_names’, ‘numeric’]. Defaults to ‘path’.</p>
-<p>Returns: AnnData: A single concatenated AnnData object with harmonized features, geneId annotations, and batch info.</p>
 </section>
 <section id="api-reference" class="level2">
 <h2 class="anchored" data-anchor-id="api-reference">API reference</h2>
-<hr>
-<section id="read_sicelore_isomatrix" class="level3">
-<h3 class="anchored" data-anchor-id="read_sicelore_isomatrix">read_sicelore_isomatrix</h3>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> read_sicelore_isomatrix(</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    file_path:<span class="bu">str</span>, <span class="co"># Path to the isomatrix file (tab-delimited).</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    gene_id_label:<span class="bu">str</span><span class="op">=</span><span class="st">'geneId'</span>, <span class="co"># Row/column label used for gene IDs (default "geneId").</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    transcript_id_label:<span class="bu">str</span><span class="op">=</span><span class="st">'transcriptId'</span>, <span class="co"># Row/column label used for transcript IDs (default "transcriptId").</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    remove_undef:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Whether to remove rows with transcriptId="undef" (default True).</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    sparse:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># Whether to store the matrix in sparse format (default False).</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>AnnData: <span class="co"># An AnnData object containing numeric data in `.X` and metadata in `.var`.</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><em>Read a SiCeLoRe isomatrix file (tab-delimited) and convert it into a scanpy-compatible AnnData object.</em></p>
-<hr>
-</section>
-<section id="process_mouse_data" class="level3">
-<h3 class="anchored" data-anchor-id="process_mouse_data">process_mouse_data</h3>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> process_mouse_data(</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>):</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><em>Downloads test data, reads two mouse isoform count matrices, and merges them into a single AnnData object.</em> It also reads a CSV file containing barcode-to-cell_type mappings, merges this information into the AnnData object’s obs DataFrame, and filters out entries with no cell_type assigned.</p>
-<p>Returns: combined_mouse_data (AnnData): The merged and annotated AnnData object.</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

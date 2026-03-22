@@ -1,47 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://cobioda.github.io/allos/index.html</loc>
-    <lastmod>2025-04-03T12:54:55.198Z</lastmod>
-  </url>
-  <url>
-    <loc>https://cobioda.github.io/allos/palettes.html</loc>
-    <lastmod>2025-04-03T12:54:54.545Z</lastmod>
-  </url>
-  <url>
-    <loc>https://cobioda.github.io/allos/transcript_data.html</loc>
-    <lastmod>2025-04-03T12:55:50.094Z</lastmod>
-  </url>
-  <url>
     <loc>https://cobioda.github.io/allos/switch_search.html</loc>
-    <lastmod>2025-04-03T12:54:57.407Z</lastmod>
+    <lastmod>2026-03-22T12:28:09.206Z</lastmod>
   </url>
   <url>
-    <loc>https://cobioda.github.io/allos/visuals.html</loc>
-    <lastmod>2025-04-03T12:54:54.150Z</lastmod>
+    <loc>https://cobioda.github.io/allos/quant_plots.html</loc>
+    <lastmod>2026-03-22T12:28:09.472Z</lastmod>
   </url>
   <url>
-    <loc>https://cobioda.github.io/allos/transcript_plots.html</loc>
-    <lastmod>2025-04-03T12:55:16.917Z</lastmod>
-  </url>
-  <url>
-    <loc>https://cobioda.github.io/allos/anndata_iso.html</loc>
-    <lastmod>2025-04-03T12:54:53.686Z</lastmod>
-  </url>
-  <url>
-    <loc>https://cobioda.github.io/allos/metacells.html</loc>
-    <lastmod>2025-04-03T12:54:52.226Z</lastmod>
+    <loc>https://cobioda.github.io/allos/composed_plots.html</loc>
+    <lastmod>2026-03-22T12:28:09.869Z</lastmod>
   </url>
   <url>
     <loc>https://cobioda.github.io/allos/readers_tests.html</loc>
-    <lastmod>2025-04-03T12:54:53.832Z</lastmod>
+    <lastmod>2026-03-22T12:28:08.715Z</lastmod>
+  </url>
+  <url>
+    <loc>https://cobioda.github.io/allos/coverage_plots.html</loc>
+    <lastmod>2026-03-22T12:28:09.782Z</lastmod>
+  </url>
+  <url>
+    <loc>https://cobioda.github.io/allos/index.html</loc>
+    <lastmod>2026-03-22T12:28:10.071Z</lastmod>
+  </url>
+  <url>
+    <loc>https://cobioda.github.io/allos/transcript_plots.html</loc>
+    <lastmod>2026-03-22T12:28:08.643Z</lastmod>
+  </url>
+  <url>
+    <loc>https://cobioda.github.io/allos/junctions.html</loc>
+    <lastmod>2026-03-22T12:28:10.053Z</lastmod>
+  </url>
+  <url>
+    <loc>https://cobioda.github.io/allos/palettes.html</loc>
+    <lastmod>2026-03-22T12:28:07.220Z</lastmod>
+  </url>
+  <url>
+    <loc>https://cobioda.github.io/allos/transcript_data.html</loc>
+    <lastmod>2026-03-22T12:28:08.207Z</lastmod>
+  </url>
+  <url>
+    <loc>https://cobioda.github.io/allos/protein_plots.html</loc>
+    <lastmod>2026-03-22T12:28:10.262Z</lastmod>
+  </url>
+  <url>
+    <loc>https://cobioda.github.io/allos/coord_plots.html</loc>
+    <lastmod>2026-03-22T12:28:09.434Z</lastmod>
+  </url>
+  <url>
+    <loc>https://cobioda.github.io/allos/protein_data.html</loc>
+    <lastmod>2026-03-22T12:28:09.890Z</lastmod>
   </url>
   <url>
     <loc>https://cobioda.github.io/allos/preprocesing.html</loc>
-    <lastmod>2025-04-03T12:54:54.320Z</lastmod>
-  </url>
-  <url>
-    <loc>https://cobioda.github.io/allos/gene_report.html</loc>
-    <lastmod>2025-04-03T12:54:55.075Z</lastmod>
+    <lastmod>2026-03-22T12:28:11.001Z</lastmod>
   </url>
 </urlset>

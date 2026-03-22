@@ -2,11 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.42">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="This module retrieves genomic coordinates and other key information related to transcripts from a GTF file. Using pyRanges, it efficiently stores and visualizes transcript features like exons, CDS, and UTRs.">
+<meta name="description" content="Load, index, and query transcript annotations from GTF files for long-read single-cell analysis.">
 
 <title>Transcript Data – allos</title>
 <style>
@@ -70,10 +70,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-ae44de7e3b26b230a7801128389852ee.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-423ad5ba759ba8d1584d5d13ca0c1f6f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -105,10 +105,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <link rel="stylesheet" href="styles.css">
 <meta property="og:title" content="Transcript Data – allos">
-<meta property="og:description" content="This module retrieves genomic coordinates and other key information related to transcripts from a GTF file. Using pyRanges, it efficiently stores and visualizes transcript features like exons, CDS, and UTRs.">
+<meta property="og:description" content="Load, index, and query transcript annotations from GTF files for long-read single-cell analysis.">
 <meta property="og:site_name" content="allos">
 <meta name="twitter:title" content="Transcript Data – allos">
-<meta name="twitter:description" content="This module retrieves genomic coordinates and other key information related to transcripts from a GTF file. Using pyRanges, it efficiently stores and visualizes transcript features like exons, CDS, and UTRs.">
+<meta name="twitter:description" content="Load, index, and query transcript annotations from GTF files for long-read single-cell analysis.">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -177,20 +177,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./anndata_iso.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">IsoAdata</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./switch_search.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Detecting Switches</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./gene_report.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Gene Report Module</span></a>
+ <span class="menu-text">Switch Search</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -201,14 +189,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./visuals.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Visualizations</span></a>
+  <a href="./quant_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quantitative Plots</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./metacells.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Metacells</span></a>
+  <a href="./composed_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Composed Plots</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./coord_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coordinate Plots</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./coverage_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coverage Plots</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./protein_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Protein Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./protein_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Protein Plots</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./junctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Junction Data Processing</span></a>
   </div>
 </li>
     </ul>
@@ -221,7 +239,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#transcriptdata" id="toc-transcriptdata" class="nav-link active" data-scroll-target="#transcriptdata">TranscriptData</a></li>
+  <li><a href="#classifybubble" id="toc-classifybubble" class="nav-link active" data-scroll-target="#classifybubble">ClassifyBubble</a></li>
+  <li><a href="#findbubbles" id="toc-findbubbles" class="nav-link" data-scroll-target="#findbubbles">FindBubbles</a></li>
+  <li><a href="#buildsplicegraph" id="toc-buildsplicegraph" class="nav-link" data-scroll-target="#buildsplicegraph">BuildSpliceGraph</a></li>
+  <li><a href="#smoothends" id="toc-smoothends" class="nav-link" data-scroll-target="#smoothends">SmoothEnds</a></li>
+  <li><a href="#checkoverlap" id="toc-checkoverlap" class="nav-link" data-scroll-target="#checkoverlap">CheckOverlap</a></li>
+  <li><a href="#transcriptindex" id="toc-transcriptindex" class="nav-link" data-scroll-target="#transcriptindex">TranscriptIndex</a></li>
+  <li><a href="#txrecord" id="toc-txrecord" class="nav-link" data-scroll-target="#txrecord">TxRecord</a></li>
+  <li><a href="#classify_transcript_pair_from_index" id="toc-classify_transcript_pair_from_index" class="nav-link" data-scroll-target="#classify_transcript_pair_from_index">classify_transcript_pair_from_index</a></li>
+  <li><a href="#transcriptdata" id="toc-transcriptdata" class="nav-link" data-scroll-target="#transcriptdata"><code>TranscriptData</code></a>
+  <ul class="collapse">
+  <li><a href="#transcriptdata-1" id="toc-transcriptdata-1" class="nav-link" data-scroll-target="#transcriptdata-1">TranscriptData</a></li>
+  <li><a href="#transcriptdata.get_transcripts_by_gene_name" id="toc-transcriptdata.get_transcripts_by_gene_name" class="nav-link" data-scroll-target="#transcriptdata.get_transcripts_by_gene_name">TranscriptData.get_transcripts_by_gene_name</a></li>
+  <li><a href="#transcriptdata.get_transcript_info" id="toc-transcriptdata.get_transcript_info" class="nav-link" data-scroll-target="#transcriptdata.get_transcript_info">TranscriptData.get_transcript_info</a></li>
+  </ul></li>
+  <li><a href="#storing-transcriptdata-in-anndata" id="toc-storing-transcriptdata-in-anndata" class="nav-link" data-scroll-target="#storing-transcriptdata-in-anndata">Storing TranscriptData in AnnData</a>
+  <ul class="collapse">
+  <li><a href="#get_transcript_data" id="toc-get_transcript_data" class="nav-link" data-scroll-target="#get_transcript_data">get_transcript_data</a></li>
+  <li><a href="#register_transcripts" id="toc-register_transcripts" class="nav-link" data-scroll-target="#register_transcripts">register_transcripts</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/cobioda/allos/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -235,7 +271,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div>
   <div class="description">
-    This module retrieves genomic coordinates and other key information related to transcripts from a GTF file. Using <strong>pyRanges</strong>, it efficiently stores and visualizes transcript features like exons, CDS, and UTRs.
+    Load, index, and query transcript annotations from GTF files for long-read single-cell analysis.
   </div>
 </div>
 
@@ -254,159 +290,164 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
 <hr>
-<p><a href="https://github.com/cobioda/allos/blob/main/allos/transcript_data.py#L20" target="_blank" style="float:right; font-size:smaller">source</a></p>
-<section id="transcriptdata" class="level3">
-<h3 class="anchored" data-anchor-id="transcriptdata">TranscriptData</h3>
-<blockquote class="blockquote">
-<pre><code> TranscriptData (gtf_file:str, reference_fasta:Optional[str]=None)</code></pre>
-</blockquote>
-<p>*A class for managing transcript and gene information from a GTF file using PyRanges.</p>
-<p>Existing Features: - Lookup by transcript ID or gene ID/name - Support for exons, CDS, UTR queries - Intron coordinate calculation - Batch queries - Transcript length calculation - Caching/memoization for repeated queries - Basic logging/error handling</p>
-<p>NEW Features: (1) Nucleotide/protein sequence retrieval for CDS (with optional FASTA) (2) Alternative splicing analysis with splice junctions, isoform comparisons, and junction-chain interpretation.*</p>
-<div id="ae39e82c" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib.request</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Example Ensembl URLs for mouse GRCm39 (release 109)</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>gtf_url <span class="op">=</span> <span class="st">"ftp://ftp.ensembl.org/pub/release-109/gtf/mus_musculus/Mus_musculus.GRCm39.109.gtf.gz"</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>fasta_url <span class="op">=</span> <span class="st">"ftp://ftp.ensembl.org/pub/release-109/fasta/mus_musculus/dna/Mus_musculus.GRCm39.dna.primary_assembly.fa.gz"</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Store data one directory back</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>data_dir <span class="op">=</span> Path(<span class="st">".."</span>) <span class="op">/</span> <span class="st">"data"</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>data_dir.mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>gtf_file_local <span class="op">=</span> data_dir <span class="op">/</span> <span class="st">"Mus_musculus.GRCm39.109.gtf.gz"</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>fasta_file_local <span class="op">=</span> data_dir <span class="op">/</span> <span class="st">"Mus_musculus.GRCm39.dna.primary_assembly.fa.gz"</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Download if not already present</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> gtf_file_local.is_file():</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Downloading </span><span class="sc">{</span>gtf_url<span class="sc">}</span><span class="ss">..."</span>)</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    urllib.request.urlretrieve(gtf_url, gtf_file_local)</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> fasta_file_local.is_file():</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Downloading </span><span class="sc">{</span>fasta_url<span class="sc">}</span><span class="ss">..."</span>)</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    urllib.request.urlretrieve(fasta_url, fasta_file_local)</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Instantiate your TranscriptData</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>td <span class="op">=</span> TranscriptData(</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    gtf_file<span class="op">=</span>gtf_file_local,</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    reference_fasta<span class="op">=</span>fasta_file_local</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Now you can make queries like:</span></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>example_transcript_id <span class="op">=</span> <span class="st">"ENSMUST00000070533"</span>  <span class="co"># e.g., for mouse</span></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>exons <span class="op">=</span> td.get_exons(example_transcript_id)</span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Exons:"</span>, exons)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Downloading ftp://ftp.ensembl.org/pub/release-109/gtf/mus_musculus/Mus_musculus.GRCm39.109.gtf.gz...
-Downloading ftp://ftp.ensembl.org/pub/release-109/fasta/mus_musculus/dna/Mus_musculus.GRCm39.dna.primary_assembly.fa.gz...
-Exons: +--------------+----------------+------------+-----------+-----------+------------+--------------+------------+--------------------+----------------+-------------+----------------+----------------+--------------------+-------+
-|   Chromosome | Source         | Feature    |     Start |       End | Score      | Strand       | Frame      | gene_id            |   gene_version | gene_name   | gene_source    | gene_biotype   | transcript_id      | +12   |
-|   (category) | (object)       | (object)   |   (int64) |   (int64) | (object)   | (category)   | (object)   | (object)           |       (object) | (object)    | (object)       | (object)       | (object)           | ...   |
-|--------------+----------------+------------+-----------+-----------+------------+--------------+------------+--------------------+----------------+-------------+----------------+----------------+--------------------+-------|
-|            1 | ensembl_havana | exon       |   3740774 |   3741721 | .          | -            | .          | ENSMUSG00000051951 |              6 | Xkr4        | ensembl_havana | protein_coding | ENSMUST00000070533 | ...   |
-|            1 | ensembl_havana | exon       |   3491924 |   3492124 | .          | -            | .          | ENSMUSG00000051951 |              6 | Xkr4        | ensembl_havana | protein_coding | ENSMUST00000070533 | ...   |
-|            1 | ensembl_havana | exon       |   3284704 |   3287191 | .          | -            | .          | ENSMUSG00000051951 |              6 | Xkr4        | ensembl_havana | protein_coding | ENSMUST00000070533 | ...   |
-+--------------+----------------+------------+-----------+-----------+------------+--------------+------------+--------------------+----------------+-------------+----------------+----------------+--------------------+-------+
-Stranded PyRanges object has 3 rows and 26 columns from 1 chromosomes.
-For printing, the PyRanges was sorted on Chromosome and Strand.
-12 hidden columns: transcript_version, transcript_name, transcript_source, transcript_biotype, tag, transcript_support_level, exon_number, exon_id, exon_version, ccds_id, protein_id, protein_version</code></pre>
-</div>
-</div>
-<div id="6e3323cc" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ranges <span class="op">=</span> pr.read_gtf(gtf_file_local)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="6055c4ef" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ranges.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
-<pre><code>Index(['Chromosome', 'Source', 'Feature', 'Start', 'End', 'Score', 'Strand',
-       'Frame', 'gene_id', 'gene_version', 'gene_name', 'gene_source',
-       'gene_biotype', 'transcript_id', 'transcript_version',
-       'transcript_name', 'transcript_source', 'transcript_biotype', 'tag',
-       'transcript_support_level', 'exon_number', 'exon_id', 'exon_version',
-       'ccds_id', 'protein_id', 'protein_version'],
-      dtype='object')</code></pre>
-</div>
-</div>
-<div id="77404e66" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ranges.as_df()[<span class="st">'transcript_id'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
-<pre><code>0                         NaN
-1          ENSMUST00000194081
-2          ENSMUST00000194081
-3                         NaN
-4          ENSMUST00000194393
-                  ...        
-1901233    ENSMUST00000189418
-1901234    ENSMUST00000189418
-1901235                   NaN
-1901236    ENSMUST00000186353
-1901237    ENSMUST00000186353
-Name: transcript_id, Length: 1901238, dtype: object</code></pre>
-</div>
-</div>
-<div id="e105ad36" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> allos.readers_tests <span class="im">import</span> <span class="op">*</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>mouse_data <span class="op">=</span> process_mouse_data()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-🔎 Looking for file at: /home/runner/work/allos/allos/allos/resources/e18.mouse.clusters.csv
-✅ File found at: /home/runner/work/allos/allos/allos/resources/e18.mouse.clusters.csv
-✅ File already exists at: /home/runner/work/allos/allos/allos/resources/data/mouse_1.txt.gz
+<section id="classifybubble" class="level3">
+<h3 class="anchored" data-anchor-id="classifybubble">ClassifyBubble</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ClassifyBubble(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    bubble, attributes</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Call self as a function.</em></p>
+<hr>
+</section>
+<section id="findbubbles" class="level3">
+<h3 class="anchored" data-anchor-id="findbubbles">FindBubbles</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> FindBubbles(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    spliceGraph</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Same as Wang’s FindBubbles – single pass from root to sink.</em></p>
+<hr>
+</section>
+<section id="buildsplicegraph" class="level3">
+<h3 class="anchored" data-anchor-id="buildsplicegraph">BuildSpliceGraph</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> BuildSpliceGraph(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    inputDF</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Call self as a function.</em></p>
+<hr>
+</section>
+<section id="smoothends" class="level3">
+<h3 class="anchored" data-anchor-id="smoothends">SmoothEnds</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> SmoothEnds(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    inputDF</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Same as Wang’s SmoothEnds but operates on our small 2-row DataFrame:</em> columns: [‘transcript_ID’,‘chrom’,‘strand’,‘exonStart’,‘exonEnd’]</p>
+<hr>
+</section>
+<section id="checkoverlap" class="level3">
+<h3 class="anchored" data-anchor-id="checkoverlap">CheckOverlap</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> CheckOverlap(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    tuple1, tuple2</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Call self as a function.</em></p>
+<hr>
+</section>
+<section id="transcriptindex" class="level3">
+<h3 class="anchored" data-anchor-id="transcriptindex">TranscriptIndex</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> TranscriptIndex(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    tx_by_id:Dict, gene_to_tx:Dict, genename_to_tx:Dict, cache_key:<span class="bu">str</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Fast, read-only index built from a GTF/GFF. O(1) lookups for blocks &amp; metadata.</em></p>
+<hr>
+</section>
+<section id="txrecord" class="level3">
+<h3 class="anchored" data-anchor-id="txrecord">TxRecord</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> TxRecord(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    transcript_id:<span class="bu">str</span>, gene_id:Optional, gene_name:Optional, transcript_name:Optional, transcript_type:Optional,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    chrom:<span class="bu">str</span>, strand:<span class="bu">int</span>, span:Tuple, exons:ndarray, cds:ndarray, utr5:ndarray, utr3:ndarray</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="va">None</span>:</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<hr>
+</section>
+<section id="classify_transcript_pair_from_index" class="level3">
+<h3 class="anchored" data-anchor-id="classify_transcript_pair_from_index">classify_transcript_pair_from_index</h3>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> classify_transcript_pair_from_index(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    idx:TranscriptIndex, tid1:<span class="bu">str</span>, tid2:<span class="bu">str</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>DataFrame:</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Enumerate transcript-structure differences between two isoforms using Wang’s</em> bubble algorithm, backed by our TranscriptIndex.</p>
+<p>Returns a DataFrame with columns: [‘transcript1’, ‘transcript2’, ‘event’, ‘coordinates’]</p>
+</section>
+<section id="transcriptdata" class="level2">
+<h2 class="anchored" data-anchor-id="transcriptdata"><code>TranscriptData</code></h2>
+<hr>
+<section id="transcriptdata-1" class="level3">
+<h3 class="anchored" data-anchor-id="transcriptdata-1">TranscriptData</h3>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> TranscriptData(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    gtf_file:<span class="bu">str</span>, <span class="co"># Path to GTF/GFF file.</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    reference_fasta:Optional<span class="op">=</span><span class="va">None</span>, <span class="co"># Path to reference genome FASTA for sequence retrieval.</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    cache_dir:Optional<span class="op">=</span><span class="va">None</span>, <span class="co"># Directory to cache the built index.</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    gene_name_map:Union<span class="op">=</span><span class="va">None</span>, <span class="co"># Mapping from transcript_id to gene_name. Useful for GFF files</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>(like PacBio) that lack gene_name attributes. Can be:</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Path to TSV <span class="bu">file</span> <span class="cf">with</span> columns [transcript_id, gene_name]</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Dict mapping transcript_id <span class="op">-&gt;</span> gene_name  </span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> DataFrame (use transcript_id_col <span class="kw">and</span> gene_name_col to specify columns)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>For PacBio <span class="bu">format</span> (e.g., <span class="st">'PB.10.82:DDX11L17'</span>), the base</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>transcript_id will be extracted <span class="cf">for</span> matching.</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    transcript_id_col:Optional<span class="op">=</span><span class="va">None</span>, <span class="co"># Column name for transcript_id when gene_name_map is a DataFrame.</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    gene_name_col:Optional<span class="op">=</span><span class="va">None</span>, <span class="co"># Column name for gene_name when gene_name_map is a DataFrame.</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Fast, drop-in replacement for your old TranscriptData, backed by TranscriptIndex.</em></p>
+<hr>
+</section>
+<section id="transcriptdata.get_transcripts_by_gene_name" class="level3">
+<h3 class="anchored" data-anchor-id="transcriptdata.get_transcripts_by_gene_name">TranscriptData.get_transcripts_by_gene_name</h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_transcripts_by_gene_name(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    gnm:<span class="bu">str</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>List:</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Call self as a function.</em></p>
+<hr>
+</section>
+<section id="transcriptdata.get_transcript_info" class="level3">
+<h3 class="anchored" data-anchor-id="transcriptdata.get_transcript_info">TranscriptData.get_transcript_info</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_transcript_info(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    transcript_id:<span class="bu">str</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="bu">dict</span>:</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Call self as a function.</em></p>
+</section>
+</section>
+<section id="storing-transcriptdata-in-anndata" class="level2">
+<h2 class="anchored" data-anchor-id="storing-transcriptdata-in-anndata">Storing TranscriptData in AnnData</h2>
+<p>These helper functions allow you to store transcript annotations directly in your AnnData object. This is useful because:</p>
+<ol type="1">
+<li><strong>Convenience</strong> - No need to pass <code>transcript_data</code> to every plotting function</li>
+<li><strong>Persistence</strong> - The GTF/FASTA paths are stored in <code>adata.uns</code> and survive <code>write_h5ad</code>/<code>read_h5ad</code></li>
+<li><strong>Automatic reconstruction</strong> - After loading, <code>get_transcript_data()</code> rebuilds the object from stored paths</li>
+</ol>
+<hr>
+<section id="get_transcript_data" class="level3">
+<h3 class="anchored" data-anchor-id="get_transcript_data">get_transcript_data</h3>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_transcript_data(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    adata, <span class="co"># Annotated data object with registered transcript data</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>): <span class="co"># Transcript data object</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Get TranscriptData from an AnnData object.</em></p>
+<p>If the TranscriptData object is cached in adata.uns, returns it directly. Otherwise, reconstructs it from stored GTF/FASTA paths (useful after loading from h5ad).</p>
+<hr>
+</section>
+<section id="register_transcripts" class="level3">
+<h3 class="anchored" data-anchor-id="register_transcripts">register_transcripts</h3>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> register_transcripts(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    adata, <span class="co"># Annotated data object to register transcripts with</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    td_or_path, <span class="co"># Either a TranscriptData object or path to GTF file</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    reference_fasta:NoneType<span class="op">=</span><span class="va">None</span>, <span class="co"># Path to reference FASTA file (only used if td_or_path is a path)</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Register transcript annotations with an AnnData object.</em></p>
+<p>This stores transcript data in adata.uns so it persists with the object and can be reconstructed after saving/loading from h5ad.</p>
 
-🔄 Decompressing /home/runner/work/allos/allos/allos/resources/data/mouse_1.txt.gz to /home/runner/work/allos/allos/allos/resources/data/mouse_1.txt...
-✅ Decompression complete.
-Test data (mouse_1) downloaded successfully
-✅ File already exists at: /home/runner/work/allos/allos/allos/resources/data/mouse_2.txt.gz
 
-🔄 Decompressing /home/runner/work/allos/allos/allos/resources/data/mouse_2.txt.gz to /home/runner/work/allos/allos/allos/resources/data/mouse_2.txt...
-✅ Decompression complete.
-Test data (mouse_2) downloaded successfully</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>/opt/hostedtoolcache/Python/3.10.16/x64/lib/python3.10/site-packages/anndata/_core/anndata.py:1756: UserWarning: Observation names are not unique. To make them unique, call `.obs_names_make_unique`.
-  utils.warn_names_duplicates("obs")</code></pre>
-</div>
-</div>
-<div id="a61876f7" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>transcriptIds <span class="op">=</span> mouse_data.var.index.to_list()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="a73ca1f9" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>transcriptIds[:<span class="dv">10</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="9">
-<pre><code>['ENSMUST00000156717.1',
- 'ENSMUST00000212520.1',
- 'ENSMUST00000025798.12',
- 'ENSMUST00000231280.1',
- 'ENSMUST00000039286.4',
- 'ENSMUST00000144552.7',
- 'ENSMUST00000112304.8',
- 'ENSMUST00000162041.7',
- 'ENSMUST00000053506.6',
- 'ENSMUST00000028207.12']</code></pre>
-</div>
-</div>
-<div id="0e1c71e9" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>gene_names <span class="op">=</span> td.get_gene_names_for_transcripts(transcript_ids<span class="op">=</span>transcriptIds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="172e5e8c" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>gene_names[:<span class="dv">10</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="11">
-<pre><code>['Klc2',
- 'Capn15',
- 'Klc2',
- 'Eva1c',
- 'Atg5',
- 'Znhit3',
- 'Ppm1b',
- 'Gcc2',
- 'Bbs1',
- 'Crat']</code></pre>
-</div>
-</div>
-
-
+</section>
 </section>
 
 </main> <!-- /main -->

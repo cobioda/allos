@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Load isoform-resolution single-cell data into Allos from a variety of formats.">
+<meta name="description" content="Plot Nanopore read coverage from BAM files for genes and transcripts.">
 
-<title>Readers – allos</title>
+<title>Coverage Plots – allos</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -104,11 +104,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="Readers – allos">
-<meta property="og:description" content="Load isoform-resolution single-cell data into Allos from a variety of formats.">
+<meta property="og:title" content="Coverage Plots – allos">
+<meta property="og:description" content="Plot Nanopore read coverage from BAM files for genes and transcripts.">
 <meta property="og:site_name" content="allos">
-<meta name="twitter:title" content="Readers – allos">
-<meta name="twitter:description" content="Load isoform-resolution single-cell data into Allos from a variety of formats.">
+<meta name="twitter:title" content="Coverage Plots – allos">
+<meta name="twitter:description" content="Plot Nanopore read coverage from BAM files for genes and transcripts.">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -133,7 +133,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./readers_tests.html">Readers</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./coverage_plots.html">Coverage Plots</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -171,7 +171,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./readers_tests.html" class="sidebar-item-text sidebar-link active">
+  <a href="./readers_tests.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Readers</span></a>
   </div>
 </li>
@@ -207,7 +207,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./coverage_plots.html" class="sidebar-item-text sidebar-link">
+  <a href="./coverage_plots.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Coverage Plots</span></a>
   </div>
 </li>
@@ -239,14 +239,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#get_resource_path" id="toc-get_resource_path" class="nav-link active" data-scroll-target="#get_resource_path">get_resource_path</a></li>
-  <li><a href="#download_test_data" id="toc-download_test_data" class="nav-link" data-scroll-target="#download_test_data">download_test_data</a></li>
-  <li><a href="#iso_concat" id="toc-iso_concat" class="nav-link" data-scroll-target="#iso_concat">iso_concat</a></li>
+  <li><a href="#compact-layout-monkey-patch" id="toc-compact-layout-monkey-patch" class="nav-link active" data-scroll-target="#compact-layout-monkey-patch">Compact Layout Monkey-Patch</a></li>
+  <li><a href="#helper-functions" id="toc-helper-functions" class="nav-link" data-scroll-target="#helper-functions">Helper Functions</a></li>
+  <li><a href="#main-coverage-plot-function" id="toc-main-coverage-plot-function" class="nav-link" data-scroll-target="#main-coverage-plot-function">Main Coverage Plot Function</a></li>
   <li><a href="#api-reference" id="toc-api-reference" class="nav-link" data-scroll-target="#api-reference">API reference</a>
   <ul class="collapse">
-  <li><a href="#read_sicelore_isomatrix" id="toc-read_sicelore_isomatrix" class="nav-link" data-scroll-target="#read_sicelore_isomatrix">read_sicelore_isomatrix</a></li>
-  <li><a href="#process_mouse_data" id="toc-process_mouse_data" class="nav-link" data-scroll-target="#process_mouse_data">process_mouse_data</a></li>
+  <li><a href="#plot_gene_coverage" id="toc-plot_gene_coverage" class="nav-link" data-scroll-target="#plot_gene_coverage">plot_gene_coverage</a></li>
   </ul></li>
+  <li><a href="#example-usage" id="toc-example-usage" class="nav-link" data-scroll-target="#example-usage">Example Usage</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/cobioda/allos/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -255,12 +255,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Readers</h1>
+<h1 class="title">Coverage Plots</h1>
 </div>
 
 <div>
   <div class="description">
-    Load isoform-resolution single-cell data into Allos from a variety of formats.
+    Plot Nanopore read coverage from BAM files for genes and transcripts.
   </div>
 </div>
 
@@ -278,69 +278,104 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
-<hr>
-<section id="get_resource_path" class="level3">
-<h3 class="anchored" data-anchor-id="get_resource_path">get_resource_path</h3>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_resource_path(</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    filename</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>):</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><em>Find the correct path to the resources/ directory based on execution context.</em></p>
-<hr>
+<section id="compact-layout-monkey-patch" class="level2">
+<h2 class="anchored" data-anchor-id="compact-layout-monkey-patch">Compact Layout Monkey-Patch</h2>
+<p>This monkey-patch improves trackplot layouts by: - Making the x-axis ruler thinner - Reducing vertical spacing between tracks - Pulling annotation tracks closer to data</p>
 </section>
-<section id="download_test_data" class="level3">
-<h3 class="anchored" data-anchor-id="download_test_data">download_test_data</h3>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> download_test_data(</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    url:<span class="bu">str</span><span class="op">=</span><span class="st">'https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3748nnn/GSM3748087/suppl/GSM3748087</span><span class="sc">%5F</span><span class="st">190c.isoforms.matrix.txt.gz'</span>, <span class="co"># URL to download the data from.</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    output_filename:<span class="bu">str</span><span class="op">=</span><span class="va">None</span>, <span class="co"># Name of the file to save the data as (default: name from the URL).</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    decompress:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Whether to decompress the file if it is a gzip archive (default True).</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="bu">str</span>: <span class="co"># Path to the downloaded or decompressed file.</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><em>Download test data to the correct directory, dynamically adjusting based on the execution context.</em> Optionally decompresses gzip files if detected.</p>
-<hr>
+<section id="helper-functions" class="level2">
+<h2 class="anchored" data-anchor-id="helper-functions">Helper Functions</h2>
 </section>
-<section id="iso_concat" class="level3">
-<h3 class="anchored" data-anchor-id="iso_concat">iso_concat</h3>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> iso_concat(</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    data_inputs, batch_info:NoneType<span class="op">=</span><span class="va">None</span>, batch_type:<span class="bu">str</span><span class="op">=</span><span class="st">'path'</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>):</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><em>Concatenates a list of AnnData objects or paths to AnnData objects based on the union of transcriptIds,</em> while preserving geneId information which might be non-unique per transcriptId. Missing values are filled with zeros. Adds a batch column to <code>.obs</code> based on the file path, obs_names, or numeric.</p>
-<p>Parameters: data_inputs (list of str or AnnData): List of paths to AnnData objects or AnnData objects to concatenate. batch_info (list of str, optional): List of batch identifiers for each AnnData object in data_inputs. If not provided, batch identifiers are extracted from file paths, obs_names, or a numeric sequence. batch_type (str, optional): Specifies which type of batch information to use. One of [‘path’, ‘obs_names’, ‘numeric’]. Defaults to ‘path’.</p>
-<p>Returns: AnnData: A single concatenated AnnData object with harmonized features, geneId annotations, and batch info.</p>
+<section id="main-coverage-plot-function" class="level2">
+<h2 class="anchored" data-anchor-id="main-coverage-plot-function">Main Coverage Plot Function</h2>
 </section>
 <section id="api-reference" class="level2">
 <h2 class="anchored" data-anchor-id="api-reference">API reference</h2>
 <hr>
-<section id="read_sicelore_isomatrix" class="level3">
-<h3 class="anchored" data-anchor-id="read_sicelore_isomatrix">read_sicelore_isomatrix</h3>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> read_sicelore_isomatrix(</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    file_path:<span class="bu">str</span>, <span class="co"># Path to the isomatrix file (tab-delimited).</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    gene_id_label:<span class="bu">str</span><span class="op">=</span><span class="st">'geneId'</span>, <span class="co"># Row/column label used for gene IDs (default "geneId").</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    transcript_id_label:<span class="bu">str</span><span class="op">=</span><span class="st">'transcriptId'</span>, <span class="co"># Row/column label used for transcript IDs (default "transcriptId").</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    remove_undef:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Whether to remove rows with transcriptId="undef" (default True).</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    sparse:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># Whether to store the matrix in sparse format (default False).</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>AnnData: <span class="co"># An AnnData object containing numeric data in `.X` and metadata in `.var`.</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><em>Read a SiCeLoRe isomatrix file (tab-delimited) and convert it into a scanpy-compatible AnnData object.</em></p>
-<hr>
+<section id="plot_gene_coverage" class="level3">
+<h3 class="anchored" data-anchor-id="plot_gene_coverage">plot_gene_coverage</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_gene_coverage(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    adata, transcript_data, gene:<span class="bu">str</span> <span class="op">|</span> <span class="va">None</span><span class="op">=</span><span class="va">None</span>, chrom:<span class="bu">str</span> <span class="op">|</span> <span class="va">None</span><span class="op">=</span><span class="va">None</span>, start:<span class="bu">int</span> <span class="op">|</span> <span class="va">None</span><span class="op">=</span><span class="va">None</span>, end:<span class="bu">int</span> <span class="op">|</span> <span class="va">None</span><span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    strand:<span class="bu">str</span> <span class="op">|</span> <span class="va">None</span><span class="op">=</span><span class="va">None</span>, groupby:<span class="bu">str</span> <span class="op">|</span> Sequence[<span class="bu">str</span>]<span class="op">=</span>(<span class="st">'cell_type'</span>,), bc_col:<span class="bu">str</span><span class="op">=</span><span class="st">'barcode_raw'</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    bam_paths:Mapping[<span class="bu">str</span>, <span class="bu">str</span>] <span class="op">|</span> <span class="va">None</span><span class="op">=</span><span class="va">None</span>, bam_column:<span class="bu">str</span><span class="op">=</span><span class="st">'batch'</span>, bc_tag:<span class="bu">str</span><span class="op">=</span><span class="st">'BC'</span>, padding:<span class="bu">int</span><span class="op">=</span><span class="dv">1000</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    figsize:<span class="bu">tuple</span>[<span class="bu">float</span>, <span class="bu">float</span>]<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">3</span>), font_size:<span class="bu">int</span><span class="op">=</span><span class="dv">6</span>, n_y_ticks:<span class="bu">int</span><span class="op">=</span><span class="dv">3</span>, threshold:<span class="bu">int</span><span class="op">=</span><span class="dv">1</span>, same_y:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    raster:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, show_site_plot:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, transcripts:List[<span class="bu">str</span>] <span class="op">|</span> <span class="va">None</span><span class="op">=</span><span class="va">None</span>, top_n:<span class="bu">int</span> <span class="op">|</span> <span class="va">None</span><span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    choose_primary:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, annotation_scale:<span class="bu">float</span><span class="op">=</span><span class="fl">0.25</span>, intron_scale:<span class="bu">float</span><span class="op">=</span><span class="fl">0.15</span>, exon_width:<span class="bu">float</span><span class="op">=</span><span class="fl">0.3</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    show_cell_labels:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, title:<span class="bu">str</span> <span class="op">|</span> <span class="va">None</span><span class="op">=</span><span class="va">None</span>, <span class="co"># kept for API compatibility (unused)</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    gtf_file:<span class="bu">str</span> <span class="op">|</span> <span class="va">None</span><span class="op">=</span><span class="va">None</span>, color_key:Optional[<span class="bu">str</span>]<span class="op">=</span><span class="st">'cell_type'</span>, palette:<span class="bu">str</span> <span class="op">|</span> <span class="bu">list</span><span class="op">=</span><span class="st">'tab10'</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    group_color_map:Optional[Dict[<span class="bu">str</span>, <span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    group_order:Optional[List[<span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, <span class="co"># deprecated: use visible_groups</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    visible_groups:Optional[List[<span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, show_title:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># kept for API compatibility (ignored)</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    distance_between_label_axis:<span class="bu">float</span><span class="op">=</span><span class="fl">0.2</span>, xaxis_height_scale:<span class="bu">float</span><span class="op">=</span><span class="fl">0.2</span>, annotation_height_scale:<span class="bu">float</span><span class="op">=</span><span class="fl">0.6</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    grid_hspace:<span class="bu">float</span><span class="op">=</span><span class="fl">0.18</span>, verbose:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>): <span class="co"># The figure object (so the caller can save it via fig.savefig()).</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Plot Nanopore read coverage from BAM files with transcript annotations.</em></p>
 </section>
-<section id="process_mouse_data" class="level3">
-<h3 class="anchored" data-anchor-id="process_mouse_data">process_mouse_data</h3>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> process_mouse_data(</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>):</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><em>Downloads test data, reads two mouse isoform count matrices, and merges them into a single AnnData object.</em> It also reads a CSV file containing barcode-to-cell_type mappings, merges this information into the AnnData object’s obs DataFrame, and filters out entries with no cell_type assigned.</p>
-<p>Returns: combined_mouse_data (AnnData): The merged and annotated AnnData object.</p>
+</section>
+<section id="example-usage" class="level2">
+<h2 class="anchored" data-anchor-id="example-usage">Example Usage</h2>
+<p>Load test data and plot coverage for the Myl6 gene.</p>
+<div id="8f5bf04c" class="cell" data-execution_count="80">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Setup barcodes</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pathlib, re, collections</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>BAMDIR <span class="op">=</span> pathlib.Path(<span class="st">"/data/analysis/data_mcandrew/00_allos_0.6_TAB/data/bams"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Strip any "-1/-2 ..." suffix, keep clean ID</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>adata.obs[<span class="st">"barcode_prefixed"</span>] <span class="op">=</span> adata.obs_names.<span class="bu">str</span>.replace(<span class="vs">r"-\d+$"</span>, <span class="st">""</span>, regex<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract 16-mer barcode</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">"barcode_raw"</span> <span class="kw">not</span> <span class="kw">in</span> adata.obs:</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    adata.obs[<span class="st">"barcode_raw"</span>] <span class="op">=</span> adata.obs[<span class="st">"barcode_prefixed"</span>].<span class="bu">str</span>.extract(<span class="vs">r"([ACGT]</span><span class="sc">{16}</span><span class="vs">)$"</span>)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="4f7771a4" class="cell" data-execution_count="83">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define BAM file paths</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>bam_paths <span class="op">=</span> {</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"0"</span>: <span class="st">"/data/analysis/data_mcandrew/00_allos_0.6_TAB/data/bams/s190_isobam.bam"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1"</span>: <span class="st">"/data/analysis/data_mcandrew/00_allos_0.6_TAB/data/bams/s951_isobam.bam"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="c7519a3f" class="cell" data-execution_count="91">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot coverage for Myl6 gene</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plot_gene_coverage(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    adata<span class="op">=</span>adata,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    transcript_data<span class="op">=</span>td,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    gene<span class="op">=</span><span class="st">"Myl6"</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    groupby<span class="op">=</span>[<span class="st">"cell_type"</span>],</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    bam_paths<span class="op">=</span>bam_paths,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    bam_column<span class="op">=</span><span class="st">"batch"</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    gtf_file<span class="op">=</span><span class="bu">str</span>(gtf_local),</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>),</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    font_size<span class="op">=</span><span class="dv">7</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    threshold<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    top_n <span class="op">=</span> <span class="dv">2</span>,</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    group_order <span class="op">=</span> celltype_order,</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    group_color_map <span class="op">=</span> celltype_palette,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    show_title <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="d33b653c" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot coverage for Myl6 gene with top_n parameter</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This automatically selects the 2 most abundant transcripts</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> plot_gene_coverage(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    adata<span class="op">=</span>adata,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    transcript_data<span class="op">=</span>td,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    gene<span class="op">=</span><span class="st">"Myl6"</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    groupby<span class="op">=</span>[<span class="st">"cell_type"</span>],</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    bam_paths<span class="op">=</span>bam_paths,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    bam_column<span class="op">=</span><span class="st">"batch"</span>,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    gtf_file<span class="op">=</span><span class="bu">str</span>(gtf_local),</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">3</span>),</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    font_size<span class="op">=</span><span class="dv">7</span>,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    threshold<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    top_n<span class="op">=</span><span class="dv">2</span>,  <span class="co"># Automatically select top 2 most abundant transcripts</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

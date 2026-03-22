@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.42">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="This module centers around the IsoAdata class, an extension of the AnnData object, specifically designed to handle isoform-resolution single-cell data. It provides specialized methods to efficiently manage and analyze data from various protocols that generate such data, facilitating seamless integration and manipulation within the Allos framework.">
+<meta name="description" content="Visualize transcript structures with protein domain overlays.">
 
-<title>IsoAdata – allos</title>
+<title>Protein Plots – allos</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -70,10 +70,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-ae44de7e3b26b230a7801128389852ee.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-423ad5ba759ba8d1584d5d13ca0c1f6f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -104,11 +104,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="IsoAdata – allos">
-<meta property="og:description" content="This module centers around the IsoAdata class, an extension of the AnnData object, specifically designed to handle isoform-resolution single-cell data. It provides specialized methods to efficiently manage and analyze data from various protocols that generate such data, facilitating seamless integration and manipulation within the Allos framework.">
+<meta property="og:title" content="Protein Plots – allos">
+<meta property="og:description" content="Visualize transcript structures with protein domain overlays.">
 <meta property="og:site_name" content="allos">
-<meta name="twitter:title" content="IsoAdata – allos">
-<meta name="twitter:description" content="This module centers around the IsoAdata class, an extension of the AnnData object, specifically designed to handle isoform-resolution single-cell data. It provides specialized methods to efficiently manage and analyze data from various protocols that generate such data, facilitating seamless integration and manipulation within the Allos framework.">
+<meta name="twitter:title" content="Protein Plots – allos">
+<meta name="twitter:description" content="Visualize transcript structures with protein domain overlays.">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -133,7 +133,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./anndata_iso.html">IsoAdata</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./protein_plots.html">Protein Plots</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -177,20 +177,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./anndata_iso.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">IsoAdata</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./switch_search.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Detecting Switches</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./gene_report.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Gene Report Module</span></a>
+ <span class="menu-text">Switch Search</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -201,14 +189,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./visuals.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Visualizations</span></a>
+  <a href="./quant_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quantitative Plots</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./metacells.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Metacells</span></a>
+  <a href="./composed_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Composed Plots</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./coord_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coordinate Plots</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./coverage_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coverage Plots</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./protein_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Protein Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./protein_plots.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Protein Plots</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./junctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Junction Data Processing</span></a>
   </div>
 </li>
     </ul>
@@ -221,7 +239,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#anndataiso" id="toc-anndataiso" class="nav-link active" data-scroll-target="#anndataiso">AnnDataIso</a></li>
+  <li><a href="#api-reference" id="toc-api-reference" class="nav-link active" data-scroll-target="#api-reference">API reference</a>
+  <ul class="collapse">
+  <li><a href="#proteinplots" id="toc-proteinplots" class="nav-link" data-scroll-target="#proteinplots">ProteinPlots</a></li>
+  <li><a href="#proteinplots.draw_transcripts_with_protein_domains" id="toc-proteinplots.draw_transcripts_with_protein_domains" class="nav-link" data-scroll-target="#proteinplots.draw_transcripts_with_protein_domains">ProteinPlots.draw_transcripts_with_protein_domains</a></li>
+  </ul></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/cobioda/allos/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -230,12 +253,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">IsoAdata</h1>
+<h1 class="title">Protein Plots</h1>
 </div>
 
 <div>
   <div class="description">
-    This module centers around the <strong>IsoAdata</strong> class, an extension of the AnnData object, specifically designed to handle isoform-resolution single-cell data. It provides specialized methods to efficiently manage and analyze data from various protocols that generate such data, facilitating seamless integration and manipulation within the Allos framework.
+    Visualize transcript structures with protein domain overlays.
   </div>
 </div>
 
@@ -253,55 +276,46 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
-<div id="ac16319e" class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> allos.readers_tests <span class="im">import</span> <span class="op">*</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> allos.preprocessing <span class="im">import</span> subset_common_cells, transfer_obs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="d487932c" class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>combined_mouse_data <span class="op">=</span> process_mouse_data()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Starting download of test data from https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3748nnn/GSM3748087/suppl/GSM3748087%5F190c.isoforms.matrix.txt.gz
-File downloaded successfully
-File extracted successfully
-Test data downloaded successfully
-Starting download of test data from https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3748nnn/GSM3748089/suppl/GSM3748089%5F951c.isoforms.matrix.txt.gz
-File downloaded successfully
-File extracted successfully
-Test data downloaded successfully</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>/data/analysis/data_mcandrew/Allos_new/allos_env/lib/python3.9/site-packages/anndata/_core/anndata.py:1754: UserWarning: Observation names are not unique. To make them unique, call `.obs_names_make_unique`.
-  utils.warn_names_duplicates("obs")</code></pre>
-</div>
-</div>
-<div id="fb78b5a3" class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>combined_mouse_data.obs.index</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<pre><code>Index(['CCACCTACAAAGTCAA', 'AACCATGAGACCACGA', 'GATGAGGTCGACCAGC',
-       'GCACTCTTCTATCGCC', 'TGCCCTAAGGCCCGTT', 'TTCGGTCAGCTGGAAC',
-       'GGATTACAGACGCAAC', 'GTCTCGTTCCTCTAGC', 'CCATGTCAGTAGATGT',
-       'GATCGATGTCAAACTC',
-       ...
-       'GCTCCTACATCGACGC', 'AGCGTCGCATTATCTC', 'ATCCACCTCCCACTTG',
-       'GTGCTTCCAAGGCTCC', 'GACTACATCATTGCGA', 'TACTCATTCGCCATAA',
-       'CGTGAGCTCTCTAAGG', 'TTATGCTAGTAAGTAC', 'CGGACACTCTTGTCAT',
-       'GGCTCGAGTACCGAGA'],
-      dtype='object', length=1109)</code></pre>
-</div>
-</div>
-<pre><code>/opt/hostedtoolcache/Python/3.10.16/x64/lib/python3.10/site-packages/fastcore/docscrape.py:230: UserWarning: Unknown section See Also
-  else: warn(msg)</code></pre>
+<section id="api-reference" class="level2">
+<h2 class="anchored" data-anchor-id="api-reference">API reference</h2>
 <hr>
-<p><a href="https://github.com/cobioda/allos/blob/main/allos/anndata_iso.py#L14" target="_blank" style="float:right; font-size:smaller">source</a></p>
-<section id="anndataiso" class="level3">
-<h3 class="anchored" data-anchor-id="anndataiso">AnnDataIso</h3>
-<blockquote class="blockquote">
-<pre><code> AnnDataIso (anndata:anndata._core.anndata.AnnData, palette='ghibli')</code></pre>
-</blockquote>
-<p>*An annotated data matrix.</p>
-<p>.. figure:: ../_static/img/anndata_schema.svg :width: 260px :align: right :class: dark-light</p>
-<p>:class:<code>~anndata.AnnData</code> stores a data matrix :attr:<code>X</code> together with annotations of observations :attr:<code>obs</code> (:attr:<code>obsm</code>, :attr:<code>obsp</code>), variables :attr:<code>var</code> (:attr:<code>varm</code>, :attr:<code>varp</code>), and unstructured annotations :attr:<code>uns</code>.</p>
-<p>An :class:<code>~anndata.AnnData</code> object <code>adata</code> can be sliced like a :class:<code>~pandas.DataFrame</code>, for instance <code>adata_subset = adata[:, list_of_variable_names]</code>. :class:<code>~anndata.AnnData</code>’s basic structure is similar to R’s ExpressionSet [Huber15]_. If setting an <code>.h5ad</code>-formatted HDF5 backing file <code>.filename</code>, data remains on the disk but is automatically loaded into memory if needed.*</p>
+<section id="proteinplots" class="level3">
+<h3 class="anchored" data-anchor-id="proteinplots">ProteinPlots</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ProteinPlots(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    transcript_data:TranscriptData, protein_data:ProteinData, intron_scale:<span class="bu">float</span><span class="op">=</span><span class="fl">0.15</span>, color_offset:<span class="bu">int</span><span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    kwargs:VAR_KEYWORD</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Extended TranscriptPlots with protein domain overlay capabilities.</em></p>
+<p>Inherits all transcript plotting functionality from TranscriptPlots and adds methods for overlaying protein domains on transcript structures.</p>
+<hr>
+</section>
+<section id="proteinplots.draw_transcripts_with_protein_domains" class="level3">
+<h3 class="anchored" data-anchor-id="proteinplots.draw_transcripts_with_protein_domains">ProteinPlots.draw_transcripts_with_protein_domains</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_transcripts_with_protein_domains(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    transcript_ids, <span class="co"># Transcript ID(s) to visualize</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    provider:<span class="bu">str</span><span class="op">=</span><span class="st">'ensembl'</span>, <span class="co"># Domain provider ("ensembl" or "interpro")</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>Note: InterPro only annotates canonical transcripts</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    max_domains:<span class="bu">int</span><span class="op">=</span><span class="dv">12</span>, <span class="co"># Maximum domains to show per transcript</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    id_prefixes:Optional[List[<span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, <span class="co"># Filter domains by ID prefix (e.g., ["PF"] for Pfam)</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    sources:Optional[List[<span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, <span class="co"># Filter domains by source database</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    fig_width:<span class="bu">float</span><span class="op">=</span><span class="fl">18.0</span>, <span class="co"># Figure width in inches</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    palette_name:<span class="bu">str</span><span class="op">=</span><span class="st">'Dark2'</span>, <span class="co"># Seaborn color palette name for protein domains</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    custom_domains:Optional[Dict[<span class="bu">str</span>, List[Dict]]]<span class="op">=</span><span class="va">None</span>, <span class="co"># Custom domain annotations. Dict mapping transcript_id to list of domain dicts.</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>Each domain <span class="bu">dict</span> should have keys: <span class="st">'name'</span>, <span class="st">'label'</span>, <span class="st">'start'</span>, <span class="st">'end'</span> (AA coords)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>If provided, overrides API fetching <span class="cf">for</span> those transcripts.</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    show_aa_ticks:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Show amino acid position ticks on domain track</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>): <span class="co"># The generated figure</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Draw isoform exon structures + clean domain tracks.</em></p>
+<p>For InterPro provider: domains are only shown on the first (canonical) transcript, since InterPro annotations are only available for canonical isoforms. Other transcripts are still shown for structural comparison.</p>
+</section>
+</section>
+<section id="examples" class="level2">
+<h2 class="anchored" data-anchor-id="examples">Examples</h2>
+<p>Demonstrate protein domain visualization on transcripts.</p>
 
 
 </section>

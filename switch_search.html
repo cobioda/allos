@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.42">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="This module provides tools to identify potential isoform switches within single-cell isoform-resolution datasets. It includes methods based on Dirichlet distributions and Wilcoxon tests for detecting differential isoform usage. These approaches are still under development and intended for exploratory use, with manual confirmation of detected isoform switches being essential.">
+<meta name="description" content="Identify isoform switches across cell types or conditions in single-cell long-read data.">
 
-<title>Detecting Switches – allos</title>
+<title>Switch Search – allos</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -58,7 +58,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -70,10 +70,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-ae44de7e3b26b230a7801128389852ee.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-423ad5ba759ba8d1584d5d13ca0c1f6f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -101,17 +101,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 <link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="Detecting Switches – allos">
-<meta property="og:description" content="This module provides tools to identify potential isoform switches within single-cell isoform-resolution datasets. It includes methods based on Dirichlet distributions and Wilcoxon tests for detecting differential isoform usage. These approaches are still under development and intended for exploratory use, with manual confirmation of detected isoform switches being essential.">
+<meta property="og:title" content="Switch Search – allos">
+<meta property="og:description" content="Identify isoform switches across cell types or conditions in single-cell long-read data.">
 <meta property="og:site_name" content="allos">
-<meta name="twitter:title" content="Detecting Switches – allos">
-<meta name="twitter:description" content="This module provides tools to identify potential isoform switches within single-cell isoform-resolution datasets. It includes methods based on Dirichlet distributions and Wilcoxon tests for detecting differential isoform usage. These approaches are still under development and intended for exploratory use, with manual confirmation of detected isoform switches being essential.">
+<meta name="twitter:title" content="Switch Search – allos">
+<meta name="twitter:description" content="Identify isoform switches across cell types or conditions in single-cell long-read data.">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -136,7 +133,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./switch_search.html">Detecting Switches</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./switch_search.html">Switch Search</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -180,20 +177,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./anndata_iso.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">IsoAdata</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./switch_search.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Detecting Switches</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./gene_report.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Gene Report Module</span></a>
+ <span class="menu-text">Switch Search</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -204,14 +189,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./visuals.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Visualizations</span></a>
+  <a href="./quant_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quantitative Plots</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./metacells.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Metacells</span></a>
+  <a href="./composed_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Composed Plots</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./coord_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coordinate Plots</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./coverage_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coverage Plots</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./protein_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Protein Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./protein_plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Protein Plots</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./junctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Junction Data Processing</span></a>
   </div>
 </li>
     </ul>
@@ -224,14 +239,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#build_isoform_metrics_table" id="toc-build_isoform_metrics_table" class="nav-link active" data-scroll-target="#build_isoform_metrics_table">build_isoform_metrics_table</a></li>
-  <li><a href="#compute_cell_level_psi" id="toc-compute_cell_level_psi" class="nav-link" data-scroll-target="#compute_cell_level_psi">compute_cell_level_psi</a></li>
-  <li><a href="#pct_expressed" id="toc-pct_expressed" class="nav-link" data-scroll-target="#pct_expressed">pct_expressed</a></li>
-  <li><a href="#safe_sum" id="toc-safe_sum" class="nav-link" data-scroll-target="#safe_sum">safe_sum</a></li>
-  <li><a href="#build_gene_metrics_table" id="toc-build_gene_metrics_table" class="nav-link" data-scroll-target="#build_gene_metrics_table">build_gene_metrics_table</a></li>
-  <li><a href="#switchsearch" id="toc-switchsearch" class="nav-link" data-scroll-target="#switchsearch">SwitchSearch</a></li>
+  <li><a href="#safe_sum" id="toc-safe_sum" class="nav-link active" data-scroll-target="#safe_sum">safe_sum</a></li>
+  <li><a href="#build_isoform_metrics_table" id="toc-build_isoform_metrics_table" class="nav-link" data-scroll-target="#build_isoform_metrics_table">build_isoform_metrics_table</a></li>
+  <li><a href="#delta_pi_one_gene_signed" id="toc-delta_pi_one_gene_signed" class="nav-link" data-scroll-target="#delta_pi_one_gene_signed">delta_pi_one_gene_signed</a></li>
+  <li><a href="#delta_pi_one_gene" id="toc-delta_pi_one_gene" class="nav-link" data-scroll-target="#delta_pi_one_gene">delta_pi_one_gene</a></li>
+  <li><a href="#build_isoform_metrics_table-1" id="toc-build_isoform_metrics_table-1" class="nav-link" data-scroll-target="#build_isoform_metrics_table-1">build_isoform_metrics_table</a></li>
+  <li><a href="#delta_pi_one_gene_signed-1" id="toc-delta_pi_one_gene_signed-1" class="nav-link" data-scroll-target="#delta_pi_one_gene_signed-1">delta_pi_one_gene_signed</a></li>
+  <li><a href="#volcano_grid" id="toc-volcano_grid" class="nav-link" data-scroll-target="#volcano_grid">volcano_grid</a></li>
+  <li><a href="#draw_volcano_panel" id="toc-draw_volcano_panel" class="nav-link" data-scroll-target="#draw_volcano_panel">draw_volcano_panel</a></li>
   <li><a href="#filter_sample_replicated_transcripts" id="toc-filter_sample_replicated_transcripts" class="nav-link" data-scroll-target="#filter_sample_replicated_transcripts">filter_sample_replicated_transcripts</a></li>
-  <li><a href="#get_top_n_isoforms" id="toc-get_top_n_isoforms" class="nav-link" data-scroll-target="#get_top_n_isoforms">get_top_n_isoforms</a></li>
+  <li><a href="#api-reference" id="toc-api-reference" class="nav-link" data-scroll-target="#api-reference">API reference</a>
+  <ul class="collapse">
+  <li><a href="#switchsearch" id="toc-switchsearch" class="nav-link" data-scroll-target="#switchsearch">SwitchSearch</a></li>
+  <li><a href="#switchsearch.find_switches_chi2" id="toc-switchsearch.find_switches_chi2" class="nav-link" data-scroll-target="#switchsearch.find_switches_chi2">SwitchSearch.find_switches_chi2</a></li>
+  <li><a href="#pseudobulk_diff_splice" id="toc-pseudobulk_diff_splice" class="nav-link" data-scroll-target="#pseudobulk_diff_splice">pseudobulk_diff_splice</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/cobioda/allos/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -240,12 +262,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Detecting Switches</h1>
+<h1 class="title">Switch Search</h1>
 </div>
 
 <div>
   <div class="description">
-    This module provides tools to identify potential isoform switches within single-cell isoform-resolution datasets. It includes methods based on Dirichlet distributions and Wilcoxon tests for detecting differential isoform usage. These approaches are still under development and intended for exploratory use, with manual confirmation of detected isoform switches being essential.
+    Identify isoform switches across cell types or conditions in single-cell long-read data.
   </div>
 </div>
 
@@ -264,612 +286,162 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
 <hr>
-<p><a href="https://github.com/cobioda/allos/blob/main/allos/switch_search.py#L52" target="_blank" style="float:right; font-size:smaller">source</a></p>
-<section id="build_isoform_metrics_table" class="level3">
-<h3 class="anchored" data-anchor-id="build_isoform_metrics_table">build_isoform_metrics_table</h3>
-<blockquote class="blockquote">
-<pre><code> build_isoform_metrics_table (adata:anndata._core.anndata.AnnData,
-                              group_column:str, condition_column:str=None,
-                              comparisons:list=None, epsilon:float=1e-06,
-                              n_jobs:int=-1)</code></pre>
-</blockquote>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th></th>
-<th><strong>Type</strong></th>
-<th><strong>Default</strong></th>
-<th><strong>Details</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>adata</td>
-<td>AnnData</td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td>group_column</td>
-<td>str</td>
-<td></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>condition_column</td>
-<td>str</td>
-<td>None</td>
-<td>optional nesting argument</td>
-</tr>
-<tr class="even">
-<td>comparisons</td>
-<td>list</td>
-<td>None</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>epsilon</td>
-<td>float</td>
-<td>1e-06</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>n_jobs</td>
-<td>int</td>
-<td>-1</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td><strong>Returns</strong></td>
-<td><strong>DataFrame</strong></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<hr>
-<p><a href="https://github.com/cobioda/allos/blob/main/allos/switch_search.py#L42" target="_blank" style="float:right; font-size:smaller">source</a></p>
-</section>
-<section id="compute_cell_level_psi" class="level3">
-<h3 class="anchored" data-anchor-id="compute_cell_level_psi">compute_cell_level_psi</h3>
-<blockquote class="blockquote">
-<pre><code> compute_cell_level_psi (adata_sub, transcripts, epsilon=1e-06)</code></pre>
-</blockquote>
-<hr>
-<p><a href="https://github.com/cobioda/allos/blob/main/allos/switch_search.py#L37" target="_blank" style="float:right; font-size:smaller">source</a></p>
-</section>
-<section id="pct_expressed" class="level3">
-<h3 class="anchored" data-anchor-id="pct_expressed">pct_expressed</h3>
-<blockquote class="blockquote">
-<pre><code> pct_expressed (adata_sub, features)</code></pre>
-</blockquote>
-<hr>
-<p><a href="https://github.com/cobioda/allos/blob/main/allos/switch_search.py#L33" target="_blank" style="float:right; font-size:smaller">source</a></p>
-</section>
 <section id="safe_sum" class="level3">
 <h3 class="anchored" data-anchor-id="safe_sum">safe_sum</h3>
-<blockquote class="blockquote">
-<pre><code> safe_sum (X)</code></pre>
-</blockquote>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> safe_sum(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    X</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Call self as a function.</em></p>
 <hr>
-<p><a href="https://github.com/cobioda/allos/blob/main/allos/switch_search.py#L147" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
-<section id="build_gene_metrics_table" class="level3">
-<h3 class="anchored" data-anchor-id="build_gene_metrics_table">build_gene_metrics_table</h3>
-<blockquote class="blockquote">
-<pre><code> build_gene_metrics_table (adata:anndata._core.anndata.AnnData,
-                           group_column:str, condition_column:str=None,
-                           comparisons:list=None, epsilon:float=1e-06,
-                           n_jobs:int=-1)</code></pre>
-</blockquote>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th></th>
-<th><strong>Type</strong></th>
-<th><strong>Default</strong></th>
-<th><strong>Details</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>adata</td>
-<td>AnnData</td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td>group_column</td>
-<td>str</td>
-<td></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>condition_column</td>
-<td>str</td>
-<td>None</td>
-<td>optional nesting argument</td>
-</tr>
-<tr class="even">
-<td>comparisons</td>
-<td>list</td>
-<td>None</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>epsilon</td>
-<td>float</td>
-<td>1e-06</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>n_jobs</td>
-<td>int</td>
-<td>-1</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td><strong>Returns</strong></td>
-<td><strong>DataFrame</strong></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<pre><code>/opt/hostedtoolcache/Python/3.10.16/x64/lib/python3.10/site-packages/fastcore/docscrape.py:230: UserWarning: Unknown section See Also
-  else: warn(msg)</code></pre>
+<section id="build_isoform_metrics_table" class="level3">
+<h3 class="anchored" data-anchor-id="build_isoform_metrics_table">build_isoform_metrics_table</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_isoform_metrics_table(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    adata:ad.AnnData, group_columns:Sequence[<span class="bu">str</span>] <span class="op">|</span> <span class="bu">str</span>, comparisons:Sequence[Tuple[<span class="bu">str</span>, <span class="bu">str</span>]] <span class="op">|</span> <span class="va">None</span><span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    group_vs_rest:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, epsilon:<span class="bu">float</span><span class="op">=</span><span class="fl">1e-06</span>, n_jobs:<span class="bu">int</span><span class="op">=-</span><span class="dv">1</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>pd.DataFrame:</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Call self as a function.</em></p>
 <hr>
-<p><a href="https://github.com/cobioda/allos/blob/main/allos/switch_search.py#L277" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
-<section id="switchsearch" class="level3">
-<h3 class="anchored" data-anchor-id="switchsearch">SwitchSearch</h3>
-<blockquote class="blockquote">
-<pre><code> SwitchSearch (anndata_obj:anndata._core.anndata.AnnData, n_jobs=-1,
-               compute_metrics=True, group_column='cell_type',
-               condition_column=None)</code></pre>
-</blockquote>
-<p>*An annotated data matrix.</p>
-<p>.. figure:: ../_static/img/anndata_schema.svg :width: 260px :align: right :class: dark-light</p>
-<p>:class:<code>~anndata.AnnData</code> stores a data matrix :attr:<code>X</code> together with annotations of observations :attr:<code>obs</code> (:attr:<code>obsm</code>, :attr:<code>obsp</code>), variables :attr:<code>var</code> (:attr:<code>varm</code>, :attr:<code>varp</code>), and unstructured annotations :attr:<code>uns</code>.</p>
-<p>An :class:<code>~anndata.AnnData</code> object <code>adata</code> can be sliced like a :class:<code>~pandas.DataFrame</code>, for instance <code>adata_subset = adata[:, list_of_variable_names]</code>. :class:<code>~anndata.AnnData</code>’s basic structure is similar to R’s ExpressionSet [Huber15]_. If setting an <code>.h5ad</code>-formatted HDF5 backing file <code>.filename</code>, data remains on the disk but is automatically loaded into memory if needed.*</p>
+<section id="delta_pi_one_gene_signed" class="level3">
+<h3 class="anchored" data-anchor-id="delta_pi_one_gene_signed">delta_pi_one_gene_signed</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> delta_pi_one_gene_signed(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    dpsi:pd.Series</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="bu">float</span>:</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Signed Tilgner Δπ (keeps ± sign of the stronger direction).</em></p>
 <hr>
-<p><a href="https://github.com/cobioda/allos/blob/main/allos/switch_search.py#L541" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="delta_pi_one_gene" class="level3">
+<h3 class="anchored" data-anchor-id="delta_pi_one_gene">delta_pi_one_gene</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> delta_pi_one_gene(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    dpsi:pd.Series</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="bu">float</span>:</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Unsigned Tilgner Δπ (always ≥ 0).</em></p>
+<hr>
+</section>
+<section id="build_isoform_metrics_table-1" class="level3">
+<h3 class="anchored" data-anchor-id="build_isoform_metrics_table-1">build_isoform_metrics_table</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_isoform_metrics_table(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    adata:ad.AnnData, group_columns:Sequence[<span class="bu">str</span>] <span class="op">|</span> <span class="bu">str</span>, comparisons:Sequence[Tuple[<span class="bu">str</span>, <span class="bu">str</span>]] <span class="op">|</span> <span class="va">None</span><span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    group_vs_rest:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, epsilon:<span class="bu">float</span><span class="op">=</span><span class="fl">1e-06</span>, n_jobs:<span class="bu">int</span><span class="op">=-</span><span class="dv">1</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>pd.DataFrame:</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Call self as a function.</em></p>
+<hr>
+</section>
+<section id="delta_pi_one_gene_signed-1" class="level3">
+<h3 class="anchored" data-anchor-id="delta_pi_one_gene_signed-1">delta_pi_one_gene_signed</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> delta_pi_one_gene_signed(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    dpsi:pd.Series</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="bu">float</span>:</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Signed Tilgner Δπ (keeps ± sign of the stronger direction).</em></p>
+<hr>
+</section>
+<section id="volcano_grid" class="level3">
+<h3 class="anchored" data-anchor-id="volcano_grid">volcano_grid</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> volcano_grid(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    df_all, n_cols:<span class="bu">int</span><span class="op">=</span><span class="dv">3</span>, <span class="co"># How many columns in the grid.</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    figsize_per_panel:<span class="bu">float</span><span class="op">=</span><span class="fl">3.0</span>, <span class="co"># inches</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    save:NoneType<span class="op">=</span><span class="va">None</span>, <span class="co"># "all_volcanos.pdf" / ".svg" / None</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    show:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Whether to display the figure inline.</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    panel_kw:VAR_KEYWORD, <span class="co"># Extra kwargs for `draw_volcano_panel` (cut-offs, sizes, etc.).</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Draw every (group_1, group_2) combo in df_all on one figure grid.</em></p>
+<hr>
+</section>
+<section id="draw_volcano_panel" class="level3">
+<h3 class="anchored" data-anchor-id="draw_volcano_panel">draw_volcano_panel</h3>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_volcano_panel(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    ax, df_comp, <span class="co"># dataframe for ONE (group1, group2)</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    effect_col:<span class="bu">str</span><span class="op">=</span><span class="st">'effect_size'</span>, pval_col:<span class="bu">str</span><span class="op">=</span><span class="st">'adj_pval'</span>, fdr_cutoff:<span class="bu">float</span><span class="op">=</span><span class="fl">0.05</span>, eff_cutoff:<span class="bu">float</span><span class="op">=</span><span class="fl">0.1</span>, top_n:<span class="bu">int</span><span class="op">=</span><span class="dv">6</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    bg_size:<span class="bu">int</span><span class="op">=</span><span class="dv">10</span>, <span class="co"># marker areas (pt²)</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    sig_size:<span class="bu">int</span><span class="op">=</span><span class="dv">25</span>, font_size:<span class="bu">int</span><span class="op">=</span><span class="dv">7</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Draws a Δπ vs FDR volcano into </em>ax* (NO fig.show/save here).*</p>
+<hr>
 </section>
 <section id="filter_sample_replicated_transcripts" class="level3">
 <h3 class="anchored" data-anchor-id="filter_sample_replicated_transcripts">filter_sample_replicated_transcripts</h3>
-<blockquote class="blockquote">
-<pre><code> filter_sample_replicated_transcripts (adata, sample_col='sample',
-                                       min_samples=2, min_umi=1)</code></pre>
-</blockquote>
-<p>*Filters out transcripts that are not detected above a minimum UMI threshold in at least a specified number of samples (replicates).</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> filter_sample_replicated_transcripts(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    adata, sample_col:<span class="bu">str</span><span class="op">=</span><span class="st">'sample'</span>, min_samples:<span class="bu">int</span><span class="op">=</span><span class="dv">2</span>, min_umi:<span class="bu">int</span><span class="op">=</span><span class="dv">1</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Filters out transcripts that are not detected above a minimum UMI threshold </em> in at least a specified number of samples (replicates).</p>
 <p>Parameters: adata: AnnData object containing transcript-level counts. sample_col: Column in adata.obs that identifies the replicate/sample. min_samples: Minimum number of samples in which the transcript must be expressed. min_umi: Minimum UMI count in a sample for the transcript to be considered “expressed”.</p>
-<p>Returns: A new AnnData object containing only transcripts that replicate across samples.*</p>
-<div id="3719063a" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> allos.readers_tests <span class="im">import</span> <span class="op">*</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> allos.preprocessing <span class="im">as</span> pp</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>combined_mouse_data <span class="op">=</span> process_mouse_data()</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>combined_mouse_data <span class="op">=</span> pp.filter_transcripts_by_abundance(combined_mouse_data,  threshold_pct<span class="op">=</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-🔎 Looking for file at: /home/runner/work/allos/allos/allos/resources/e18.mouse.clusters.csv
-✅ File found at: /home/runner/work/allos/allos/allos/resources/e18.mouse.clusters.csv
-✅ File already exists at: /home/runner/work/allos/allos/allos/resources/data/mouse_1.txt.gz
-
-🔄 Decompressing /home/runner/work/allos/allos/allos/resources/data/mouse_1.txt.gz to /home/runner/work/allos/allos/allos/resources/data/mouse_1.txt...
-✅ Decompression complete.
-Test data (mouse_1) downloaded successfully
-✅ File already exists at: /home/runner/work/allos/allos/allos/resources/data/mouse_2.txt.gz
-
-🔄 Decompressing /home/runner/work/allos/allos/allos/resources/data/mouse_2.txt.gz to /home/runner/work/allos/allos/allos/resources/data/mouse_2.txt...
-✅ Decompression complete.
-Test data (mouse_2) downloaded successfully</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>/opt/hostedtoolcache/Python/3.10.16/x64/lib/python3.10/site-packages/anndata/_core/anndata.py:1756: UserWarning: Observation names are not unique. To make them unique, call `.obs_names_make_unique`.
-  utils.warn_names_duplicates("obs")</code></pre>
-</div>
-</div>
-<div id="7b7c4e01" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>combined_mouse_data.obs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="9">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">batch</th>
-<th data-quarto-table-cell-role="th">cell_type</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">CCACCTACAAAGTCAA</td>
-<td>0</td>
-<td>mature Glutamatergic</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">AACCATGAGACCACGA</td>
-<td>0</td>
-<td>Cajal-Retzius</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">GATGAGGTCGACCAGC</td>
-<td>0</td>
-<td>imature Glutamatergic</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">GCACTCTTCTATCGCC</td>
-<td>0</td>
-<td>imature Glutamatergic</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">TGCCCTAAGGCCCGTT</td>
-<td>0</td>
-<td>intermediate progenitor</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">...</td>
-<td>...</td>
-<td>...</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">TACTCATTCGCCATAA</td>
-<td>1</td>
-<td>mature GABAergic</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">CGTGAGCTCTCTAAGG</td>
-<td>1</td>
-<td>imature Glutamatergic</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">TTATGCTAGTAAGTAC</td>
-<td>1</td>
-<td>mature GABAergic</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">CGGACACTCTTGTCAT</td>
-<td>1</td>
-<td>radial glia</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">GGCTCGAGTACCGAGA</td>
-<td>1</td>
-<td>mature GABAergic</td>
-</tr>
-</tbody>
-</table>
-
-<p>1109 rows × 2 columns</p>
-</div>
-</div>
-</div>
-<div id="2864493e" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>ss <span class="op">=</span> SwitchSearch(combined_mouse_data, n_jobs <span class="op">=</span><span class="dv">20</span>, group_column <span class="op">=</span> <span class="st">'cell_type'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="30ac90ec" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>result_df_transcript <span class="op">=</span> ss.find_switching_isoforms_chi2(cell_group_column<span class="op">=</span><span class="st">'cell_type'</span>, return_transcript_metrics<span class="op">=</span><span class="va">True</span>, n_jobs <span class="op">=</span> <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="c35ecde9" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>result_df_transcript.sort_values(by<span class="op">=</span><span class="st">'adj_pval'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="14">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">gene_id</th>
-<th data-quarto-table-cell-role="th">group_1</th>
-<th data-quarto-table-cell-role="th">group_2</th>
-<th data-quarto-table-cell-role="th">chi2_stat</th>
-<th data-quarto-table-cell-role="th">p_value</th>
-<th data-quarto-table-cell-role="th">dof</th>
-<th data-quarto-table-cell-role="th">adj_pval</th>
-<th data-quarto-table-cell-role="th">comparison</th>
-<th data-quarto-table-cell-role="th">transcript_id</th>
-<th data-quarto-table-cell-role="th">count_group1</th>
-<th data-quarto-table-cell-role="th">...</th>
-<th data-quarto-table-cell-role="th">mean_expr_group2</th>
-<th data-quarto-table-cell-role="th">percent_expr_group1</th>
-<th data-quarto-table-cell-role="th">percent_expr_group2</th>
-<th data-quarto-table-cell-role="th">avg_psi_group1</th>
-<th data-quarto-table-cell-role="th">log_fc</th>
-<th data-quarto-table-cell-role="th">delta_psi</th>
-<th data-quarto-table-cell-role="th">n_cells_group1</th>
-<th data-quarto-table-cell-role="th">n_cells_group2</th>
-<th data-quarto-table-cell-role="th">total_cells</th>
-<th data-quarto-table-cell-role="th">total_count</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">38</td>
-<td>Clta</td>
-<td>mature Glutamatergic</td>
-<td>cycling radial glia</td>
-<td>490.319910</td>
-<td>1.213957e-108</td>
-<td>1</td>
-<td>4.916526e-107</td>
-<td>imature GABAergic__mature Glutamatergic</td>
-<td>ENSMUST00000034834.15</td>
-<td>228.0</td>
-<td>...</td>
-<td>0.712727</td>
-<td>65.957447</td>
-<td>42.181818</td>
-<td>0.442660</td>
-<td>1.254394</td>
-<td>0.316393</td>
-<td>141.0</td>
-<td>275.0</td>
-<td>416.0</td>
-<td>424.0</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">115</td>
-<td>Pkm</td>
-<td>imature Glutamatergic</td>
-<td>intermediate progenitor</td>
-<td>345.024592</td>
-<td>5.136026e-77</td>
-<td>1</td>
-<td>1.386727e-75</td>
-<td>imature Glutamatergic__intermediate progenitor</td>
-<td>ENSMUST00000163694.3</td>
-<td>682.0</td>
-<td>...</td>
-<td>1.081395</td>
-<td>84.615385</td>
-<td>51.162791</td>
-<td>0.628912</td>
-<td>1.066032</td>
-<td>0.412333</td>
-<td>234.0</td>
-<td>86.0</td>
-<td>320.0</td>
-<td>775.0</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">116</td>
-<td>Pkm</td>
-<td>imature Glutamatergic</td>
-<td>intermediate progenitor</td>
-<td>345.024592</td>
-<td>5.136026e-77</td>
-<td>1</td>
-<td>1.386727e-75</td>
-<td>imature Glutamatergic__intermediate progenitor</td>
-<td>ENSMUST00000034834.15</td>
-<td>312.0</td>
-<td>...</td>
-<td>4.906977</td>
-<td>58.974359</td>
-<td>94.186047</td>
-<td>0.268524</td>
-<td>-1.055774</td>
-<td>-0.503269</td>
-<td>234.0</td>
-<td>86.0</td>
-<td>320.0</td>
-<td>734.0</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">30</td>
-<td>Pkm</td>
-<td>mature Glutamatergic</td>
-<td>imature GABAergic</td>
-<td>296.662337</td>
-<td>1.757717e-66</td>
-<td>1</td>
-<td>4.067860e-65</td>
-<td>imature GABAergic__mature Glutamatergic</td>
-<td>ENSMUST00000077735.12</td>
-<td>149.0</td>
-<td>...</td>
-<td>1.872727</td>
-<td>52.482270</td>
-<td>73.090909</td>
-<td>0.401401</td>
-<td>-0.442533</td>
-<td>-0.223438</td>
-<td>141.0</td>
-<td>275.0</td>
-<td>416.0</td>
-<td>664.0</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">71</td>
-<td>Myl6</td>
-<td>mature Glutamatergic</td>
-<td>radial glia</td>
-<td>276.251023</td>
-<td>4.926999e-62</td>
-<td>1</td>
-<td>9.977173e-61</td>
-<td>mature Glutamatergic__radial glia</td>
-<td>ENSMUST00000218127.1</td>
-<td>156.0</td>
-<td>...</td>
-<td>3.558824</td>
-<td>37.818182</td>
-<td>89.705882</td>
-<td>0.143715</td>
-<td>-1.448639</td>
-<td>-0.468127</td>
-<td>275.0</td>
-<td>68.0</td>
-<td>343.0</td>
-<td>398.0</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">3</td>
-<td>Nsg2</td>
-<td>mature Glutamatergic</td>
-<td>imature Glutamatergic</td>
-<td>6.391678</td>
-<td>1.146566e-02</td>
-<td>1</td>
-<td>1.175593e-02</td>
-<td>imature Glutamatergic__mature Glutamatergic</td>
-<td>ENSMUST00000164181.1</td>
-<td>385.0</td>
-<td>...</td>
-<td>3.370909</td>
-<td>75.213675</td>
-<td>89.090909</td>
-<td>0.593013</td>
-<td>-0.278629</td>
-<td>-0.190546</td>
-<td>234.0</td>
-<td>275.0</td>
-<td>509.0</td>
-<td>1312.0</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">90</td>
-<td>Psma3</td>
-<td>imature Glutamatergic</td>
-<td>imature GABAergic</td>
-<td>6.343323</td>
-<td>1.178239e-02</td>
-<td>1</td>
-<td>1.200470e-02</td>
-<td>intermediate progenitor__mature Glutamatergic</td>
-<td>ENSMUST00000130411.6</td>
-<td>76.0</td>
-<td>...</td>
-<td>1.025455</td>
-<td>52.325581</td>
-<td>58.181818</td>
-<td>0.401163</td>
-<td>-0.311244</td>
-<td>-0.146474</td>
-<td>86.0</td>
-<td>275.0</td>
-<td>361.0</td>
-<td>358.0</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">85</td>
-<td>Thra</td>
-<td>imature Glutamatergic</td>
-<td>mature GABAergic</td>
-<td>6.304508</td>
-<td>1.204313e-02</td>
-<td>1</td>
-<td>1.219367e-02</td>
-<td>intermediate progenitor__mature Glutamatergic</td>
-<td>ENSMUST00000163694.3</td>
-<td>93.0</td>
-<td>...</td>
-<td>4.443636</td>
-<td>51.162791</td>
-<td>89.818182</td>
-<td>0.216579</td>
-<td>-1.289582</td>
-<td>-0.569881</td>
-<td>86.0</td>
-<td>275.0</td>
-<td>361.0</td>
-<td>1315.0</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">166</td>
-<td>Rpl34</td>
-<td>imature GABAergic</td>
-<td>cycling radial glia</td>
-<td>5.721957</td>
-<td>1.675405e-02</td>
-<td>1</td>
-<td>1.685811e-02</td>
-<td>cycling radial glia__mature GABAergic</td>
-<td>ENSMUST00000077609.11</td>
-<td>75.0</td>
-<td>...</td>
-<td>0.220930</td>
-<td>35.042735</td>
-<td>19.186047</td>
-<td>0.290212</td>
-<td>0.663856</td>
-<td>0.140793</td>
-<td>117.0</td>
-<td>172.0</td>
-<td>289.0</td>
-<td>113.0</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">91</td>
-<td>Rpl29</td>
-<td>imature Glutamatergic</td>
-<td>imature GABAergic</td>
-<td>7.527070</td>
-<td>2.320158e-02</td>
-<td>2</td>
-<td>2.320158e-02</td>
-<td>intermediate progenitor__mature Glutamatergic</td>
-<td>ENSMUST00000017065.14</td>
-<td>42.0</td>
-<td>...</td>
-<td>0.163636</td>
-<td>36.046512</td>
-<td>14.181818</td>
-<td>0.226744</td>
-<td>0.938248</td>
-<td>0.138017</td>
-<td>86.0</td>
-<td>275.0</td>
-<td>361.0</td>
-<td>87.0</td>
-</tr>
-</tbody>
-</table>
-
-<p>145 rows × 22 columns</p>
-</div>
-</div>
-</div>
-<hr>
-<p><a href="https://github.com/cobioda/allos/blob/main/allos/switch_search.py#L583" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p>Returns: A new AnnData object containing only transcripts that replicate across samples.</p>
 </section>
-<section id="get_top_n_isoforms" class="level3">
-<h3 class="anchored" data-anchor-id="get_top_n_isoforms">get_top_n_isoforms</h3>
-<blockquote class="blockquote">
-<pre><code> get_top_n_isoforms (adata, gene_id, top_n=5, strip=False)</code></pre>
-</blockquote>
-<p>*Get the top_n transcript IDs for a given gene based on overall average expression.</p>
-<p>Parameters: - adata: AnnData object containing transcript-level data. - gene_id: The gene ID to search for corresponding isoforms. - top_n: The number of top isoforms to return based on overall average expression. - strip: Boolean indicating whether to strip the dot and everything after from the ID.</p>
-<p>Returns: - A list of top_n transcript IDs.*</p>
+<section id="api-reference" class="level2">
+<h2 class="anchored" data-anchor-id="api-reference">API reference</h2>
+<hr>
+<section id="switchsearch" class="level3">
+<h3 class="anchored" data-anchor-id="switchsearch">SwitchSearch</h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> SwitchSearch(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    anndata_obj:ad.AnnData, group_columns:Sequence[<span class="bu">str</span>] <span class="op">|</span> <span class="bu">str</span><span class="op">=</span>(<span class="st">'cell_type'</span>,), n_jobs:<span class="bu">int</span><span class="op">=-</span><span class="dv">1</span>, fast_mode:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    precompute_metrics:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>χ²-based isoform-switch screen supporting nested and 1-vs-rest designs,</em> with auto-managed transcript-metrics caching. FP-control additions: - min_expected_count: χ² validity guard (default 5.0; set None to disable) - min_gene_total: require gene total counts per group (default None/off) - min_isoforms_gene: require &gt;= this many isoforms for a gene (default 2) - min_present_isoforms: require &gt;= this many isoforms pass count threshold (optional) New (optional): - min_prevalence_pct: require &gt;= this % of spots/cells express an isoform (in either group) - min_prevalent_isoforms: require &gt;= this many isoforms meet prevalence criterion (default 2) - prevalence_count_thr: isoform considered expressed in a cell/spot if count &gt;= thr (default 1)</p>
+<hr>
+</section>
+<section id="switchsearch.find_switches_chi2" class="level3">
+<h3 class="anchored" data-anchor-id="switchsearch.find_switches_chi2">SwitchSearch.find_switches_chi2</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> find_switches_chi2(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    primary_col:Optional[<span class="bu">str</span>]<span class="op">=</span><span class="va">None</span>, secondary_col:Optional[<span class="bu">str</span>]<span class="op">=</span><span class="va">None</span>, within:<span class="bu">str</span><span class="op">=</span><span class="st">'primary'</span>, group_vs_rest:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    targets:Optional[Sequence[<span class="bu">str</span>]]<span class="op">=</span><span class="va">None</span>, min_reads:<span class="bu">int</span><span class="op">=</span><span class="dv">30</span>, <span class="co"># existing thresholds</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    fdr:<span class="bu">float</span><span class="op">=</span><span class="fl">0.05</span>, min_expected_count:Optional[<span class="bu">float</span>]<span class="op">=</span><span class="fl">5.0</span>, <span class="co"># set None to disable</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    min_gene_total:Optional[<span class="bu">int</span>]<span class="op">=</span><span class="va">None</span>, <span class="co"># per group; set None to disable</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    min_isoforms_gene:<span class="bu">int</span><span class="op">=</span><span class="dv">2</span>, min_present_isoforms:Optional[<span class="bu">int</span>]<span class="op">=</span><span class="va">None</span>, <span class="co"># set None to disable</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    present_count_thr:<span class="bu">int</span><span class="op">=</span><span class="dv">1</span>, min_prevalence_pct:Optional[<span class="bu">float</span>]<span class="op">=</span><span class="va">None</span>, <span class="co"># e.g. 1.0 or 5.0; set None to disable</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    min_prevalent_isoforms:<span class="bu">int</span><span class="op">=</span><span class="dv">2</span>, <span class="co"># require &gt;= N isoforms meet prevalence in either group</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    prevalence_count_thr:<span class="bu">int</span><span class="op">=</span><span class="dv">1</span>, <span class="co"># isoform is "expressed" in cell/spot if count&gt;=thr</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    return_transcript_metrics:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># outputs</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    calc_effect_size:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, effect_size_mode:<span class="bu">str</span><span class="op">=</span><span class="st">'abs'</span>, <span class="co"># 'abs' or 'signed'</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    drop_unmatched_metrics:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, n_jobs:Optional[<span class="bu">int</span>]<span class="op">=</span><span class="va">None</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>pd.DataFrame:</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Call self as a function.</em></p>
+<hr>
+</section>
+<section id="pseudobulk_diff_splice" class="level3">
+<h3 class="anchored" data-anchor-id="pseudobulk_diff_splice">pseudobulk_diff_splice</h3>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> pseudobulk_diff_splice(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    adata, group_col:<span class="bu">str</span><span class="op">=</span><span class="st">'cell_type'</span>, replicate_col:<span class="bu">str</span><span class="op">=</span><span class="st">'batch'</span>, layer:NoneType<span class="op">=</span><span class="va">None</span>, <span class="co"># None = use .X</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    gene_col:<span class="bu">str</span><span class="op">=</span><span class="st">'geneId'</span>, comparisons:NoneType<span class="op">=</span><span class="va">None</span>, <span class="co"># list of (g1, g2); None = all pairwise</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    group_vs_rest:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, min_cells:<span class="bu">int</span><span class="op">=</span><span class="dv">10</span>, <span class="co"># drop pseudobulk samples with fewer cells</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    min_transcript_counts:<span class="bu">int</span><span class="op">=</span><span class="dv">10</span>, <span class="co"># min total counts across all pseudobulk samples</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    min_isoform_fraction:<span class="bu">float</span><span class="op">=</span><span class="fl">0.01</span>, <span class="co"># min fraction of gene total (filters minor isoforms)</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    min_samples_expressed:<span class="bu">int</span><span class="op">=</span><span class="dv">1</span>, <span class="co"># min pseudobulk samples with &gt;0 counts</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    covariates:NoneType<span class="op">=</span><span class="va">None</span>, <span class="co"># str or list of obs column names</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    output_level:<span class="bu">str</span><span class="op">=</span><span class="st">'gene'</span>, <span class="co"># "gene" or "transcript"</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    fdr:<span class="bu">float</span><span class="op">=</span><span class="fl">0.05</span>, return_all:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># if True, skip FDR filter and return everything</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    prior_count:<span class="bu">float</span><span class="op">=</span><span class="fl">0.125</span>, n_jobs:<span class="bu">int</span><span class="op">=</span><span class="dv">1</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>): <span class="co"># gene_id, n_transcripts, group_1, group_2,</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>stat, p_value, simes_p_value, adj_pval</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Pseudobulk differential splicing test using edgePython’s diff_splice (QL F-test).</em></p>
+<p>Counts are summed per (group_col, replicate_col), a quasi-likelihood GLM is fitted per comparison pair, and diff_splice tests whether each gene/transcript shows differential isoform usage beyond its overall expression change.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
