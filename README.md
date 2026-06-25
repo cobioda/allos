@@ -44,25 +44,6 @@ td = TranscriptData("Mus_musculus.GRCm39.109.gtf.gz")
 adata = pp.filter_transcripts_by_abundance(adata, threshold_pct=2)
 ```
 
-### Gene-level UMAP
-
-```python
-gene_adata = pp.get_sot_gene_matrix(adata)
-sc.pp.normalize_total(gene_adata, target_sum=1e4)
-sc.pp.log1p(gene_adata)
-sc.pp.highly_variable_genes(gene_adata)
-sc.pp.pca(gene_adata)
-sc.pp.neighbors(gene_adata)
-sc.tl.umap(gene_adata)
-sc.pl.umap(gene_adata, color='cell_type')
-```
-
-![UMAP](resources/readme_figs/umap.png)
-
-### Marker gene validation
-
-![Marker heatmap](resources/readme_figs/marker_heatmap.png)
-
 ### Differential isoform usage (SwitchSearch)
 
 ```python
