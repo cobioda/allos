@@ -56,14 +56,15 @@ Best for genes with strong, consistent switching across many groups. Summarises 
 from allos.composed_plots import plot_isoform_heatmap_composed
 
 plot_isoform_heatmap_composed(
-    transcript_data=td, adata=adata, gene_id='Clta',
-    group_col='cell_type', top_n=3,
+    transcript_data=td, adata=adata, gene_id='Pkm',
+    group_col='cell_type', top_n=2,
     add_group_color_band=True, add_gex_band=True,
 )
 ```
 
 <p align="center">
-  <img src="resources/readme_figs/heatmap_composed.png" alt="Composed heatmap" width="820"/>
+  <img src="resources/readme_figs/heatmap_pkm.png" alt="Composed heatmap — Pkm" width="820"/>
+  <br/><sub><em>Pkm — the canonical M1/M2 metabolic switch during neuronal maturation.</em></sub>
 </p>
 
 ### Dotplot
@@ -74,13 +75,14 @@ Encodes mean PSI as colour and prevalence (% of cells expressing the isoform) as
 from allos.composed_plots import plot_isoform_dot_composed
 
 plot_isoform_dot_composed(
-    transcript_data=td, adata=adata, gene_id='Clta',
+    transcript_data=td, adata=adata, gene_id='Ergic3',
     group_col='cell_type', top_n=3,
 )
 ```
 
 <p align="center">
-  <img src="resources/readme_figs/dotplot_composed.png" alt="Composed dotplot" width="820"/>
+  <img src="resources/readme_figs/dotplot_ergic3.png" alt="Composed dotplot — Ergic3" width="820"/>
+  <br/><sub><em>Ergic3 — exon-excluding isoform dominates in radial glia; exon-including isoform prevails in neurons.</em></sub>
 </p>
 
 ### Violin
@@ -91,13 +93,14 @@ Shows the full per-cell expression distribution, capturing cell-type-restricted 
 from allos.composed_plots import plot_isoform_violin_composed
 
 plot_isoform_violin_composed(
-    transcript_data=td, adata=adata, gene_id='Clta',
+    transcript_data=td, adata=adata, gene_id='Myl6',
     group_col='cell_type', top_n=3,
 )
 ```
 
 <p align="center">
-  <img src="resources/readme_figs/violin_composed.png" alt="Composed violin" width="820"/>
+  <img src="resources/readme_figs/violin_myl6.png" alt="Composed violin — Myl6" width="820"/>
+  <br/><sub><em>Myl6 — cell-type-restricted isoform specificity in the regulatory light chain.</em></sub>
 </p>
 
 ### Stacked bar
@@ -114,7 +117,8 @@ plot_isoform_stacked_bar_composed(
 ```
 
 <p align="center">
-  <img src="resources/readme_figs/stacked_bar_composed.png" alt="Composed stacked bar" width="820"/>
+  <img src="resources/readme_figs/stacked_bar_clta.png" alt="Composed stacked bar — Clta" width="820"/>
+  <br/><sub><em>Clta — isoform proportions shift markedly between progenitors and mature neurons.</em></sub>
 </p>
 
 ### UMAP
@@ -131,7 +135,7 @@ plot_isoform_umap_composed(
 ```
 
 <p align="center">
-  <img src="resources/readme_figs/umap_composed.png" alt="Composed UMAP" width="820"/>
+  <img src="resources/readme_figs/umap_clta.png" alt="Composed UMAP — Clta" width="820"/>
 </p>
 
 ### Density
@@ -148,7 +152,7 @@ plot_isoform_density_composed(
 ```
 
 <p align="center">
-  <img src="resources/readme_figs/density_composed.png" alt="Composed density" width="820"/>
+  <img src="resources/readme_figs/density_clta.png" alt="Composed density — Clta" width="820"/>
 </p>
 
 ### Replicate concordance
@@ -166,7 +170,7 @@ plot_isoform_replicates_composed(
 ```
 
 <p align="center">
-  <img src="resources/readme_figs/replicates.png" alt="Replicate concordance" width="820"/>
+  <img src="resources/readme_figs/replicates_clta.png" alt="Replicate concordance — Clta" width="820"/>
 </p>
 
 ---
@@ -186,7 +190,7 @@ plot_gene_coverage(
 ```
 
 <p align="center">
-  <img src="resources/readme_figs/coverage.png" alt="Coverage plot" width="820"/>
+  <img src="resources/readme_figs/coverage_clta.png" alt="Coverage plot — Clta" width="820"/>
 </p>
 
 ---
@@ -203,13 +207,14 @@ pd = ProteinData(td, provider="ensembl")
 pplot = ProteinPlots(transcript_data=td, protein_data=pd)
 
 fig = pplot.draw_gene_with_protein_domains(
-    gene="Clta", adata=adata, top_n=3,
+    gene="Myl6", adata=adata, top_n=3,
     id_prefixes=["PF", "SM", "PS"], max_domains=8,
 )
 ```
 
 <p align="center">
-  <img src="resources/readme_figs/protein_clta.png" alt="Protein domains — Clta" width="820"/>
+  <img src="resources/readme_figs/protein_myl6.png" alt="Protein domains — Myl6" width="820"/>
+  <br/><sub><em>Myl6 — protein domains mapped onto the three most expressed isoforms, showing the alternative EF-hand region.</em></sub>
 </p>
 
 ---
