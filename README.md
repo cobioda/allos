@@ -28,35 +28,19 @@ For the full method description, see McAndrew *et al.*, 2026 ([bioRxiv 10.64898/
 
 The screen completes in **~34 seconds** on a typical single-cell dataset, making it practical as a first-pass discovery step before committing to more computationally intensive pseudobulk methods.
 
-<table>
-<tr>
-<td width="40%">
-
 ```python
 from allos.switch_search import SwitchSearch, volcano_grid
 
 ss = SwitchSearch(adata, n_jobs=4)
-results = ss.find_switches_chi2(
-    primary_col="cell_type",
-    fdr=0.10,
-)
+results = ss.find_switches_chi2(primary_col="cell_type", fdr=0.10)
 
-volcano_grid(
-    results,
-    n_cols=4,
-    eff_cutoff=0.15,
-    fdr_cutoff=0.05,
-    abbrev=ABBREV,
-)
+volcano_grid(results, n_cols=4, eff_cutoff=0.15, fdr_cutoff=0.05, abbrev=ABBREV)
 ```
 
-</td>
-<td width="60%">
-<img src="resources/volcano_4panel.png" alt="SwitchSearch volcano plots" width="100%"/>
-<br/><sub><em>Representative pairwise contrasts — E18 mouse brain. Orange: |Δπ| ≥ 0.15 &amp; FDR &lt; 0.05.</em></sub>
-</td>
-</tr>
-</table>
+<p align="center">
+  <img src="resources/volcano_4panel.png" alt="SwitchSearch volcano plots" width="820"/>
+  <br/><sub><em>Representative pairwise contrasts — E18 mouse brain. Orange: |Δπ| ≥ 0.15 & FDR < 0.05.</em></sub>
+</p>
 
 ---
 
@@ -66,252 +50,148 @@ The centrepiece of Allos is the **composed plot**: transcript structures rendere
 
 ### Heatmap
 
-<table>
-<tr>
-<td width="35%">
-
 Best for genes with strong, consistent switching across many groups. Summarises mean PSI for all cell types with optional GEX and group colour bands.
 
 ```python
-from allos.composed_plots import (
-    plot_isoform_heatmap_composed,
-)
+from allos.composed_plots import plot_isoform_heatmap_composed
 
 plot_isoform_heatmap_composed(
-    transcript_data=td,
-    adata=adata,
-    gene_id='Clta',
-    group_col='cell_type',
-    top_n=3,
-    add_group_color_band=True,
-    add_gex_band=True,
+    transcript_data=td, adata=adata, gene_id='Clta',
+    group_col='cell_type', top_n=3,
+    add_group_color_band=True, add_gex_band=True,
 )
 ```
 
-</td>
-<td width="65%">
-<img src="resources/readme_figs/heatmap_composed.png" alt="Composed heatmap" width="100%"/>
-</td>
-</tr>
-</table>
+<p align="center">
+  <img src="resources/readme_figs/heatmap_composed.png" alt="Composed heatmap" width="820"/>
+</p>
 
 ### Dotplot
-
-<table>
-<tr>
-<td width="35%">
 
 Encodes mean PSI as colour and prevalence (% of cells expressing the isoform) as dot size — distinguishes widespread shifts from those driven by a few cells.
 
 ```python
-from allos.composed_plots import (
-    plot_isoform_dot_composed,
-)
+from allos.composed_plots import plot_isoform_dot_composed
 
 plot_isoform_dot_composed(
-    transcript_data=td,
-    adata=adata,
-    gene_id='Clta',
-    group_col='cell_type',
-    top_n=3,
+    transcript_data=td, adata=adata, gene_id='Clta',
+    group_col='cell_type', top_n=3,
 )
 ```
 
-</td>
-<td width="65%">
-<img src="resources/readme_figs/dotplot_composed.png" alt="Composed dotplot" width="100%"/>
-</td>
-</tr>
-</table>
+<p align="center">
+  <img src="resources/readme_figs/dotplot_composed.png" alt="Composed dotplot" width="820"/>
+</p>
 
 ### Violin
-
-<table>
-<tr>
-<td width="35%">
 
 Shows the full per-cell expression distribution, capturing cell-type-restricted isoform specificity even at low expression levels.
 
 ```python
-from allos.composed_plots import (
-    plot_isoform_violin_composed,
-)
+from allos.composed_plots import plot_isoform_violin_composed
 
 plot_isoform_violin_composed(
-    transcript_data=td,
-    adata=adata,
-    gene_id='Clta',
-    group_col='cell_type',
-    top_n=3,
+    transcript_data=td, adata=adata, gene_id='Clta',
+    group_col='cell_type', top_n=3,
 )
 ```
 
-</td>
-<td width="65%">
-<img src="resources/readme_figs/violin_composed.png" alt="Composed violin" width="100%"/>
-</td>
-</tr>
-</table>
+<p align="center">
+  <img src="resources/readme_figs/violin_composed.png" alt="Composed violin" width="820"/>
+</p>
 
 ### Stacked bar
-
-<table>
-<tr>
-<td width="35%">
 
 Displays isoform proportions as stacked bars per group — an immediate overview of how the "pie" is split across isoforms.
 
 ```python
-from allos.composed_plots import (
-    plot_isoform_stacked_bar_composed,
-)
+from allos.composed_plots import plot_isoform_stacked_bar_composed
 
 plot_isoform_stacked_bar_composed(
-    transcript_data=td,
-    adata=adata,
-    gene_id='Clta',
-    group_col='cell_type',
-    top_n=3,
+    transcript_data=td, adata=adata, gene_id='Clta',
+    group_col='cell_type', top_n=3,
 )
 ```
 
-</td>
-<td width="65%">
-<img src="resources/readme_figs/stacked_bar_composed.png" alt="Composed stacked bar" width="100%"/>
-</td>
-</tr>
-</table>
+<p align="center">
+  <img src="resources/readme_figs/stacked_bar_composed.png" alt="Composed stacked bar" width="820"/>
+</p>
 
 ### UMAP
-
-<table>
-<tr>
-<td width="35%">
 
 Overlays per-isoform expression on the UMAP manifold — shows which cells express which isoform.
 
 ```python
-from allos.composed_plots import (
-    plot_isoform_umap_composed,
-)
+from allos.composed_plots import plot_isoform_umap_composed
 
 plot_isoform_umap_composed(
-    transcript_data=td,
-    adata=adata,
-    gene_id='Clta',
-    group_col='cell_type',
-    top_n=3,
+    transcript_data=td, adata=adata, gene_id='Clta',
+    group_col='cell_type', top_n=3,
 )
 ```
 
-</td>
-<td width="65%">
-<img src="resources/readme_figs/umap_composed.png" alt="Composed UMAP" width="100%"/>
-</td>
-</tr>
-</table>
+<p align="center">
+  <img src="resources/readme_figs/umap_composed.png" alt="Composed UMAP" width="820"/>
+</p>
 
 ### Density
-
-<table>
-<tr>
-<td width="35%">
 
 KDE-smoothed isoform expression on the UMAP — highlights continuous gradients and spatial patterns.
 
 ```python
-from allos.composed_plots import (
-    plot_isoform_density_composed,
-)
+from allos.composed_plots import plot_isoform_density_composed
 
 plot_isoform_density_composed(
-    transcript_data=td,
-    adata=adata,
-    gene_id='Clta',
-    group_col='cell_type',
-    top_n=3,
+    transcript_data=td, adata=adata, gene_id='Clta',
+    group_col='cell_type', top_n=3,
 )
 ```
 
-</td>
-<td width="65%">
-<img src="resources/readme_figs/density_composed.png" alt="Composed density" width="100%"/>
-</td>
-</tr>
-</table>
+<p align="center">
+  <img src="resources/readme_figs/density_composed.png" alt="Composed density" width="820"/>
+</p>
 
 ### Replicate concordance
-
-<table>
-<tr>
-<td width="35%">
 
 Per-replicate PSI values with box overlay — checks whether isoform proportions are reproducible across batches.
 
 ```python
-from allos.composed_plots import (
-    plot_isoform_replicates_composed,
-)
+from allos.composed_plots import plot_isoform_replicates_composed
 
 plot_isoform_replicates_composed(
-    transcript_data=td,
-    adata=adata,
-    gene_id='Clta',
-    group_col='cell_type',
-    replicate_col='batch',
-    top_n=3,
+    transcript_data=td, adata=adata, gene_id='Clta',
+    group_col='cell_type', replicate_col='batch', top_n=3,
     add_group_color_band=True,
 )
 ```
 
-</td>
-<td width="65%">
-<img src="resources/readme_figs/replicates.png" alt="Replicate concordance" width="100%"/>
-</td>
-</tr>
-</table>
+<p align="center">
+  <img src="resources/readme_figs/replicates.png" alt="Replicate concordance" width="820"/>
+</p>
 
 ---
 
 ## Coverage plots — read-level validation
 
-<table>
-<tr>
-<td width="35%">
-
 Coverage plots display mean read depth and splice junction usage per cell type alongside transcript models — a genome-browser–style view without leaving Python.
 
 ```python
-from allos.coverage_plots import (
-    plot_gene_coverage,
-)
+from allos.coverage_plots import plot_gene_coverage
 
 plot_gene_coverage(
-    adata,
-    transcript_data=td,
-    gene='Clta',
-    groupby='cell_type',
-    bam_paths=bam_paths,
-    bam_column='batch',
-    gtf_file='annotation.gtf.gz',
-    top_n=3,
+    adata, transcript_data=td, gene='Clta',
+    groupby='cell_type', bam_paths=bam_paths,
+    bam_column='batch', gtf_file='annotation.gtf.gz', top_n=3,
 )
 ```
 
-</td>
-<td width="65%">
-<img src="resources/readme_figs/coverage.png" alt="Coverage plot" width="100%"/>
-</td>
-</tr>
-</table>
+<p align="center">
+  <img src="resources/readme_figs/coverage.png" alt="Coverage plot" width="820"/>
+</p>
 
 ---
 
 ## Protein domain overlay
-
-<table>
-<tr>
-<td width="35%">
 
 Fetch protein domains from Ensembl or InterPro and overlay them on transcript exon structures — linking splicing changes to functional protein regions.
 
@@ -320,26 +200,17 @@ from allos.protein_data import ProteinData
 from allos.protein_plots import ProteinPlots
 
 pd = ProteinData(td, provider="ensembl")
-pplot = ProteinPlots(
-    transcript_data=td,
-    protein_data=pd,
-)
+pplot = ProteinPlots(transcript_data=td, protein_data=pd)
 
 fig = pplot.draw_gene_with_protein_domains(
-    gene="Clta",
-    adata=adata,
-    top_n=3,
-    id_prefixes=["PF", "SM", "PS"],
-    max_domains=8,
+    gene="Clta", adata=adata, top_n=3,
+    id_prefixes=["PF", "SM", "PS"], max_domains=8,
 )
 ```
 
-</td>
-<td width="65%">
-<img src="resources/readme_figs/protein_clta.png" alt="Protein domains — Clta" width="100%"/>
-</td>
-</tr>
-</table>
+<p align="center">
+  <img src="resources/readme_figs/protein_clta.png" alt="Protein domains — Clta" width="820"/>
+</p>
 
 ---
 
@@ -380,12 +251,6 @@ Allos visualises isoform usage directly on tissue coordinates, combining transcr
 ## Installation
 
 ```sh
-pip install allos
-```
-
-Or from source:
-
-```sh
 git clone https://github.com/cobioda/allos
 cd allos
 pip install -e .
@@ -396,7 +261,7 @@ pip install -e .
 ## SwitchSearch performance
 
 <p align="center">
-  <img src="resources/FigA3_runtime_comparison.png" alt="SwitchSearch runtime: 34s vs 1.8 min DiffSplice vs 4.9 min DEXSeq" width="520"/>
+  <img src="resources/FigA3_runtime_comparison.png" alt="SwitchSearch runtime comparison" width="520"/>
 </p>
 
 SwitchSearch is designed as a rapid first-pass exploratory screen — analogous to marker gene detection in Scanpy — and is complemented by pseudobulk methods (DiffSplice via edgePython, DEXSeq) for rigorous confirmatory analysis, both accessible within Allos.
@@ -422,9 +287,13 @@ SwitchSearch is designed as a rapid first-pass exploratory screen — analogous 
 
 ## Tutorials
 
-See `tutorial_notebooks/` for complete worked examples:
+Complete worked examples in [`tutorial_notebooks/`](tutorial_notebooks/):
 
-- **01_single_cell_tutorial.ipynb** — end-to-end workflow: data loading, QC, marker validation, Leiden clustering, DIU with SwitchSearch, all 7 composed plot types, read-level coverage, replicate concordance, protein domain overlay, and exercises.
+| # | Tutorial | Topics covered |
+|:-:|---|---|
+| 1 | [**Single-cell isoform analysis**](tutorial_notebooks/01_single_cell_tutorial.ipynb) | Data loading, QC, marker validation, Leiden clustering, DIU with SwitchSearch, volcano plots, all 7 composed plot types, read-level coverage, replicate concordance, protein domain overlay, exercises |
+
+> More tutorials coming soon — spatial transcriptomics, pseudobulk DIU, and custom annotation workflows.
 
 ---
 
